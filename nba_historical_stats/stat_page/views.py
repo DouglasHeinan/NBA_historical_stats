@@ -3,4 +3,4 @@ from django.http import HttpResponse
 
 
 def home(request):
-    return HttpResponse('<h1>Stats Home</h1>')
+    return render(request, 'stat_page/stat_page.html')
