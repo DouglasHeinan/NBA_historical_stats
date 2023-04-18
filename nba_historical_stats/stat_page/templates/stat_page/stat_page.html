@@ -6,5 +6,11 @@
 </head>
 <body>
     <h1>Stat Page!</h1>
+    {% for player in players %}
+    <h3>{{player.f_name}} {{ player.l_name }}</h3>
+    <p>Position: {{ player.position }}</p>
+    <p>Career POints: {{ player.career_points }}</p>
+    <br>
+    {% endfor %}
 </body>
 </html>
