@@ -25,4 +25,4 @@ def home(request):
 
 
 def about(request):
-    return render(request, 'stat_page/about.html')
+    return render(request, 'stat_page/about.html', {"title": "About"})
