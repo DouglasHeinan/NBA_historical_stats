@@ -1,7 +1,12 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'stat_page/styles.css' %}">
+
     {% if title %}
     <title>NBA Stats-{{ title }}</title>
     {% else %}
