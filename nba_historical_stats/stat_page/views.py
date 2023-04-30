@@ -7,11 +7,13 @@ players = players.get_players()
 
 
 def home(request):
+    rando = rando_player(players)
     context = {
         'players': players,
         'first_players': players[0:10],
         'active_players': [player for player in players if player['is_active']],
-        'rando': rando_player(players)
+        'rando': rando,
+        'bb_ref_link': f"{rando['last_name'][0].lower()}/{(rando['last_name'][0:5]).lower()}{rando['first_name'][0:2].lower()}01.html"
     }
     return render(request, 'stat_page/stat_page.html', context)
 
@@ -21,7 +23,7 @@ def about(request):
 
 
 def rando_player(player_list):
-    print(len(player_list))
-    total_players = len
-    return "Steven Adams"
+    total_players = len(player_list)
+    player_index = random.randrange(total_players)
+    return player_list[player_index]
 

@@ -2,7 +2,18 @@
 
 {% block content %}
 
-    <h1>Stat Page!</h1>
-    <p><span>{{ rando }}</span></p>
+<h1>Stat Page!</h1>
+<br>
+<button id="randomPlayerReveal" onclick="revealRandomPlayer()">Look up a random player!</button>
+<div id="randomPlayer" class="hidden">
+    <a target="_blank" href="https://www.basketball-reference.com/players/{{ bb_ref_link }}">{{ rando.full_name }}</a>
+</div>
+
 
 {% endblock content %}
+
+
+https://www.basketball-reference.com/players/l/labissk01.html
+https://www.basketball-reference.com/players/c/curryst01.html
+https://www.basketball-reference.com/players/k/kerrst01.html
+https://www.basketball-reference.com/players/j/jeffeRi01.html
