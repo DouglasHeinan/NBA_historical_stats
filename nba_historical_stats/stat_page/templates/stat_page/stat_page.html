@@ -3,11 +3,6 @@
 {% block content %}
 
     <h1>Stat Page!</h1>
-    {% for player in players %}
-    <h3>{{player.f_name}} {{ player.l_name }}</h3>
-    <p>Position: {{ player.position }}</p>
-    <p>Career Points: {{ player.career_pts }}</p>
-    <br>
-    {% endfor %}
+    <p><span>{{ rando }}</span></p>
 
 {% endblock content %}
