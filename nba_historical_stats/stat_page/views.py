@@ -14,7 +14,6 @@ def home(request):
         'first_players': players[0:10],
         'active_players': [player for player in players if player['is_active']],
         'rando': rando,
-        'bb_ref_link': determine_bb_ref_link(player)
     }
     return render(request, 'stat_page/stat_page.html', context)
 
