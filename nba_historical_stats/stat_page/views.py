@@ -1,20 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django_pandas.managers import DataFrameManager
-from nba_api.stats.static import players, teams
+from .models import AllPlayers, AllTeams
 import random
-
-players = players.get_players()
 
 
 def home(request):
-    rando = rando_player(players)
+    players = AllPlayers.objects.all()
+    update_db(players)
     context = {
-        'players': players,
-        'first_players': players[0:10],
-        'active_players': [player for player in players if player['is_active']],
-        'rando': rando,
+        'players': players
     }
+    print(players[0])
     return render(request, 'stat_page/stat_page.html', context)
 
 
@@ -31,4 +28,16 @@ def rando_player(player_list):
 def determine_bb_ref_link(player):
     return f"{player['last_name'][0].lower()}/{(player['last_name'][0:5]).lower()}{player['first_name'][0:2].lower()}01.html"
 
+
+def update_db(players):
+    for player in players:
+        if not AllPlayers.objects.filter(player_id=player.id).first():
+            new_player = AllPlayers(
+                player_id=player.id,
+                first_name=player.first_name,
+                last_name=player.last_name,
+                is_active=player.is_active,
+                bb_ref_link=f"https://www.basketball-reference.com/players/{player['last_name'][0].lower()}/{(player['last_name'][0:5]).lower()}{player['first_name'][0:2].lower()}01.html"
+            )
+            new_player.save()
 
