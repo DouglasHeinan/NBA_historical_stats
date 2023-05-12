@@ -7,11 +7,11 @@ import random
 
 def home(request):
     players = AllPlayers.objects.all()
+    print(f'****************************{players}')
     update_db(players)
     context = {
         'players': players
     }
-    print(players[0])
     return render(request, 'stat_page/stat_page.html', context)
 
 
