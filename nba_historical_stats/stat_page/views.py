@@ -22,14 +22,19 @@ def about(request):
 
 
 def rando_player():
-    rand_int = random.randint[0, 4814]
-    rand_player = AllPlayer.objects.get(player_id=rand_int)
-    return rand_player
+    # // randIndex = Math.floor(Math.random() * 4000) + 1;
+    # // randPlayer = allPlayers[randIndex];
+    # // console.log(randPlayer.first_name)
+    # // return randPlayer
+
+    # rand_int = random.randint[0, 4814]
+    # rand_player = AllPlayer.objects.get(player_id=rand_int)
+    # return rand_player
 
 
-    total_players = len(player_list)
-    player_index = random.randrange(total_players)
-    return player_list[player_index]
+    # total_players = len(player_list)
+    # player_index = random.randrange(total_players)
+    # return player_list[player_index]
 
 
 def determine_bb_ref_link(player):
