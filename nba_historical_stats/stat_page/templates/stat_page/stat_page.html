@@ -5,7 +5,10 @@
 <h1>Stat Page!</h1>
 <br>
 <!--Need to add functionality back-->
-<button id="randomPlayerReveal" action="{%  %}">Look up a random player!</button>
+<form action="{% url 'rando_player', 'players' %}">
+    {% csrf token %}
+    <button type="submit" id="randomPlayerReveal">Look up a random player!</button>
+</form>
 <div id="randomPlayer" class="hidden">
     <a target="_blank" href="https://www.basketball-reference.com/players/{{ randPlayer.bb_ref_link }}">{{ randPlayer.full_name }}</a>
 </div>

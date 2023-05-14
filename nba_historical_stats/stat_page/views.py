@@ -21,7 +21,7 @@ def about(request):
     return render(request, 'stat_page/about.html', {"title": "About"})
 
 
-def rando_player():
+def rando_player(players):
     # // randIndex = Math.floor(Math.random() * 4000) + 1;
     # // randPlayer = allPlayers[randIndex];
     # // console.log(randPlayer.first_name)
@@ -35,6 +35,9 @@ def rando_player():
     # total_players = len(player_list)
     # player_index = random.randrange(total_players)
     # return player_list[player_index]
+    print("(***********************************")
+    print(players[0].first_name)
+    print{''}
 
 
 def determine_bb_ref_link(player):
