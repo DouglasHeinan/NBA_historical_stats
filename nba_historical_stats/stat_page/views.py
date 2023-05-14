@@ -21,24 +21,19 @@ def about(request):
     return render(request, 'stat_page/about.html', {"title": "About"})
 
 
-def rando_player(players):
-    # // randIndex = Math.floor(Math.random() * 4000) + 1;
-    # // randPlayer = allPlayers[randIndex];
-    # // console.log(randPlayer.first_name)
-    # // return randPlayer
-
+def rando_player(request, players):
+    # form = randoPlayerForm()
     # rand_int = random.randint[0, 4814]
-    # rand_player = AllPlayer.objects.get(player_id=rand_int)
-    # return rand_player
-
-
-    # total_players = len(player_list)
-    # player_index = random.randrange(total_players)
-    # return player_list[player_index]
-    print("(***********************************")
+    player_index = random.randrange(total_players)
+    rand_player = AllPlayer.objects.get(player_id=rand_int)
+    print("***********************************")
     print(players)
     print('')
-
+    context = {
+        'players': players,
+        'randPlayer': rand_player
+    }
+    return(request, 'stat_page/stat_page.html', context)
 
 def determine_bb_ref_link(player):
     return f"{player['last_name'][0].lower()}/{(player['last_name'][0:5]).lower()}{player['first_name'][0:2].lower()}01.html"
