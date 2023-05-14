@@ -36,8 +36,8 @@ def rando_player(players):
     # player_index = random.randrange(total_players)
     # return player_list[player_index]
     print("(***********************************")
-    print(players[0].first_name)
-    print{''}
+    print(players)
+    print('')
 
 
 def determine_bb_ref_link(player):

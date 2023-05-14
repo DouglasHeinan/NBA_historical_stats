@@ -5,8 +5,8 @@
 <h1>Stat Page!</h1>
 <br>
 <!--Need to add functionality back-->
-<form action="{% url 'rando_player', 'players' %}">
-    {% csrf token %}
+<form action="{% url 'views.rando_player' players=players %}">
+    {% csrf_token %}
     <button type="submit" id="randomPlayerReveal">Look up a random player!</button>
 </form>
 <div id="randomPlayer" class="hidden">
