@@ -14,6 +14,10 @@ def home(request):
     context = {
         'players': all_players
     }
+    if request.method == "POST":
+        rand_player = rando_player(all_players)
+        context['rand_player'] = rand_player
+        return render(request, 'stat_page/stat_page.html', context)
     return render(request, 'stat_page/stat_page.html', context)
 
 
@@ -21,19 +25,18 @@ def about(request):
     return render(request, 'stat_page/about.html', {"title": "About"})
 
 
-def rando_player(request, players):
-    # form = randoPlayerForm()
-    # rand_int = random.randint[0, 4814]
-    # player_index = random.randrange(total_players)
-    # rand_player = AllPlayer.objects.get(player_id=rand_int)
-    print("***********************************")
-    print(players)
-    print('')
-    # context = {
-    #     'players': players,
-    #     'randPlayer': rand_player
-    # }
-    # return(request, 'stat_page/stat_page.html', context)
+def rando_player(players):
+    player_ids = []
+    for player in AllPlayers.objects.all():
+        player_ids.append(player.player_id)
+    rand_int = random.choice(player_ids)
+    rand_player = AllPlayers.objects.get(player_id=rand_int)
+    while not rand_player:
+        print(rand_player.first_name)
+        rand_int = random.randint(0, 4814)
+        rand_player = AllPlayers.objects.get(player_id=rand_int)
+    return rand_player
+
 
 def determine_bb_ref_link(player):
     return f"{player['last_name'][0].lower()}/{(player['last_name'][0:5]).lower()}{player['first_name'][0:2].lower()}01.html"
