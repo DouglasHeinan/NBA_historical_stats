@@ -4,11 +4,9 @@
 
 <h1>Stat Page!</h1>
 <br>
-<!--Need to add functionality back-->
-<form action="{% url 'rando_player' players=players %}">
-    {% csrf_token %}
-    <button type="submit" id="randomPlayerReveal">Look up a random player!</button>
-</form>
+
+    <button onclick="{% url 'rando_player' players=players %}" type="submit" id="randomPlayerReveal">Look up a random player!</button>
+
 
 {% if rand_player %}
 <div id="randomPlayer" class="hidden">

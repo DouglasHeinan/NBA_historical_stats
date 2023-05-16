@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from stat_page import views
+from rando_player import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('stat_page/', include('stat_page.urls')),
-    path('rando_player/', views.rando_player, name='rando_player')
+    path('rando_player/', include('rando_player.urls'))
 ]
