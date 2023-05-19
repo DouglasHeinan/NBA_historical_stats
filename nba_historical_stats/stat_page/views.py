@@ -12,7 +12,8 @@ def home(request):
         createDatabase()
     update_db()
     context = {
-        'players': all_players
+        'players': all_players;
+        'randPlayer': randoPlayer
     }
     if request.method == "POST":
         rand_player = rando_player(all_players)

@@ -3,7 +3,18 @@ const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", revealRandomPlayer)
 
 function revealRandomPlayer() {
-console.log("here")
+
+
+    axios.get("{% randPlayer %}")
+    .then((res) => {
+        console.log("RESPONSE ", res);
+    })
+    .catch(e => {
+        console.log("ERROR ", e);
+    })
+
+
+    console.log("here")
     toShow = document.getElementById('randomPlayer');
     toShow.classList.remove('hidden');
 }
