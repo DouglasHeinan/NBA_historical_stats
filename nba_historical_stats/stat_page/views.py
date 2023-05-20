@@ -22,13 +22,14 @@ def about(request):
     return render(request, 'stat_page/about.html', {"title": "About"})
 
 
-def rando_player(players):
+def rando_player():
     player_ids = []
     for player in AllPlayers.objects.all():
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
-    rand_player = {"player": AllPlayers.objects.get(player_id=rand_int)}
-    return json.dumps(rand_player)
+    rand_player = AllPlayers.objects.get(player_id=rand_int).first()
+    # rand_player = {"player": AllPlayers.objects.get(player_id=rand_int)}
+    return HttpResponse(rand_player)
 
 
 def determine_bb_ref_link(player):
