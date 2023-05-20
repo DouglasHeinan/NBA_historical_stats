@@ -4,6 +4,7 @@ from django_pandas.managers import DataFrameManager
 from .models import AllPlayers, AllTeams
 from nba_api.stats.static import players
 import random
+import json
 
 
 def home(request):
@@ -12,13 +13,8 @@ def home(request):
         createDatabase()
     update_db()
     context = {
-        'players': all_players;
-        'randPlayer': randoPlayer
+        'players': all_players
     }
-    if request.method == "POST":
-        rand_player = rando_player(all_players)
-        context['rand_player'] = rand_player
-        return render(request, 'stat_page/stat_page.html', context)
     return render(request, 'stat_page/stat_page.html', context)
 
 
@@ -31,12 +27,8 @@ def rando_player(players):
     for player in AllPlayers.objects.all():
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
-    rand_player = AllPlayers.objects.get(player_id=rand_int)
-    while not rand_player:
-        print(rand_player.first_name)
-        rand_int = random.randint(0, 4814)
-        rand_player = AllPlayers.objects.get(player_id=rand_int)
-    return rand_player
+    rand_player = {"player": AllPlayers.objects.get(player_id=rand_int)}
+    return json.dumps(rand_player)
 
 
 def determine_bb_ref_link(player):
