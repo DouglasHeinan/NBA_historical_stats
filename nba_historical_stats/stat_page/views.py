@@ -24,17 +24,12 @@ def about(request):
 
 def rando_player(request):
     player_ids = []
-    all_players = AllPlayers.objects.all()
     for player in AllPlayers.objects.all():
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
-    rand_player = AllPlayers.objects.get(player_id=rand_int)
+    rand_player = AllPlayers.objects.get(player_id=rand_int).first()
     # rand_player = {"player": AllPlayers.objects.get(player_id=rand_int)}
-    context = {
-        'players': all_players,
-        'rand_player': rand_player
-    }
-    return render(request, 'stat_page/stat_page.html', context)
+    return render(rand_player)
 
 
 def determine_bb_ref_link(player):
