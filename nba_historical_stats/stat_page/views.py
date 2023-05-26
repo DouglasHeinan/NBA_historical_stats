@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django_pandas.managers import DataFrameManager
 from .models import AllPlayers, AllTeams
 from nba_api.stats.static import players
 import random
 import json
+
 
 
 def home(request):
@@ -27,9 +28,12 @@ def rando_player(request):
     for player in AllPlayers.objects.all():
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
-    rand_player = AllPlayers.objects.get(player_id=rand_int).first()
-    # rand_player = {"player": AllPlayers.objects.get(player_id=rand_int)}
-    return render(rand_player)
+    # rand_player = AllPlayers.objects.get(player_id=rand_int).first()
+    rand_player = {"player": AllPlayers.objects.get(player_id=rand_int)}
+    print("************************************************C")
+    print(rand_player)
+    print("************************************************C")
+    return JsonResponse(rand_player)
 
 
 def determine_bb_ref_link(player):

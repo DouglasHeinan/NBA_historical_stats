@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'rando_player.apps.RandoPlayerConfig',
     'stat_page.apps.StatPageConfig',
     'django.contrib.admin',
     'django.contrib.auth',
