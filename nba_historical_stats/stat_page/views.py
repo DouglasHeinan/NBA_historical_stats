@@ -24,19 +24,17 @@ def about(request):
 
 
 def rando_player(request):
-    print("************************************************Ctrl111111111111111111")
-    print(rand_player)
-    print("************************************************Ctrl222222222222222222")
     player_ids = []
     for player in AllPlayers.objects.all():
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
-    # rand_player = AllPlayers.objects.get(player_id=rand_int).first()
+    rand_player = AllPlayers.objects.get(player_id=rand_int)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        rand_player = {
-            "player": AllPlayers.objects.get(player_id=rand_int)
+        player = {
+            "first_name": rand_player.first_name,
+            "last_name": rand_player.last_name
         }
-        return JsonResponse(rand_player)
+        return JsonResponse(player)
 
 
 def determine_bb_ref_link(player):
