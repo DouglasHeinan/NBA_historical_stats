@@ -20,7 +20,7 @@ function revealRandomPlayer() {
     .then(data => {
         console.log(data)
         fullName = data["first_name"] + " " + data["last_name"]
-        anchorTag.href = 'https://www.basketball-reference.com/players/' + data['bb_ref_link']
+        anchorTag.href = data['bb_ref_link']
         anchorTag.innerText = fullName
     })
 }
