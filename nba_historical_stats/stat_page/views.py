@@ -31,8 +31,10 @@ def rando_player(request):
     rand_player = AllPlayers.objects.get(player_id=rand_int)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = {
+            # "player_id": rand_player.player_id,
             "first_name": rand_player.first_name,
-            "last_name": rand_player.last_name
+            "last_name": rand_player.last_name,
+            "bb_ref_link": rand_player.bb_ref_link
         }
         return JsonResponse(player)
 
