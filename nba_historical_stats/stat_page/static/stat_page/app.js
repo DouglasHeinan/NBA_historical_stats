@@ -7,20 +7,14 @@ function revealRandomPlayer() {
     toShow.classList.remove('hidden');
 
 
-//    fetch('/rando_json', {
     fetch('rando_json/', {
         headers:{
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
         }
-//        headers:{
-//            'Accept': 'application/json',
-//        },
     })
     .then(response => {
         console.log(response)
-    })
-    .then(response => {
         return response.json() //Convert response to JSON
     })
     .then(data => {
