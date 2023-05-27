@@ -12,6 +12,9 @@ class AllPlayers(models.Model):
 
 class AllTeams(models.Model):
     team_id = models.IntegerField(primary_key=True)
+    full_name = models.CharField(max_length=50)
     team_city = models.CharField(max_length=50)
+    team_state = models.CharField(max_length=25)
+    abbreviation = models.CharField(max_length=5)
     team_nickname = models.CharField(max_length=50)
     bb_ref_link = models.URLField()
