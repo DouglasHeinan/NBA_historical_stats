@@ -9,12 +9,9 @@ import json
 
 
 def home(request):
+    update_db()
     all_players = AllPlayers.objects.all()
     all_teams = AllTeams.objects.all()
-    print("*********************************************")
-    update_db()
-    print(all_teams[0])
-    print(all_players[0])
     context = {
         'players': all_players,
         'teams': all_teams
@@ -22,28 +19,19 @@ def home(request):
     return render(request, 'stat_page/stat_page.html', context)
 
 
-def about(request):
-    return render(request, 'stat_page/about.html', {"title": "About"})
-
-
-def rando_player(request):
-    player_ids = []
-    all_players = AllPlayers.objects.all()
+def update_db():
+    all_players = players.get_players()
+    all_teams = teams.get_teams()
+    new_players = []
+    new_teams = []
     for player in all_players:
-        player_ids.append(player.player_id)
-    rand_int = random.choice(player_ids)
-    rand_player = AllPlayers.objects.get(player_id=rand_int)
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        player = {
-            "first_name": rand_player.first_name,
-            "last_name": rand_player.last_name,
-            "bb_ref_link": rand_player.bb_ref_link
-        }
-        return JsonResponse(player)
-
-
-def determine_bb_ref_link(player):
-    return f"{player['last_name'][0].lower()}/{(player['last_name'][0:5]).lower()}{player['first_name'][0:2].lower()}01.html"
+        if not AllPlayers.objects.filter(player_id=player["id"]).exists():
+            new_players.append(player)
+    create_player_db_entries(new_players)
+    for team in all_teams:
+        if not AllTeams.objects.filter(team_id=team["id"]).exists():
+            new_teams.append(team)
+    create_team_db_entries(new_teams)
 
 
 def create_player_db_entries(all_players):
@@ -74,19 +62,24 @@ def create_team_db_entries(all_teams):
         new_team.save()
 
 
-def update_db():
-    all_players = players.get_players()
-    all_teams = teams.get_teams()
-    new_players = []
-    new_teams = []
+def about(request):
+    return render(request, 'stat_page/about.html', {"title": "About"})
+
+
+def rando_player(request):
+    player_ids = []
+    all_players = AllPlayers.objects.all()
     for player in all_players:
-        if not AllPlayers.objects.filter(player_id=player["id"]).exists():
-            new_players.append(player)
-    create_player_db_entries(new_players)
-    for team in all_teams:
-        if not AllTeams.objects.filter(team_id=team["id"]).exists():
-            new_teams.append(team)
-    create_team_db_entries(new_teams)
+        player_ids.append(player.player_id)
+    rand_int = random.choice(player_ids)
+    rand_player = AllPlayers.objects.get(player_id=rand_int)
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        player = {
+            "first_name": rand_player.first_name,
+            "last_name": rand_player.last_name,
+            "bb_ref_link": rand_player.bb_ref_link
+        }
+        return JsonResponse(player)
 
 
 
