@@ -6,6 +6,39 @@ from nba_api.stats.static import players, teams
 import random
 import json
 
+TEAM_COLORS = {
+    "Atlanta Hawks": ["#C8102E", "#FDB927"],
+    "Boston Celtics": ["#007A33", "#BA9653"],
+    "Cleveland Cavaliers": ["#860038", "#FDBB30"],
+    "New Orleans Pelicans": ["#0C2340", "#85714D"],
+    "Chicago Bulls": ["#CE1141", "#000000"],
+    "Dallas Mavericks": ["#00538C", "#B8C4CA"],
+    "Denver Nuggets": ["#0E2240", "#FEC524"],
+    "Golden State Warriors": ["#1D428A", "#FFC72C"],
+    "Houston Rockets": ["#CE1141", "#000000"],
+    "Los Angeles Clippers": ["#C8102E", "#1D428A"],
+    "Los Angeles Lakers": ["#552583", "#FDB927"],
+    "Miami Heat": ["#98002E", "#000000"],
+    "Milwaukee Bucks": ["#00471B", "#EEE1C6"],
+    "Minnesota Timberwolves": ["#0C2340", "#9EA2A2"],
+    "Brooklyn Nets": ["#000000", "#FFFFFF"],
+    "New Yorks Knicks": ["#006BB6", "#F58426"],
+    "Orlando Magic": ["#0077C0", "#C4CED4"],
+    "Indiana Pacers": ["#002D62", "#FDBB30"],
+    "Philadelphia 76ers": ["#006BB6", "#FFFFFF"],
+    "Phoenix Suns": ["#1D1160", "#E56020"],
+    "Portland Trail Blazers": ["#E03A3E", "#000000"],
+    "Sacramento Kings": ["#5A2D81", "#63727A"],
+    "San Antonio Spurs": ["#C4CED4", "#000000"],
+    "Oklahoma City Thunder": ["#007AC1", "#EF3B24"],
+    "Toronto Raptors": ["#CE1141", "#000000"],
+    "Utah Jazz": ["#002B5C", "#00471B"],
+    "Memphis Grizzlies": ["#5D76A9", "#12173F"],
+    "Washington Wizards": ["#002B5C", "#E31837"],
+    "Detroit Pistons": ["#C8102E", "#1D42BA"],
+    "Charlotte Hornets": ["#1D1160", "#00788C"],
+}
+
 
 
 def home(request):
@@ -16,6 +49,8 @@ def home(request):
         'players': all_players,
         'teams': all_teams
     }
+    for team in all_teams:
+        print(team.full_name)
     return render(request, 'stat_page/stat_page.html', context)
 
 
@@ -32,6 +67,7 @@ def update_db():
         if not AllTeams.objects.filter(team_id=team["id"]).exists():
             new_teams.append(team)
     create_team_db_entries(new_teams)
+    check_team_colors()
 
 
 def create_player_db_entries(all_players):
@@ -62,6 +98,14 @@ def create_team_db_entries(all_teams):
         new_team.save()
 
 
+def check_team_colors():
+    all_teams = AllTeams.objects.all()
+    for team in all_teams:
+        if not team.team_color_one:
+            team.team_color_one = TEAM_COLORS[team.full_name][0]
+            team.team_color_two = TEAM_COLORS[team.full_name][1]
+
+
 def about(request):
     return render(request, 'stat_page/about.html', {"title": "About"})
 
@@ -83,11 +127,3 @@ def rando_player(request):
 
 
 
-
-# def create_database():
-#     print("*************************************************")
-#     print("database")
-#     all_players = players.get_players()
-#     create_player_db_entries(all_players)
-#     all_teams = teams.get_teams()
-#     create_teams_db_entries(all_teams)
