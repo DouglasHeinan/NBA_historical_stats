@@ -22,7 +22,7 @@ TEAM_COLORS = {
     "Milwaukee Bucks": ["#00471B", "#EEE1C6"],
     "Minnesota Timberwolves": ["#0C2340", "#9EA2A2"],
     "Brooklyn Nets": ["#000000", "#FFFFFF"],
-    "New Yorks Knicks": ["#006BB6", "#F58426"],
+    "New York Knicks": ["#006BB6", "#F58426"],
     "Orlando Magic": ["#0077C0", "#C4CED4"],
     "Indiana Pacers": ["#002D62", "#FDBB30"],
     "Philadelphia 76ers": ["#006BB6", "#FFFFFF"],
@@ -49,8 +49,6 @@ def home(request):
         'players': all_players,
         'teams': all_teams
     }
-    for team in all_teams:
-        print(team.full_name)
     return render(request, 'stat_page/stat_page.html', context)
 
 
