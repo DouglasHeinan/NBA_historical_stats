@@ -102,6 +102,7 @@ def check_team_colors():
         if not team.team_color_one:
             team.team_color_one = TEAM_COLORS[team.full_name][0]
             team.team_color_two = TEAM_COLORS[team.full_name][1]
+            team.save()
 
 
 def about(request):
