@@ -1,5 +1,5 @@
 body {
-    background-color: grey;
+    background-color: pink;
 }
 
 .hidden {
@@ -8,4 +8,26 @@ body {
 
 .bigFont {
     font-size: 5em;
+}
+
+.inline {
+    width: 10%;
+    text-align: center;
+    margin: 1em 0;
+}
+
+.teams {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 80%;
+    margin: 4em auto;
+}
+
+.teamLink {
+    color: indigo;
+}
+
+.teamLink:visited {
+    color: green;
 }

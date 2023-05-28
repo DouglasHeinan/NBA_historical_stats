@@ -9,17 +9,14 @@
 <div id="randomPlayer" class="hidden">
     <a id="randomPlayerLink" target="_blank"></a>
 </div>
+<div class="teams">
+    {% for team in teams %}
+    <a target="_blank" href="{{team.bb_ref_link}}" class="inline teamLink">{{ team.team_abbreviation }}</a>
+    {% endfor %}
+</div>
 
-<p>{{ teams.0.team_abbreviation }}</p>
 
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <button id="updateDatabase">Update Database!</button>
 
 {% endblock content %}
