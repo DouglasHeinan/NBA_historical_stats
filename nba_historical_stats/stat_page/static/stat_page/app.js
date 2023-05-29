@@ -1,6 +1,4 @@
-//Random player button functionality
-const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
-randomPlayerBtn.addEventListener("click", revealRandomPlayer)
+//Random player button/onload functionality
 function revealRandomPlayer() {
     toShow = document.querySelector("#randomPlayer");
     toShow.classList.remove('hidden');
@@ -21,6 +19,14 @@ function revealRandomPlayer() {
         anchorTag.innerText = fullName
     })
 }
+//Random player triggers
+const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
+randomPlayerBtn.addEventListener("click", revealRandomPlayer)
+window.addEventListener('load', (event) => {
+    revealRandomPlayer()
+    }
+)
+
 
 //Dict of team colors for function below.
 //teamColors = {
@@ -65,5 +71,4 @@ function revealRandomPlayer() {
 //        teamLinks[i].style.backgroundPosition = 'center center'
 //    }
 //})
-
 
