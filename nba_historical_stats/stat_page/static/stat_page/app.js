@@ -62,6 +62,8 @@ window.addEventListener('load', (event) => {
     for (let i = 0; i < teamLinks.length; i++) {
         teamLinks[i].style.color = teamColors[teamLinks[i].innerText][0];
         teamLinks[i].style.backgroundColor = teamColors[teamLinks[i].innerText][1];
+        teamLinks[i].style.backgroundImage = `url(${teamColors[teamLinks[i].innerText][2]})`;
+        teamLinks[i].style.backgroundPosition = 'center center'
     }
 })
 //window.addEventListener('load', (event) => {

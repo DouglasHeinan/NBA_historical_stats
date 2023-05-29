@@ -19,4 +19,5 @@ class AllTeams(models.Model):
     team_nickname = models.CharField(max_length=50)
     team_color_one = models.CharField(max_length=7, default="")
     team_color_two = models.CharField(max_length=7, default="")
+    team_logo = models.URLField(default="")
     bb_ref_link = models.URLField()
