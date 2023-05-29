@@ -1,5 +1,11 @@
 
 
 {% block footer %}
-<h1>LOOK AT ME!</h1>
+<div class="teams">
+    {% for team in teams %}
+        <a target="_blank" href="{{team.bb_ref_link}}" class="inline teamLink">
+        <img class="logo" src="{{ team.team_logo }}">
+    </a>
+    {% endfor %}
+</div>
 {% endblock %}
