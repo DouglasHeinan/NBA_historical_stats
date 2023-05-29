@@ -1,5 +1,5 @@
 body {
-    background-color: pink;
+    background-color: green;
 }
 
 .hidden {
@@ -35,11 +35,19 @@ body {
 }
 
 .teamLink {
-    width: 5em;
-    height: 5em;
     margin: 0.5em;
 }
 
 .teamLink:visited {
     color: green;
+}
+
+.logo {
+    max-width: 100%;
+    padding: 0.25em;
+}
+
+#footer {
+    background-color: pink;
+    height: 10em;
 }

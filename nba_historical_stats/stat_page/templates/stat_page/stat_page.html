@@ -10,9 +10,8 @@
 </div>
 <div class="teams">
     {% for team in teams %}
-    <a target="_blank" href="{{team.bb_ref_link}}" class="inline teamLink">
-        {{ team.team_abbreviation }}
-        <img src="{{ team.logo }}">
+        <a target="_blank" href="{{team.bb_ref_link}}" class="inline teamLink">
+        <img class="logo" src="{{ team.team_logo }}">
     </a>
     {% endfor %}
 </div>

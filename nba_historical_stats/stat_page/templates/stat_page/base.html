@@ -16,7 +16,14 @@
 <body>
     {% block content %}{% endblock %}
 
+<footer id="footer">
+    {% block footer %}
+    {% include 'stat_page/footer.html' %}
+    {% endblock footer %}
+</footer>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="{% static 'stat_page/app.js' %}"></script>
 </body>
+
 </html>
