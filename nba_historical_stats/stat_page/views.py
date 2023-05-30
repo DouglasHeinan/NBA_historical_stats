@@ -4,6 +4,7 @@ from django_pandas.managers import DataFrameManager
 from .models import AllPlayers, AllTeams
 from .admin import TEAM_COLORS_AND_LOGOS
 from nba_api.stats.static import players, teams
+from nba_api.stats.endpoints import playercareerstats
 import random
 import json
 
@@ -87,6 +88,12 @@ def rando_player(request):
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
     rand_player = AllPlayers.objects.get(player_id=rand_int)
+    # delete below***********************************************
+    raw_career = playercareerstats.PlayerCareerStats(player_id=rand_player.player_id)
+    career = raw_career.get_dict()['parameters']
+    print("*******************************************")
+    print(career)
+    # delete above***********************************************
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = {
             "first_name": rand_player.first_name,
