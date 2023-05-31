@@ -40,7 +40,6 @@ def update_db():
 
 
 def create_player_db_entries(all_players):
-    print("players")
     for player in all_players:
         new_player = AllPlayers(
             player_id=player["id"],
@@ -53,7 +52,6 @@ def create_player_db_entries(all_players):
 
 
 def create_team_db_entries(all_teams):
-    print("teams")
     for team in all_teams:
         new_team = AllTeams(
             team_id=team["id"],
@@ -89,10 +87,10 @@ def rando_player(request):
     rand_int = random.choice(player_ids)
     rand_player = AllPlayers.objects.get(player_id=rand_int)
     # delete below***********************************************
-    raw_career = playercareerstats.PlayerCareerStats(player_id=rand_player.player_id)
-    career = raw_career.get_dict().data_sets
+    raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=rand_player.player_id)
+    career = raw_career.get_dict()
     print("*******************************************")
-    print(career)
+    print(career["resultSets"][0])
     # delete above***********************************************
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = {
