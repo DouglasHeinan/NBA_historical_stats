@@ -90,7 +90,7 @@ def rando_player(request):
     rand_player = AllPlayers.objects.get(player_id=rand_int)
     # delete below***********************************************
     raw_career = playercareerstats.PlayerCareerStats(player_id=rand_player.player_id)
-    career = raw_career.get_dict()['parameters']
+    career = raw_career.get_dict().data_sets
     print("*******************************************")
     print(career)
     # delete above***********************************************
