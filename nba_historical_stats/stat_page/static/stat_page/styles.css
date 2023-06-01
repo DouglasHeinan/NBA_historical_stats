@@ -19,6 +19,10 @@ body {
     display: none;
 }
 
+table {
+    width: 100%;
+}
+
 /*******************************FONTS*******************************/
 .bigFont {
     font-size: 5em;

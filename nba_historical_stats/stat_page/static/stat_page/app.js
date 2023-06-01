@@ -3,8 +3,8 @@ function revealRandomPlayer() {
     toShow = document.querySelector("#randomPlayer");
     toShow.classList.remove('hidden');
     anchorTag = document.querySelector("#randomPlayerLink");
-    careerTableColNames = document.querySelector("#careerRowNames")
-    careerTable = document.querySelector("#")
+    careerTableColNames = document.querySelector("#careerRowNames");
+    careerTableData = document.querySelector("#careerDataRow")
 
     fetch('rando_json/', {
         headers:{
@@ -21,17 +21,19 @@ function revealRandomPlayer() {
         anchorTag.innerText = fullName
 //        ***************************************************************
         rowNames = data["player_career_stats"]["resultSets"][1]["headers"]
+        rowData = data["player_career_stats"]["resultSets"][1]["rowSet"]
         for (let i = 0; i < rowNames.length; i++) {
-            const colName = document.createElement("td");
+            const colName = document.createElement("th");
             colName.innerText = rowNames[i];
             careerTableColNames.insertAdjacentElement("beforeend", colName)
-//        for (let i = 0; i < rowNames.length; i++) {
-//            const colData = document.createElement("td");
-//            colData.innerText = rowData[i];
-//            careerRowData.insertAdjacentElement("beforeend", colData)
-//        }
-//        **************************************************************
         }
+        //        **************************************************************
+        for (let i = 0; i < rowData.length; i++) {
+            const colData = document.createElement("td");
+            colData.innerText = rowData[i];
+            careerTableData.insertAdjacentElement("beforeend", colData)
+        }
+        //        **************************************************************
     })
 }
 //Random player triggers
