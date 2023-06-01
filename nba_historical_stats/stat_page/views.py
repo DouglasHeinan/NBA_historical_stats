@@ -7,6 +7,7 @@ from nba_api.stats.static import players, teams
 from nba_api.stats.endpoints import playercareerstats
 import random
 import json
+import pandas
 
 
 
@@ -86,19 +87,19 @@ def rando_player(request):
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
     rand_player = AllPlayers.objects.get(player_id=rand_int)
-    # delete below***********************************************
     raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=rand_player.player_id)
-    career = raw_career.get_dict()
-    print("*******************************************")
-    print(career["resultSets"][0])
-    # delete above***********************************************
+    career_stats = raw_career.get_json()
+    CS_dict = raw_career.get_dict()
+    print(career_stats)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = {
             "first_name": rand_player.first_name,
             "last_name": rand_player.last_name,
-            "bb_ref_link": rand_player.bb_ref_link
+            "bb_ref_link": rand_player.bb_ref_link,
+            "player_career_stats": CS_dict
         }
         return JsonResponse(player)
+
 
 
 
