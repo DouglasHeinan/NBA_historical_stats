@@ -21,7 +21,8 @@ function revealRandomPlayer() {
         anchorTag.innerText = fullName
 //        ***************************************************************
         rowNames = data["player_career_stats"]["resultSets"][1]["headers"]
-        rowData = data["player_career_stats"]["resultSets"][1]["rowSet"]
+        rowData = data["player_career_stats"]["resultSets"][1]["rowSet"][0]
+
         for (let i = 0; i < rowNames.length; i++) {
             const colName = document.createElement("th");
             colName.innerText = rowNames[i];
@@ -31,6 +32,7 @@ function revealRandomPlayer() {
         for (let i = 0; i < rowData.length; i++) {
             const colData = document.createElement("td");
             colData.innerText = rowData[i];
+            console.log(rowData[i])
             careerTableData.insertAdjacentElement("beforeend", colData)
         }
         //        **************************************************************
