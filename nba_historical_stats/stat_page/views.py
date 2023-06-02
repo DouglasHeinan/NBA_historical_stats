@@ -90,7 +90,6 @@ def rando_player(request):
     raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=rand_player.player_id)
     career_stats = raw_career.get_json()
     CS_dict = raw_career.get_dict()
-    print(career_stats)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = {
             "first_name": rand_player.first_name,

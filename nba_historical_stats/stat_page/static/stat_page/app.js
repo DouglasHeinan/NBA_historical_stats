@@ -1,3 +1,23 @@
+//Table creation functions
+function createTableRowHeaders(data) {
+        rowNames = data["player_career_stats"]["resultSets"][1]["headers"]
+        for (let i = 0; i < rowNames.length; i++) {
+            const colName = document.createElement("th");
+            colName.innerText = rowNames[i];
+            careerTableColNames.insertAdjacentElement("beforeend", colName)
+        }
+}
+
+function createTableRowData(data) {
+    rowData = data["player_career_stats"]["resultSets"][1]["rowSet"][0]
+    for (let i = 0; i < rowData.length; i++) {
+        const colData = document.createElement("td");
+        colData.innerText = rowData[i];
+        console.log(rowData[i])
+        careerTableData.insertAdjacentElement("beforeend", colData)
+    }
+}
+
 //Random player button/onload functionality
 function revealRandomPlayer() {
     toShow = document.querySelector("#randomPlayer");
@@ -19,25 +39,11 @@ function revealRandomPlayer() {
         fullName = data["first_name"] + " " + data["last_name"]
         anchorTag.href = data['bb_ref_link']
         anchorTag.innerText = fullName
-//        ***************************************************************
-        rowNames = data["player_career_stats"]["resultSets"][1]["headers"]
-        rowData = data["player_career_stats"]["resultSets"][1]["rowSet"][0]
-
-        for (let i = 0; i < rowNames.length; i++) {
-            const colName = document.createElement("th");
-            colName.innerText = rowNames[i];
-            careerTableColNames.insertAdjacentElement("beforeend", colName)
-        }
-        //        **************************************************************
-        for (let i = 0; i < rowData.length; i++) {
-            const colData = document.createElement("td");
-            colData.innerText = rowData[i];
-            console.log(rowData[i])
-            careerTableData.insertAdjacentElement("beforeend", colData)
-        }
-        //        **************************************************************
+        createTableRowHeaders(data)
+        createTableRowData(data)
     })
 }
+
 //Random player triggers
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", revealRandomPlayer)
@@ -45,3 +51,5 @@ window.addEventListener('load', (event) => {
     revealRandomPlayer()
     }
 )
+
+
