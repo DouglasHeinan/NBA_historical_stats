@@ -1,10 +1,12 @@
 //Table creation functions
 function createTableRowHeaders(data) {
-    const headersNeeded = document.querySelectorAll(".tableHeader") == [];
-    if (headerNeeded) {
+    const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
+    const testTest = document.querySelectorAll(".tableHeader")
+    if (headersNeeded) {
     rowNames = data["player_career_stats"]["resultSets"][1]["headers"]
         for (let i = 0; i < rowNames.length; i++) {
             const colName = document.createElement("th");
+            colName.classList.add("tableHeader")
             colName.innerText = rowNames[i];
             careerTableColNames.insertAdjacentElement("beforeend", colName)
         }
@@ -22,6 +24,10 @@ function createTableRowData(data) {
     }
     for (let i = 0; i < rowData.length; i++) {
         const colData = document.createElement("td");
+        colData.classList.add("tableData")
+        if (!rowData[i]) {
+            rowData[i] = 'N/A'
+        }
         colData.innerText = rowData[i];
         careerTableData.insertAdjacentElement("beforeend", colData)
     }
