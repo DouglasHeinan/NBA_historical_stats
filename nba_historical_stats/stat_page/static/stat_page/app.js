@@ -1,19 +1,28 @@
 //Table creation functions
 function createTableRowHeaders(data) {
-        rowNames = data["player_career_stats"]["resultSets"][1]["headers"]
+    const headersNeeded = document.querySelectorAll(".tableHeader") == [];
+    if (headerNeeded) {
+    rowNames = data["player_career_stats"]["resultSets"][1]["headers"]
         for (let i = 0; i < rowNames.length; i++) {
             const colName = document.createElement("th");
             colName.innerText = rowNames[i];
             careerTableColNames.insertAdjacentElement("beforeend", colName)
         }
+    }
 }
 
 function createTableRowData(data) {
-    rowData = data["player_career_stats"]["resultSets"][1]["rowSet"][0]
+    const rowData = data["player_career_stats"]["resultSets"][1]["rowSet"][0]
+    const dataPresent = document.querySelectorAll(".tableData") != [];
+    if (dataPresent) {
+        tableData = document.querySelectorAll(".tableData");
+        for (let i = 0; i < tableData.length; i++) {
+            tableData[i].remove()
+        }
+    }
     for (let i = 0; i < rowData.length; i++) {
         const colData = document.createElement("td");
         colData.innerText = rowData[i];
-        console.log(rowData[i])
         careerTableData.insertAdjacentElement("beforeend", colData)
     }
 }
@@ -45,11 +54,12 @@ function revealRandomPlayer() {
 }
 
 //Random player triggers
+//window.addEventListener('load', (event) => {
+//    createTable()
+//    }
+//)
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", revealRandomPlayer)
-window.addEventListener('load', (event) => {
-    revealRandomPlayer()
-    }
-)
+
 
 
