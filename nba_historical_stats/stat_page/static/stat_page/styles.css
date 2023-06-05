@@ -4,7 +4,7 @@
 }
 
 body {
-    background-color: green;
+    background-color: grey;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -17,6 +17,10 @@ body {
 /************************SITE WIDE UTILITIES************************/
 .hidden {
     display: none;
+}
+
+table {
+    max-width: 100%;
 }
 
 th, td {

@@ -1,5 +1,4 @@
 from django.db import models
-# from django_pandas.managers import DataFrameManager
 
 
 class AllPlayers(models.Model):
@@ -21,3 +20,5 @@ class AllTeams(models.Model):
     team_color_two = models.CharField(max_length=7, default="")
     team_logo = models.URLField(default="")
     bb_ref_link = models.URLField()
+
+class BasicStats(models.Model):

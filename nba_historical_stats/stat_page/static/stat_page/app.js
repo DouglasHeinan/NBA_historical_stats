@@ -33,7 +33,8 @@ function createTableRowData(data) {
     }
 }
 
-//Random player button/onload functionality
+//Random player button functionality
+//Add async functionality?
 function revealRandomPlayer() {
     toShow = document.querySelector("#randomPlayer");
     toShow.classList.remove('hidden');
@@ -59,11 +60,6 @@ function revealRandomPlayer() {
     })
 }
 
-//Random player triggers
-//window.addEventListener('load', (event) => {
-//    createTable()
-//    }
-//)
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", revealRandomPlayer)
 
