@@ -88,14 +88,13 @@ def rando_player(request):
     rand_int = random.choice(player_ids)
     rand_player = AllPlayers.objects.get(player_id=rand_int)
     raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=rand_player.player_id)
-    career_stats = raw_career.get_json()
-    CS_dict = raw_career.get_dict()
+    career_stats = raw_career.get_dict()
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = {
             "first_name": rand_player.first_name,
             "last_name": rand_player.last_name,
             "bb_ref_link": rand_player.bb_ref_link,
-            "player_career_stats": CS_dict
+            "player_career_stats": career_stats
         }
         return JsonResponse(player)
 

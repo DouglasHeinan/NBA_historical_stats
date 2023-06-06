@@ -7,6 +7,28 @@ class AllPlayers(models.Model):
     last_name = models.CharField(max_length=100)
     is_active = models.BooleanField()
     bb_ref_link = models.URLField()
+    team_id = models.IntegerField(default="")
+    gp = models.IntegerField(null=True, default=0)
+    gs = models.IntegerField(null=True, default=0)
+    min = models.FloatField(null=True, default=0.0)
+    fgm = models.FloatField(null=True, default=0.0)
+    fga = models.FloatField(null=True, default=0.0)
+    fg_pct = models.FloatField(null=True, default=0.0)
+    fg3m = models.FloatField(null=True, default=0.0)
+    fg3a = models.FloatField(null=True, default=0.0)
+    fg3_pct = models.FloatField(null=True, default=0.0)
+    ftm = models.FloatField(null=True, default=0.0)
+    fta = models.FloatField(null=True, default=0.0)
+    ft_pct = models.FloatField(null=True, default=0.0)
+    oreb = models.FloatField(null=True, default=0.0)
+    dreb = models.FloatField(null=True, default=0.0)
+    treb = models.FloatField(null=True, default=0.0)
+    ast = models.FloatField(null=True, default=0.0)
+    stl = models.FloatField(null=True, default=0.0)
+    blk = models.FloatField(null=True, default=0.0)
+    tov = models.FloatField(null=True, default=0.0)
+    pf = models.FloatField(null=True, default=0.0)
+    pts = models.FloatField(null=True, default=0.0)
 
 
 class AllTeams(models.Model):
@@ -20,5 +42,3 @@ class AllTeams(models.Model):
     team_color_two = models.CharField(max_length=7, default="")
     team_logo = models.URLField(default="")
     bb_ref_link = models.URLField()
-
-class BasicStats(models.Model):

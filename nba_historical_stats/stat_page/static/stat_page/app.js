@@ -35,6 +35,7 @@ function createTableRowData(data) {
 
 //Random player button functionality
 //Add async functionality?
+//Needs fail safe for when there is no data (DaSean Butler)
 function revealRandomPlayer() {
     toShow = document.querySelector("#randomPlayer");
     toShow.classList.remove('hidden');
@@ -52,6 +53,7 @@ function revealRandomPlayer() {
         return response.json() //Convert response to JSON
     })
     .then(data => {
+        console.log(data.player_career_stats)
         fullName = data["first_name"] + " " + data["last_name"]
         anchorTag.href = data['bb_ref_link']
         anchorTag.innerText = fullName
