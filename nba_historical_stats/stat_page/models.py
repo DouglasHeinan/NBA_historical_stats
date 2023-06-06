@@ -1,15 +1,19 @@
 from django.db import models
 
 
-class AllPlayers(models.Model):
+class Player(models.Model):
     player_id = models.IntegerField(primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     is_active = models.BooleanField()
     bb_ref_link = models.URLField()
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class PlayerStats(model.Model):
+    year = models.CharField(max_length=25)
     gp = models.IntegerField(null=True, default=0)
     gs = models.IntegerField(null=True, default=0)
     min = models.FloatField(null=True, default=0.0)
@@ -31,9 +35,10 @@ class PlayerStats(model.Model):
     tov = models.FloatField(null=True, default=0.0)
     pf = models.FloatField(null=True, default=0.0)
     pts = models.FloatField(null=True, default=0.0)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
 
 
-class AllTeams(models.Model):
+class Team(models.Model):
     team_id = models.IntegerField(primary_key=True)
     full_name = models.CharField(max_length=50)
     team_city = models.CharField(max_length=50)

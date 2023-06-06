@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django_pandas.managers import DataFrameManager
-from .models import AllPlayers, AllTeams
+from .models import Player, Team, PlayerStats
 from .admin import TEAM_COLORS_AND_LOGOS
 from nba_api.stats.static import players, teams
 from nba_api.stats.endpoints import playercareerstats
@@ -14,7 +14,9 @@ import pandas
 
 
 def home(request):
+    # ***THIS NEEDS TO BE CALLED IN ITS OWN FUNC***
     update_db()
+    # ******
     all_players = AllPlayers.objects.all()
     all_teams = AllTeams.objects.all()
     context = {
@@ -50,6 +52,13 @@ def create_player_db_entries(all_players):
             bb_ref_link=f"https://www.basketball-reference.com/players/{player['last_name'][0].lower()}/{(player['last_name'][0:5]).lower()}{player['first_name'][0:2].lower()}01.html"
         )
         new_player.save()
+
+
+def createPlayerStatisticalDB(all_players):
+    for player in all_players:
+        raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
+        career_stats = raw_career.get_dict()
+
 
 
 def create_team_db_entries(all_teams):
