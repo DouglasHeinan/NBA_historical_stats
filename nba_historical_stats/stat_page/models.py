@@ -7,7 +7,9 @@ class AllPlayers(models.Model):
     last_name = models.CharField(max_length=100)
     is_active = models.BooleanField()
     bb_ref_link = models.URLField()
-    team_id = models.IntegerField(default="")
+
+
+class PlayerStats(model.Model):
     gp = models.IntegerField(null=True, default=0)
     gs = models.IntegerField(null=True, default=0)
     min = models.FloatField(null=True, default=0.0)
