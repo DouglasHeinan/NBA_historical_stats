@@ -12,10 +12,23 @@ class Player(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-class PlayerStats(model.Model):
+class Team(models.Model):
+    team_id = models.IntegerField(primary_key=True)
+    full_name = models.CharField(max_length=50)
+    team_city = models.CharField(max_length=50)
+    team_state = models.CharField(max_length=25)
+    team_abbreviation = models.CharField(max_length=5)
+    team_nickname = models.CharField(max_length=50)
+    team_color_one = models.CharField(max_length=7, default="")
+    team_color_two = models.CharField(max_length=7, default="")
+    team_logo = models.URLField(default="")
+    bb_ref_link = models.URLField()
+
+
+class PlayerStats(models.Model):
     year = models.CharField(max_length=25)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    age = models.IntegerField(max_length=3)
+    age = models.IntegerField()
     gp = models.IntegerField(null=True, default=0)
     gs = models.IntegerField(null=True, default=0)
     min = models.FloatField(null=True, default=0.0)
@@ -39,15 +52,3 @@ class PlayerStats(model.Model):
     pts = models.FloatField(null=True, default=0.0)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
 
-
-class Team(models.Model):
-    team_id = models.IntegerField(primary_key=True)
-    full_name = models.CharField(max_length=50)
-    team_city = models.CharField(max_length=50)
-    team_state = models.CharField(max_length=25)
-    team_abbreviation = models.CharField(max_length=5)
-    team_nickname = models.CharField(max_length=50)
-    team_color_one = models.CharField(max_length=7, default="")
-    team_color_two = models.CharField(max_length=7, default="")
-    team_logo = models.URLField(default="")
-    bb_ref_link = models.URLField()

@@ -52,42 +52,42 @@ def create_player_db_entries(all_players):
             bb_ref_link=f"https://www.basketball-reference.com/players/{player['last_name'][0].lower()}/{(player['last_name'][0:5]).lower()}{player['first_name'][0:2].lower()}01.html"
         )
         new_player.save()
+        create_player_statistical_db(new_player)
 
 
-def createPlayerStatisticalDB(all_players):
-    for player in all_players:
-        raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
-        career_stats = raw_career.get_dict()
-        year_by_year_stats = career_stats['resultSets'][0]["rowSet"]
-        for stat in year_by_year_stats:
-            new_entry = PlayerStats(
-                year=stat[1],
-                team=Team.objects.get(team_id=stat[3]),
-                age=stat[5],
-                gp=stat[6],
-                gs=stat[7],
-                min=stat[8],
-                fgm=stat[9],
-                fga=stat[10],
-                fg_pct=stat[11],
-                fg3m=stat[12],
-                fg3a=stat[13],
-                fg3_pct=stat[14],
-                ftm=stat=stat[15],
-                fta=stat[16],
-                ft_pct=stat[17],
-                oreb=stat[18],
-                dreb=stat[19],
-                treb=stat[20],
-                ast=stat[21],
-                stl=stat[22],
-                blk=stat[23],
-                tov=stat[24],
-                pf=stat[25],
-                pts=stat[26],
-                player=player
-            )
-            new_entry.save()
+def create_player_statistical_db(player):
+    raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
+    career_stats = raw_career.get_dict()
+    year_by_year_stats = career_stats['resultSets'][0]["rowSet"]
+    for stat in year_by_year_stats:
+        new_entry = PlayerStats(
+            year=stat[1],
+            team=Team.objects.get(team_id=stat[3]),
+            age=stat[5],
+            gp=stat[6],
+            gs=stat[7],
+            min=stat[8],
+            fgm=stat[9],
+            fga=stat[10],
+            fg_pct=stat[11],
+            fg3m=stat[12],
+            fg3a=stat[13],
+            fg3_pct=stat[14],
+            ftm=stat[15],
+            fta=stat[16],
+            ft_pct=stat[17],
+            oreb=stat[18],
+            dreb=stat[19],
+            treb=stat[20],
+            ast=stat[21],
+            stl=stat[22],
+            blk=stat[23],
+            tov=stat[24],
+            pf=stat[25],
+            pts=stat[26],
+            player=player
+        )
+        new_entry.save()
 
 
 
