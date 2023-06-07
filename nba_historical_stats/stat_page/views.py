@@ -17,8 +17,8 @@ def home(request):
     # ***THIS NEEDS TO BE CALLED IN ITS OWN FUNC***
     update_db()
     # ******
-    all_players = AllPlayers.objects.all()
-    all_teams = AllTeams.objects.all()
+    all_players = Player.objects.all()
+    all_teams = Team.objects.all()
     context = {
         'players': all_players,
         'teams': all_teams
@@ -32,11 +32,11 @@ def update_db():
     new_players = []
     new_teams = []
     for player in all_players:
-        if not AllPlayers.objects.filter(player_id=player["id"]).exists():
+        if not Player.objects.filter(player_id=player["id"]).exists():
             new_players.append(player)
     create_player_db_entries(new_players)
     for team in all_teams:
-        if not AllTeams.objects.filter(team_id=team["id"]).exists():
+        if not Team.objects.filter(team_id=team["id"]).exists():
             new_teams.append(team)
     create_team_db_entries(new_teams)
     check_team_color_logo_entries()
@@ -44,7 +44,7 @@ def update_db():
 
 def create_player_db_entries(all_players):
     for player in all_players:
-        new_player = AllPlayers(
+        new_player = Player(
             player_id=player["id"],
             first_name=player["first_name"],
             last_name=player["last_name"],
@@ -58,12 +58,42 @@ def createPlayerStatisticalDB(all_players):
     for player in all_players:
         raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
         career_stats = raw_career.get_dict()
+        year_by_year_stats = career_stats['resultSets'][0]["rowSet"]
+        for stat in year_by_year_stats:
+            new_entry = PlayerStats(
+                year=stat[1],
+                team=Team.objects.get(team_id=stat[3]),
+                age=stat[5],
+                gp=stat[6],
+                gs=stat[7],
+                min=stat[8],
+                fgm=stat[9],
+                fga=stat[10],
+                fg_pct=stat[11],
+                fg3m=stat[12],
+                fg3a=stat[13],
+                fg3_pct=stat[14],
+                ftm=stat=stat[15],
+                fta=stat[16],
+                ft_pct=stat[17],
+                oreb=stat[18],
+                dreb=stat[19],
+                treb=stat[20],
+                ast=stat[21],
+                stl=stat[22],
+                blk=stat[23],
+                tov=stat[24],
+                pf=stat[25],
+                pts=stat[26],
+                player=player
+            )
+            new_entry.save()
 
 
 
 def create_team_db_entries(all_teams):
     for team in all_teams:
-        new_team = AllTeams(
+        new_team = Team(
             team_id=team["id"],
             full_name=team["full_name"],
             team_city=team["city"],
@@ -76,7 +106,7 @@ def create_team_db_entries(all_teams):
 
 
 def check_team_color_logo_entries():
-    all_teams = AllTeams.objects.all()
+    all_teams = Team.objects.all()
     for team in all_teams:
         if not team.team_logo:
             team.team_color_one = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][0]
@@ -91,11 +121,11 @@ def about(request):
 
 def rando_player(request):
     player_ids = []
-    all_players = AllPlayers.objects.all()
+    all_players = Player.objects.all()
     for player in all_players:
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
-    rand_player = AllPlayers.objects.get(player_id=rand_int)
+    rand_player = Player.objects.get(player_id=rand_int)
     raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=rand_player.player_id)
     career_stats = raw_career.get_dict()
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
