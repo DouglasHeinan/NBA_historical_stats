@@ -31,15 +31,15 @@ def update_db():
     all_teams = teams.get_teams()
     new_players = []
     new_teams = []
-    for player in all_players:
-        if not Player.objects.filter(player_id=player["id"]).exists():
-            new_players.append(player)
-    create_player_db_entries(new_players)
     for team in all_teams:
         if not Team.objects.filter(team_id=team["id"]).exists():
             new_teams.append(team)
     create_team_db_entries(new_teams)
     check_team_color_logo_entries()
+    for player in all_players:
+        if not Player.objects.filter(player_id=player["id"]).exists():
+            new_players.append(player)
+    create_player_db_entries(new_players)
 
 
 def create_player_db_entries(all_players):
@@ -62,7 +62,7 @@ def create_player_statistical_db(player):
     for stat in year_by_year_stats:
         new_entry = PlayerStats(
             year=stat[1],
-            team=Team.objects.get(team_id=stat[3]),
+            team=stat[4],
             age=stat[5],
             gp=stat[6],
             gs=stat[7],

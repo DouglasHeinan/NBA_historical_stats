@@ -27,7 +27,7 @@ class Team(models.Model):
 
 class PlayerStats(models.Model):
     year = models.CharField(max_length=25)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    team = models.CharField(max_length=3)
     age = models.IntegerField()
     gp = models.IntegerField(null=True, default=0)
     gs = models.IntegerField(null=True, default=0)
