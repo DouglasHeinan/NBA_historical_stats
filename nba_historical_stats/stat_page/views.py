@@ -1,16 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django_pandas.managers import DataFrameManager
-from .models import Player, Team, PlayerYearlyStats
+from .models import Player, Team, PlayerYearlyStats, PlayerCareerStats
 from .admin import TEAM_COLORS_AND_LOGOS
 from nba_api.stats.static import players, teams
 from nba_api.stats.endpoints import playercareerstats
 import random
 import json
 import pandas
-
-
-
 
 
 def home(request):
@@ -40,6 +37,12 @@ def update_db():
         if not Player.objects.filter(player_id=player["id"]).exists():
             new_players.append(player)
     create_player_db_entries(new_players)
+#     Temporary code to be re-written after databases have been completely built*******
+#     ***********************************************************************
+    for player in Player.objects.all():
+        if not PlayerCareerStats.objects.filter(player=player).exists():
+            create_player_statistical_db(player)
+
 
 
 def create_player_db_entries(all_players):
@@ -56,13 +59,13 @@ def create_player_db_entries(all_players):
 
 
 def create_player_statistical_db(player):
-    print(f"{player.first_name} {player.last_name}")
+    print(player.first_name + " " + player.last_name)
     raw_stats = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
     all_player_stats = raw_stats.get_dict()
-    year_by_year_stats = all_player_stats['resultSets'][0]['rowSet']
-    create_year_by_year_stat_table(year_by_year_stats)
+    # year_by_year_stats = all_player_stats['resultSets'][0]['rowSet']
+    # create_year_by_year_stat_entry(year_by_year_stats, player)
     career_stats = all_player_stats['resultSets'][1]['rowSet']
-    create_career_stat_entry(career_stats)
+    create_career_stat_entry(career_stats, player)
 
 
 
@@ -113,7 +116,7 @@ def rando_player(request):
         return JsonResponse(player)
 
 
-def create_year_by_year_stat_table(stats):
+def create_year_by_year_stat_entry(stats, player):
     for stat in stats:
         new_entry = PlayerYearlyStats(
             year=stat[1],
@@ -145,9 +148,9 @@ def create_year_by_year_stat_table(stats):
         new_entry.save()
 
 
-def create_career_stat_table(stats):
+def create_career_stat_entry(stats, player):
     for stat in stats:
-        new_entry = PlayerYearlyStats(
+        new_entry = PlayerCareerStats(
             gp=stat[3],
             gs=stat[4],
             min=stat[5],
