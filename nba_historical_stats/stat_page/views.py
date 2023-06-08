@@ -56,6 +56,7 @@ def create_player_db_entries(all_players):
 
 
 def create_player_statistical_db(player):
+    print(f"{player.first_name} {player.last_name}")
     raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
     career_stats = raw_career.get_dict()
     year_by_year_stats = career_stats['resultSets'][0]["rowSet"]
