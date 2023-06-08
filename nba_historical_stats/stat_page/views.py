@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django_pandas.managers import DataFrameManager
-from .models import Player, Team, PlayerStats
+from .models import Player, Team, PlayerYearlyStats
 from .admin import TEAM_COLORS_AND_LOGOS
 from nba_api.stats.static import players, teams
 from nba_api.stats.endpoints import playercareerstats
@@ -57,38 +57,12 @@ def create_player_db_entries(all_players):
 
 def create_player_statistical_db(player):
     print(f"{player.first_name} {player.last_name}")
-    raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
-    career_stats = raw_career.get_dict()
-    year_by_year_stats = career_stats['resultSets'][0]["rowSet"]
-    for stat in year_by_year_stats:
-        new_entry = PlayerStats(
-            year=stat[1],
-            team=stat[4],
-            age=stat[5],
-            gp=stat[6],
-            gs=stat[7],
-            min=stat[8],
-            fgm=stat[9],
-            fga=stat[10],
-            fg_pct=stat[11],
-            fg3m=stat[12],
-            fg3a=stat[13],
-            fg3_pct=stat[14],
-            ftm=stat[15],
-            fta=stat[16],
-            ft_pct=stat[17],
-            oreb=stat[18],
-            dreb=stat[19],
-            treb=stat[20],
-            ast=stat[21],
-            stl=stat[22],
-            blk=stat[23],
-            tov=stat[24],
-            pf=stat[25],
-            pts=stat[26],
-            player=player
-        )
-        new_entry.save()
+    raw_stats = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
+    all_player_stats = raw_stats.get_dict()
+    year_by_year_stats = all_player_stats['resultSets'][0]['rowSet']
+    create_year_by_year_stat_table(year_by_year_stats)
+    career_stats = all_player_stats['resultSets'][1]['rowSet']
+    create_career_stat_entry(career_stats)
 
 
 
@@ -138,6 +112,66 @@ def rando_player(request):
         }
         return JsonResponse(player)
 
+
+def create_year_by_year_stat_table(stats):
+    for stat in stats:
+        new_entry = PlayerYearlyStats(
+            year=stat[1],
+            team=stat[4],
+            age=stat[5],
+            gp=stat[6],
+            gs=stat[7],
+            min=stat[8],
+            fgm=stat[9],
+            fga=stat[10],
+            fg_pct=stat[11],
+            fg3m=stat[12],
+            fg3a=stat[13],
+            fg3_pct=stat[14],
+            ftm=stat[15],
+            fta=stat[16],
+            ft_pct=stat[17],
+            oreb=stat[18],
+            dreb=stat[19],
+            treb=stat[20],
+            ast=stat[21],
+            stl=stat[22],
+            blk=stat[23],
+            tov=stat[24],
+            pf=stat[25],
+            pts=stat[26],
+            player=player
+        )
+        new_entry.save()
+
+
+def create_career_stat_table(stats):
+    for stat in stats:
+        new_entry = PlayerYearlyStats(
+            gp=stat[3],
+            gs=stat[4],
+            min=stat[5],
+            fgm=stat[6],
+            fga=stat[7],
+            fg_pct=stat[8],
+            fg3m=stat[9],
+            fg3a=stat[10],
+            fg3_pct=stat[11],
+            ftm=stat[12],
+            fta=stat[13],
+            ft_pct=stat[14],
+            oreb=stat[15],
+            dreb=stat[16],
+            treb=stat[17],
+            ast=stat[18],
+            stl=stat[19],
+            blk=stat[20],
+            tov=stat[21],
+            pf=stat[22],
+            pts=stat[23],
+            player=player
+        )
+        new_entry.save()
 
 
 

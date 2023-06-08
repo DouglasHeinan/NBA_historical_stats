@@ -25,7 +25,7 @@ class Team(models.Model):
     bb_ref_link = models.URLField()
 
 
-class PlayerStats(models.Model):
+class PlayerYearlyStats(models.Model):
     year = models.CharField(max_length=25)
     team = models.CharField(max_length=3)
     age = models.IntegerField()
@@ -52,3 +52,27 @@ class PlayerStats(models.Model):
     pts = models.FloatField(null=True, default=0.0)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
 
+
+class PlayerCareerStats(models.Model):
+    gp = models.IntegerField(null=True, default=0)
+    gs = models.IntegerField(null=True, default=0)
+    min = models.FloatField(null=True, default=0.0)
+    fgm = models.FloatField(null=True, default=0.0)
+    fga = models.FloatField(null=True, default=0.0)
+    fg_pct = models.FloatField(null=True, default=0.0)
+    fg3m = models.FloatField(null=True, default=0.0)
+    fg3a = models.FloatField(null=True, default=0.0)
+    fg3_pct = models.FloatField(null=True, default=0.0)
+    ftm = models.FloatField(null=True, default=0.0)
+    fta = models.FloatField(null=True, default=0.0)
+    ft_pct = models.FloatField(null=True, default=0.0)
+    oreb = models.FloatField(null=True, default=0.0)
+    dreb = models.FloatField(null=True, default=0.0)
+    treb = models.FloatField(null=True, default=0.0)
+    ast = models.FloatField(null=True, default=0.0)
+    stl = models.FloatField(null=True, default=0.0)
+    blk = models.FloatField(null=True, default=0.0)
+    tov = models.FloatField(null=True, default=0.0)
+    pf = models.FloatField(null=True, default=0.0)
+    pts = models.FloatField(null=True, default=0.0)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
