@@ -106,19 +106,42 @@ def rando_player(request):
     all_players = Player.objects.all()
     for player in all_players:
         player_ids.append(player.player_id)
-    # rand_int = random.choice(player_ids)
-    rand_int = 202392
+    rand_int = random.choice(player_ids)
     rand_player = Player.objects.get(player_id=rand_int)
-    raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=rand_player.player_id)
-    career_stats = raw_career.get_dict()
+
+    career_stats = PlayerCareerStats.objects.get(player_id=rand_int)
+
+    # raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=rand_player.player_id)
+
+    # career_stats = raw_career.get_dict()
+    all_fields = PlayerCareerStats._meta.get_fields()
+    # print(create_js_stat_dict(career_stats, all_fields))
+    # for field in all_fields:
+    #     print(field.name)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = {
             "first_name": rand_player.first_name,
             "last_name": rand_player.last_name,
-            "bb_ref_link": rand_player.bb_ref_link,
-            "player_career_stats": career_stats
+            "bb_ref_link": rand_player.bb_ref_link
         }
-        return JsonResponse(player)
+        stats = create_js_stat_dict(career_stats, all_fields)
+        return JsonResponse(player, stats)
+
+    # player = {
+    #     "first_name": rand_player.first_name,
+    #     "last_name": rand_player.last_name,
+    #     "bb_ref_link": rand_player.bb_ref_link,
+    #     "player_career_stats": career_stats
+    # }
+
+
+def create_js_stat_dict(career_stats, all_fields):
+    js_dict = {}
+    for i in range(len(all_fields) - 1):
+        js_dict[all_fields[i].name] = getattr(career_stats, all_fields[i].name)
+    return js_dict
+
+
 
 
 def create_year_by_year_stat_entry(stats, player):

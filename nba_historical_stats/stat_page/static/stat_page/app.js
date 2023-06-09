@@ -55,6 +55,8 @@ function revealRandomPlayer() {
         fullName = data["first_name"] + " " + data["last_name"]
         anchorTag.href = data['bb_ref_link']
         anchorTag.innerText = fullName
+        console.log(data.career_stats)
+
         has_value = data["player_career_stats"]["resultSets"][1]["rowSet"]
         if (has_value.length > 0) {
             createTableRowHeaders(data);
