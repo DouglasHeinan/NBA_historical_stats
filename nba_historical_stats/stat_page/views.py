@@ -13,7 +13,7 @@ import requests
 
 def home(request):
     # ***THIS NEEDS TO BE CALLED IN ITS OWN FUNC***
-    update_db()
+    # update_db()
     # ******
     all_players = Player.objects.all()
     all_teams = Team.objects.all()
@@ -56,11 +56,9 @@ def create_player_db_entries(all_players):
 
 def create_player_statistical_db(player, stat_group):
     print(player.first_name + " " + player.last_name)
+    print(player.player_id)
     raw_stats = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
     all_player_stats = raw_stats.get_dict()
-    if player.first_name == 'Ken':
-        print(all_player_stats["resultSets"][0]["headers"])
-        print(all_player_stats["resultSets"][0]["rowSet"])
     if stat_group == "yearly":
         year_by_year_stats = all_player_stats['resultSets'][0]['rowSet']
         create_year_by_year_stat_entry(year_by_year_stats, player)
@@ -108,7 +106,8 @@ def rando_player(request):
     all_players = Player.objects.all()
     for player in all_players:
         player_ids.append(player.player_id)
-    rand_int = random.choice(player_ids)
+    # rand_int = random.choice(player_ids)
+    rand_int = 202392
     rand_player = Player.objects.get(player_id=rand_int)
     raw_career = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=rand_player.player_id)
     career_stats = raw_career.get_dict()
