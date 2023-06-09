@@ -1,20 +1,20 @@
 //Table creation functions
 function createTableRowHeaders(data) {
     const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
-    const testTest = document.querySelectorAll(".tableHeader")
+//    const testTest = document.querySelectorAll(".tableHeader")
     if (headersNeeded) {
-    rowNames = data["player_career_stats"]["resultSets"][1]["headers"]
-        for (let i = 0; i < rowNames.length; i++) {
-            const colName = document.createElement("th");
-            colName.classList.add("tableHeader")
-            colName.innerText = rowNames[i];
-            careerTableColNames.insertAdjacentElement("beforeend", colName)
+        const rowNames = Object.keys(data)
+            for (let i = 1; i < rowNames.length; i++) {
+                const colName = document.createElement("th");
+                colName.classList.add("tableHeader")
+                colName.innerText = rowNames[i];
+                careerTableColNames.insertAdjacentElement("beforeend", colName)
         }
     }
 }
 
 function createTableRowData(data) {
-    const rowData = data["player_career_stats"]["resultSets"][1]["rowSet"][0]
+    const rowData = Object.values(data)
     const dataPresent = document.querySelectorAll(".tableData") != [];
     if (dataPresent) {
         tableData = document.querySelectorAll(".tableData");
@@ -22,7 +22,7 @@ function createTableRowData(data) {
             tableData[i].remove()
         }
     }
-    for (let i = 0; i < rowData.length; i++) {
+    for (let i = 1; i < rowData.length; i++) {
         const colData = document.createElement("td");
         colData.classList.add("tableData")
         if (!rowData[i]) {
@@ -52,15 +52,15 @@ function revealRandomPlayer() {
         return response.json() //Convert response to JSON
     })
     .then(data => {
-        fullName = data["first_name"] + " " + data["last_name"]
-        anchorTag.href = data['bb_ref_link']
+        fullName = data[0]["first_name"] + " " + data[0]["last_name"]
+        anchorTag.href = data[0]['bb_ref_link']
         anchorTag.innerText = fullName
-        console.log(data.career_stats)
 
-        has_value = data["player_career_stats"]["resultSets"][1]["rowSet"]
-        if (has_value.length > 0) {
-            createTableRowHeaders(data);
-            createTableRowData(data);
+        has_value = data[1]
+        if (has_value) {
+//            console.log(data[1]["id"])
+            createTableRowHeaders(data[1]);
+            createTableRowData(data[1]);
         }
     })
 }
