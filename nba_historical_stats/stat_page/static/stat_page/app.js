@@ -25,8 +25,9 @@ function createTableRowData(data) {
     for (let i = 1; i < rowData.length; i++) {
         const colData = document.createElement("td");
         colData.classList.add("tableData")
+        colData.style.textAlign = "center";
         if (!rowData[i]) {
-            rowData[i] = 'N/A'
+            rowData[i] = '-'
         }
         colData.innerText = rowData[i];
         careerTableData.insertAdjacentElement("beforeend", colData)

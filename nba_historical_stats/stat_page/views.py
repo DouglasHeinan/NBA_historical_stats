@@ -24,6 +24,7 @@ def home(request):
     return render(request, 'stat_page/stat_page.html', context)
 
 
+# db update player functions*******************************************
 def update_db():
     all_players = players.get_players()
     all_teams = teams.get_teams()
@@ -73,67 +74,6 @@ def update_player_stats():
             create_player_statistical_db(player, 'yearly')
         if not PlayerCareerStats.objects.filter(player=player).exists():
             create_player_statistical_db(player, 'career')
-
-
-
-
-def create_team_db_entries(all_teams):
-    for team in all_teams:
-        new_team = Team(
-            team_id=team["id"],
-            full_name=team["full_name"],
-            team_city=team["city"],
-            team_state=team["state"],
-            team_abbreviation=team["abbreviation"],
-            team_nickname=team["nickname"],
-            bb_ref_link=f"https://www.basketball-reference.com/teams/{team['abbreviation']}"
-        )
-        new_team.save()
-
-
-def check_team_color_logo_entries():
-    all_teams = Team.objects.all()
-    for team in all_teams:
-        if not team.team_logo:
-            team.team_color_one = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][0]
-            team.team_color_two = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][1]
-            team.team_logo = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][2]
-            team.save()
-
-
-def rando_player(request):
-    player_ids = []
-    all_players = Player.objects.all()
-    for player in all_players:
-        player_ids.append(player.player_id)
-    rand_int = random.choice(player_ids)
-    # rand_int = 986
-    rand_player = Player.objects.get(player_id=rand_int)
-    try:
-        career_stats = PlayerCareerStats.objects.get(player_id=rand_int)
-    except:
-        career_stats = None
-
-    all_fields = PlayerCareerStats._meta.get_fields()
-
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        player = {
-            "first_name": rand_player.first_name,
-            "last_name": rand_player.last_name,
-            "bb_ref_link": rand_player.bb_ref_link
-        }
-        if career_stats:
-            stats = create_js_stat_dict(career_stats, all_fields)
-        else: stats = None
-        return JsonResponse([player, stats], safe=False)
-
-
-
-def create_js_stat_dict(career_stats, all_fields):
-    js_dict = {}
-    for i in range(len(all_fields) - 1):
-        js_dict[all_fields[i].name] = getattr(career_stats, all_fields[i].name)
-    return js_dict
 
 
 
@@ -196,6 +136,72 @@ def create_career_stat_entry(stats, player):
             player=player
         )
         new_entry.save()
+
+
+# db update team functions*******************************************
+
+def create_team_db_entries(all_teams):
+    for team in all_teams:
+        new_team = Team(
+            team_id=team["id"],
+            full_name=team["full_name"],
+            team_city=team["city"],
+            team_state=team["state"],
+            team_abbreviation=team["abbreviation"],
+            team_nickname=team["nickname"],
+            bb_ref_link=f"https://www.basketball-reference.com/teams/{team['abbreviation']}"
+        )
+        new_team.save()
+
+
+def check_team_color_logo_entries():
+    all_teams = Team.objects.all()
+    for team in all_teams:
+        if not team.team_logo:
+            team.team_color_one = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][0]
+            team.team_color_two = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][1]
+            team.team_logo = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][2]
+            team.save()
+
+
+# rand_player functions*******************************************
+
+def rando_player(request):
+    rand_player, career_stats = determine_player()
+    all_fields = PlayerCareerStats._meta.get_fields()
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        player = {
+            "first_name": rand_player.first_name,
+            "last_name": rand_player.last_name,
+            "bb_ref_link": rand_player.bb_ref_link
+        }
+        if career_stats:
+            stats = create_js_stat_dict(career_stats, all_fields)
+        else: stats = None
+        return JsonResponse([player, stats], safe=False)
+
+
+def determine_player():
+    player_ids = []
+    all_players = Player.objects.all()
+    for player in all_players:
+        player_ids.append(player.player_id)
+    rand_int = random.choice(player_ids)
+    rand_player = Player.objects.get(player_id=rand_int)
+    try:
+        career_stats = PlayerCareerStats.objects.get(player_id=rand_int)
+    except:
+        career_stats = None
+    return rand_player, career_stats
+
+
+
+def create_js_stat_dict(career_stats, all_fields):
+    js_dict = {}
+    for i in range(len(all_fields) - 1):
+        js_dict[all_fields[i].name] = getattr(career_stats, all_fields[i].name)
+    return js_dict
 
 
 
