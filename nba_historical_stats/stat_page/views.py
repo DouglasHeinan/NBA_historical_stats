@@ -42,7 +42,9 @@ def update_db():
 # ***********************************************************************
     for player in Player.objects.all():
         if not PlayerCareerStats.objects.filter(player=player).exists():
-            create_player_statistical_db(player)
+            if player.last_name == "Badji":
+                print(player.player_id)
+                create_player_statistical_db(player)
 # ********************************************************************************
 
 def create_player_db_entries(all_players):
@@ -110,10 +112,6 @@ def check_team_color_logo_entries():
             team.team_color_two = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][1]
             team.team_logo = TEAM_COLORS_AND_LOGOS[team.team_abbreviation][2]
             team.save()
-
-
-def about(request):
-    return render(request, 'stat_page/about.html', {"title": "About"})
 
 
 def rando_player(request):
