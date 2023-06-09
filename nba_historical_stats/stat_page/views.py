@@ -38,14 +38,8 @@ def update_db():
         if not Player.objects.filter(player_id=player["id"]).exists():
             new_players.append(player)
     create_player_db_entries(new_players)
-# Temporary code to be re-written after databases have been completely built*******
-# ***********************************************************************
-    for player in Player.objects.all():
-        if not PlayerCareerStats.objects.filter(player=player).exists():
-            if player.last_name == "Badji":
-                print(player.player_id)
-                create_player_statistical_db(player)
-# ********************************************************************************
+    update_player_stats()
+
 
 def create_player_db_entries(all_players):
     for player in all_players:
@@ -60,33 +54,28 @@ def create_player_db_entries(all_players):
         create_player_statistical_db(new_player)
 
 
-def create_player_statistical_db(player):
+def create_player_statistical_db(player, stat_group):
     print(player.first_name + " " + player.last_name)
-
-
-    # url = f"https://stats.nba.com/stats/playercareerstats?LeagueID=&PerMode=Totals&PlayerID={player.player_id}"
-    # headers = {
-    #     'Host': 'stats.nba.com',
-    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0',
-    #     'Accept': 'application/json, text/plain, */*',
-    #     'Accept-Language': 'en-US,en;q=0.5',
-    #     'Referer': 'https://stats.nba.com/',
-    #     'Accept-Encoding': 'gzip, deflate, br',
-    #     'Connection': 'keep-alive',
-    #     'x-nba-stats-origin': 'stats',
-    #     'x-nba-stats-token': 'true'
-    # }
-    # resp_json = requests.get(url=url, headers=headers).json()
-    # print(resp_json)
-
-
     raw_stats = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
     all_player_stats = raw_stats.get_dict()
+    if player.first_name == 'Ken':
+        print(all_player_stats["resultSets"][0]["headers"])
+        print(all_player_stats["resultSets"][0]["rowSet"])
+    if stat_group == "yearly":
+        year_by_year_stats = all_player_stats['resultSets'][0]['rowSet']
+        create_year_by_year_stat_entry(year_by_year_stats, player)
+    elif stat_group == "career":
+        career_stats = all_player_stats['resultSets'][1]['rowSet']
+        create_career_stat_entry(career_stats, player)
 
-    # year_by_year_stats = all_player_stats['resultSets'][0]['rowSet']
-    # create_year_by_year_stat_entry(year_by_year_stats, player)
-    career_stats = all_player_stats['resultSets'][1]['rowSet']
-    create_career_stat_entry(career_stats, player)
+
+def update_player_stats():
+    for player in Player.objects.all():
+        if not PlayerYearlyStats.objects.filter(player=player).exists():
+            create_player_statistical_db(player, 'yearly')
+        if not PlayerCareerStats.objects.filter(player=player).exists():
+            create_player_statistical_db(player, 'career')
+
 
 
 

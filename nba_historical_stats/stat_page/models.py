@@ -27,7 +27,7 @@ class Team(models.Model):
 
 class PlayerYearlyStats(models.Model):
     year = models.CharField(max_length=25)
-    team = models.CharField(max_length=3)
+    team = models.CharField(null=True, max_length=3)
     age = models.IntegerField()
     gp = models.IntegerField(null=True, default=0)
     gs = models.IntegerField(null=True, default=0)
