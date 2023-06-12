@@ -202,7 +202,3 @@ def create_js_stat_dict(career_stats, all_fields):
     for i in range(len(all_fields) - 1):
         js_dict[all_fields[i].name] = getattr(career_stats, all_fields[i].name)
     return js_dict
-
-
-
-# Need graphs now...
