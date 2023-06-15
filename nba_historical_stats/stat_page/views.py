@@ -7,7 +7,7 @@ from nba_api.stats.static import players, teams
 from nba_api.stats.endpoints import playercareerstats
 import random
 import json
-import pandas
+import pandas as pd
 import requests
 
 
@@ -167,8 +167,9 @@ def check_team_color_logo_entries():
 # rand_player functions*******************************************
 
 def rando_player(request):
-    rand_player, career_stats = determine_player()
-    all_fields = PlayerCareerStats._meta.get_fields()
+    rand_player, career_stats, yearly_stats = determine_player()
+    all_career_fields = PlayerCareerStats._meta.get_fields()
+    all_yearly_fields = PlayerYearlyStats._meta.get_fields()
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = {
@@ -177,9 +178,12 @@ def rando_player(request):
             "bb_ref_link": rand_player.bb_ref_link
         }
         if career_stats:
-            stats = create_js_stat_dict(career_stats, all_fields)
-        else: stats = None
-        return JsonResponse([player, stats], safe=False)
+            career_stats = create_js_career_dict(career_stats, all_career_fields)
+            yearly_stats = create_js_yearly_dict(yearly_stats, all_yearly_fields)
+            df = pd.DataFrame.from_dict(yearly_stats)
+        else: career_stats = None
+        yearly_stats = None
+        return JsonResponse([player, career_stats, yearly_stats], safe=False)
 
 
 def determine_player():
@@ -191,14 +195,26 @@ def determine_player():
     rand_player = Player.objects.get(player_id=rand_int)
     try:
         career_stats = PlayerCareerStats.objects.get(player_id=rand_int)
+        yearly_stats = PlayerYearlyStats.objects.filter(player=rand_int)
     except:
         career_stats = None
-    return rand_player, career_stats
+        yearly_stats = None
+    return rand_player, career_stats, yearly_stats
 
 
-
-def create_js_stat_dict(career_stats, all_fields):
+def create_js_career_dict(stats, all_fields):
     js_dict = {}
     for i in range(len(all_fields) - 1):
-        js_dict[all_fields[i].name] = getattr(career_stats, all_fields[i].name)
+        js_dict[all_fields[i].name] = getattr(stats, all_fields[i].name)
     return js_dict
+
+
+def create_js_yearly_dict(stats, all_fields):
+    js_array = []
+    for stat in stats:
+        year_dict = {}
+        for i in range(len(all_fields) - 1):
+            year_dict[all_fields[i].name] = getattr(stat, all_fields[i].name)
+        js_array.append(year_dict)
+    return js_array
+
