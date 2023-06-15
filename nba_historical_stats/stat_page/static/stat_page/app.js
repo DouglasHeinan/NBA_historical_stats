@@ -59,9 +59,9 @@ function revealRandomPlayer() {
 
         has_value = data[1]
         if (has_value) {
-//            console.log(data[1]["id"])
             createTableRowHeaders(data[1]);
             createTableRowData(data[1]);
+            console.log(data[2])
         }
     })
 }

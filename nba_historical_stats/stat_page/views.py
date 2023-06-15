@@ -178,12 +178,12 @@ def rando_player(request):
             "bb_ref_link": rand_player.bb_ref_link
         }
         if career_stats:
-            career_stats = create_js_career_dict(career_stats, all_career_fields)
-            yearly_stats = create_js_yearly_dict(yearly_stats, all_yearly_fields)
-            df = pd.DataFrame.from_dict(yearly_stats)
-        else: career_stats = None
-        yearly_stats = None
-        return JsonResponse([player, career_stats, yearly_stats], safe=False)
+            career_stats_dict = create_js_career_dict(career_stats, all_career_fields)
+            yearly_stats_dict = create_js_yearly_dict(yearly_stats, all_yearly_fields)
+            # df = pd.DataFrame.from_dict(yearly_stats)
+            print(yearly_stats)
+        # else: career_stats, yearly_stats = None
+        return JsonResponse([player, career_stats_dict, yearly_stats_dict], safe=False)
 
 
 def determine_player():
@@ -210,11 +210,15 @@ def create_js_career_dict(stats, all_fields):
 
 
 def create_js_yearly_dict(stats, all_fields):
+    js_dict = {}
     js_array = []
     for stat in stats:
         year_dict = {}
         for i in range(len(all_fields) - 1):
             year_dict[all_fields[i].name] = getattr(stat, all_fields[i].name)
         js_array.append(year_dict)
-    return js_array
+        # key = year_dict["year"].split("-")[0][:2] + year_dict["year"].split("-")[1]
+        # js_dict[key] = year_dict
+    js_dict["all_years"] = js_array
+    return js_dict
 
