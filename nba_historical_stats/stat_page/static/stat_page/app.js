@@ -1,7 +1,6 @@
 //Table creation functions
 function createTableRowHeaders(data) {
     const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
-//    const testTest = document.querySelectorAll(".tableHeader")
     if (headersNeeded) {
         const rowNames = Object.keys(data)
             for (let i = 1; i < rowNames.length; i++) {
@@ -40,8 +39,10 @@ function revealRandomPlayer() {
     toShow = document.querySelector("#randomPlayer");
     toShow.classList.remove('hidden');
     anchorTag = document.querySelector("#randomPlayerLink");
-    careerTableColNames = document.querySelector("#careerRowNames");
-    careerTableData = document.querySelector("#careerDataRow")
+    careerTableColNames = document.querySelector("#careerPlayerRowNames");
+    careerTableData = document.querySelector("#careerPlayerDataRow")
+    yearlyTableRowNames = document.querySelector("#yearlyPlayerRowNames")
+    yearlyTableRowData = document.querySelector("#yearlyPlayerDataRow")
 
     fetch('rando_json/', {
         headers:{
@@ -61,7 +62,7 @@ function revealRandomPlayer() {
         if (has_value) {
             createTableRowHeaders(data[1]);
             createTableRowData(data[1]);
-            console.log(data[2])
+            console.log(data[2]["all_years"])
         }
     })
 }
