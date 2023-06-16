@@ -1,35 +1,35 @@
 //Table creation functions
-function createTableRowHeaders(data) {
-    const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
-    if (headersNeeded) {
-        const rowNames = Object.keys(data)
-            for (let i = 1; i < rowNames.length; i++) {
-                const colName = document.createElement("th");
-                colName.classList.add("tableHeader")
-                colName.innerText = rowNames[i];
-                careerTableColNames.insertAdjacentElement("beforeend", colName)
-        }
+function createTableRowHeaders(data, row) {
+    const rowNames = Object.keys(data)
+    for (let i = 1; i < rowNames.length; i++) {
+        const colName = document.createElement("th");
+        colName.classList.add("tableHeader")
+        colName.innerText = rowNames[i];
+        row.insertAdjacentElement("beforeend", colName)
     }
 }
 
-function createTableRowData(data) {
-    const rowData = Object.values(data)
-    const dataPresent = document.querySelectorAll(".tableData") != [];
+function deletePreviousData(dataPresent) {
     if (dataPresent) {
         tableData = document.querySelectorAll(".tableData");
         for (let i = 0; i < tableData.length; i++) {
             tableData[i].remove()
         }
     }
-    for (let i = 1; i < rowData.length; i++) {
+}
+
+
+function createTableData(data, table) {
+    values = Object.values(data)
+    for (let i = 1; i < values.length; i++) {
         const colData = document.createElement("td");
         colData.classList.add("tableData")
         colData.style.textAlign = "center";
-        if (!rowData[i]) {
-            rowData[i] = '-'
+        if (!values[i]) {
+            values[i] = '-'
         }
-        colData.innerText = rowData[i];
-        careerTableData.insertAdjacentElement("beforeend", colData)
+        colData.innerText = values[i];
+        table.insertAdjacentElement("beforeend", colData)
     }
 }
 
@@ -41,8 +41,7 @@ function revealRandomPlayer() {
     anchorTag = document.querySelector("#randomPlayerLink");
     careerTableColNames = document.querySelector("#careerPlayerRowNames");
     careerTableData = document.querySelector("#careerPlayerDataRow")
-    yearlyTableRowNames = document.querySelector("#yearlyPlayerRowNames")
-    yearlyTableRowData = document.querySelector("#yearlyPlayerDataRow")
+    yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames")
 
     fetch('rando_json/', {
         headers:{
@@ -58,11 +57,29 @@ function revealRandomPlayer() {
         anchorTag.href = data[0]['bb_ref_link']
         anchorTag.innerText = fullName
 
-        has_value = data[1]
-        if (has_value) {
-            createTableRowHeaders(data[1]);
-            createTableRowData(data[1]);
-            console.log(data[2]["all_years"])
+        careerTotals = data[1]
+        yearlyTotals = data[2]["all_years"]
+        const dataPresent = document.querySelectorAll(".tableData") != [];
+
+        if (dataPresent) {
+            deletePreviousData(dataPresent)
+        }
+        if (careerTotals) {
+            const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
+            if (headersNeeded) {
+                createTableRowHeaders(careerTotals, careerTableColNames);
+                createTableRowHeaders(yearlyTotals[0], yearlyTableColNames);
+            }
+
+            createTableData(careerTotals, careerTableData);
+            for (let i = 0; i < yearlyTotals.length; i++) {
+                if (i != 0) {
+                    const newRow = document.createElement("td");
+                    NewRow.classList.add("yearlyPlayerDataRow")
+                }
+                yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRows")
+                createTableData(yearlyTotals[i], yearlyTableData[-1])
+            }
         }
     })
 }
