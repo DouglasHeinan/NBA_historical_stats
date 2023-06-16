@@ -34,8 +34,7 @@ th, td {
 
 /*****************************MAIN PAGE*****************************/
 #randomPlayer {
-    margin-top: 1em;
-    margin-left: 1em;
+    margin: 1em;
 }
 
 #randomPlayerLink {
@@ -54,12 +53,21 @@ th, td {
     margin: 0 auto;
 }
 
+table {
+    border-spacing: 0 0.25em; /*margin between table lines*/
+    white-space: nowrap; /*keep data on one line*/
+}
+
 th {
-    width: 3px;
+    padding: 0 0.5em;
 }
 
 td {
-    white-space: no-wrap;
+    background-color: pink;
+    padding: 0 0.5em;
+}
+
+tr {
 }
 
 .tableDiv {
@@ -68,6 +76,10 @@ td {
     overflow: auto;
     white-space: no-wrap;
     text-align: center;
+}
+
+.tableData {
+    font-size: 0.75em;
 }
 /*******************************FOOTER******************************/
 #footer {
