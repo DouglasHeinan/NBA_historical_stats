@@ -48,6 +48,27 @@ th, td {
     text-align: center;
     margin: 1em 0;
 }
+
+#playerYearly, #playerCareer {
+    width: 95%;
+    margin: 0 auto;
+}
+
+th {
+    width: 3px;
+}
+
+td {
+    white-space: no-wrap;
+}
+
+.tableDiv {
+    margin-bottom: 2em;
+    background-color: #fff;
+    overflow: auto;
+    white-space: no-wrap;
+    text-align: center;
+}
 /*******************************FOOTER******************************/
 #footer {
     background-color: #fff;

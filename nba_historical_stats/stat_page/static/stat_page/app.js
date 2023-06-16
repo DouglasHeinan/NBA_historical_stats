@@ -33,16 +33,26 @@ function createTableData(data, table) {
     }
 }
 
+function deleteOldRows() {
+    const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
+    for (i = 1; i < toDelete.length; i++) {
+        toDelete[i].remove();
+    }
+}
+
+
 //Random player button functionality
 //Add async functionality?
 function revealRandomPlayer() {
-    toShow = document.querySelector("#randomPlayer");
+    const toShow = document.querySelector("#randomPlayer");
     toShow.classList.remove('hidden');
-    anchorTag = document.querySelector("#randomPlayerLink");
-    careerTableColNames = document.querySelector("#careerPlayerRowNames");
-    careerTableData = document.querySelector("#careerPlayerDataRow")
-    yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames")
-    yearlyTable = document.querySelector("#playerYearly")
+    const anchorTag = document.querySelector("#randomPlayerLink");
+    const careerTableColNames = document.querySelector("#careerPlayerRowNames");
+    const careerTableData = document.querySelector("#careerPlayerDataRow")
+    const yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames")
+    const yearlyTable = document.querySelector("#playerYearly")
+
+    deleteOldRows()
 
     fetch('rando_json/', {
         headers:{
