@@ -42,6 +42,7 @@ function revealRandomPlayer() {
     careerTableColNames = document.querySelector("#careerPlayerRowNames");
     careerTableData = document.querySelector("#careerPlayerDataRow")
     yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames")
+    yearlyTable = document.querySelector("#playerYearly")
 
     fetch('rando_json/', {
         headers:{
@@ -74,11 +75,12 @@ function revealRandomPlayer() {
             createTableData(careerTotals, careerTableData);
             for (let i = 0; i < yearlyTotals.length; i++) {
                 if (i != 0) {
-                    const newRow = document.createElement("td");
-                    NewRow.classList.add("yearlyPlayerDataRow")
+                    const newRow = document.createElement("tr");
+                    newRow.classList.add("yearlyPlayerDataRow")
+                    yearlyTable.insertAdjacentElement("beforeend", newRow)
                 }
-                yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRows")
-                createTableData(yearlyTotals[i], yearlyTableData[-1])
+                yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow")
+                createTableData(yearlyTotals[i], yearlyTableData[yearlyTableData.length - 1]);
             }
         }
     })
