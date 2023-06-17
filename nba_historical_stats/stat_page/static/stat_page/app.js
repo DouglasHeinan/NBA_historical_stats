@@ -1,4 +1,4 @@
-//Table creation functions
+//Rando player table creation functions
 function createTableRowHeaders(data, row) {
     const rowNames = Object.keys(data)
     for (let i = 1; i < rowNames.length; i++) {
@@ -6,15 +6,6 @@ function createTableRowHeaders(data, row) {
         colName.classList.add("tableHeader")
         colName.innerText = rowNames[i];
         row.insertAdjacentElement("beforeend", colName)
-    }
-}
-
-function deletePreviousData(dataPresent) {
-    if (dataPresent) {
-        tableData = document.querySelectorAll(".tableData");
-        for (let i = 0; i < tableData.length; i++) {
-            tableData[i].remove()
-        }
     }
 }
 
@@ -33,6 +24,17 @@ function createTableData(data, table) {
     }
 }
 
+//Functions to remove old rand_player data
+function deletePreviousData(dataPresent) {
+    if (dataPresent) {
+        tableData = document.querySelectorAll(".tableData");
+        for (let i = 0; i < tableData.length; i++) {
+            tableData[i].remove()
+        }
+    }
+}
+
+
 function deleteOldRows() {
     const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
     for (i = 1; i < toDelete.length; i++) {
@@ -41,12 +43,23 @@ function deleteOldRows() {
 }
 
 
+function getStatsCreateLink(data) {
+    const anchorTag = document.querySelector("#randomPlayerLink");
+    fullName = data[0]["first_name"] + " " + data[0]["last_name"]
+    anchorTag.href = data[0]['bb_ref_link']
+    anchorTag.innerText = fullName
+
+    careerTotals = data[1]
+    yearlyTotals = data[2]["all_years"]
+    return [careerTotals, yearlyTotals]
+}
+
+
 //Random player button functionality
 //Add async functionality?
 function revealRandomPlayer() {
     const toShow = document.querySelector("#randomPlayer");
     toShow.classList.remove('hidden');
-    const anchorTag = document.querySelector("#randomPlayerLink");
     const careerTableColNames = document.querySelector("#careerPlayerRowNames");
     const careerTableData = document.querySelector("#careerPlayerDataRow")
     const yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames")
@@ -64,12 +77,8 @@ function revealRandomPlayer() {
         return response.json() //Convert response to JSON
     })
     .then(data => {
-        fullName = data[0]["first_name"] + " " + data[0]["last_name"]
-        anchorTag.href = data[0]['bb_ref_link']
-        anchorTag.innerText = fullName
-
-        careerTotals = data[1]
-        yearlyTotals = data[2]["all_years"]
+        const [careerTotals, yearlyTotals] = getStatsCreateLink(data)
+        console.log(careerTotals)
         const dataPresent = document.querySelectorAll(".tableData") != [];
 
         if (dataPresent) {
@@ -83,15 +92,16 @@ function revealRandomPlayer() {
             }
 
             createTableData(careerTotals, careerTableData);
-            for (let i = 0; i < yearlyTotals.length; i++) {
-                if (i != 0) {
-                    const newRow = document.createElement("tr");
-                    newRow.classList.add("yearlyPlayerDataRow")
-                    yearlyTable.insertAdjacentElement("beforeend", newRow)
-                }
-                yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow")
-                createTableData(yearlyTotals[i], yearlyTableData[yearlyTableData.length - 1]);
-            }
+            createYearlyTotalsRows(yearlyTotals)
+//            for (let i = 0; i < yearlyTotals.length; i++) {
+//                if (i != 0) {
+//                    const newRow = document.createElement("tr");
+//                    newRow.classList.add("yearlyPlayerDataRow")
+//                    yearlyTable.insertAdjacentElement("beforeend", newRow)
+//                }
+//                yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow")
+//                createTableData(yearlyTotals[i], yearlyTableData[yearlyTableData.length - 1]);
+//            }
         }
     })
 }
