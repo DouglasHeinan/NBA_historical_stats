@@ -1,4 +1,14 @@
-//Rando player table creation functions
+//********************Rando player table creation functions********************
+
+/**
+createTableHeader takes two arguments and returns nothing.
+
+It takes in a dictionary of player information and uses the keys to create, name, and insert
+each <th> element for the player table.
+
+@param data - A dictionary of player data
+@param - row - The specific table row in the html file this row of header is added to
+*/
 function createTableHeader(data, row) {
     const rowNames = Object.keys(data)
     for (let i = 1; i < rowNames.length; i++) {
@@ -9,7 +19,15 @@ function createTableHeader(data, row) {
     }
 }
 
+/**
+createTableData takes two arguments and returns nothing.
 
+This function takes in a dictionary of player data and uses the values to create, populate, and insert
+each <td> element for the player table.
+
+@param data - A dictionary of player data
+@param table - The specific table the player data is to be added to.
+*/
 function createTableData(data, table) {
     values = Object.values(data)
     for (let i = 1; i < values.length; i++) {
