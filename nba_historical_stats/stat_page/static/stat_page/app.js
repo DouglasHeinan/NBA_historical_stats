@@ -42,10 +42,47 @@ function createTableData(data, table) {
     }
 }
 
-//Functions to remove old rand_player data
+
+/**
+createTableRowHeaders takes two arguments and returns nothing.
+
+This function takes in two dictionaries and checks to see if <th> elements have been created
+for the data in those dictionaries. If this is the first time the randomPlayer function
+has been called, those <th> elements will not have been created. On all subsequent
+calls of that function, those elements will already exist and be populated and this function
+do nothing.
+
+@param careerTotals - A dictionary of table columns headers
+@param yearlyTotals - A dictionary of table columns headers
+*/
+function createTableRowHeaders(careerTotals, yearlyTotals) {
+    const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
+    if (headersNeeded) {
+        const careerTableColNames = document.querySelector("#careerPlayerRowNames");
+        const yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames");
+        createTableHeader(careerTotals, careerTableColNames);
+        createTableHeader(yearlyTotals, yearlyTableColNames);
+    }
+}
+
+
+function createYearlyTotalsRows(yearlyTotals) {
+    const yearlyTable = document.querySelector("#playerYearly")
+    for (let i = 0; i < yearlyTotals.length; i++) {
+        if (i != 0) {
+            const newRow = document.createElement("tr");
+            newRow.classList.add("yearlyPlayerDataRow")
+            yearlyTable.insertAdjacentElement("beforeend", newRow)
+        }
+        const yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow")
+        createTableData(yearlyTotals[i], yearlyTableData[yearlyTableData.length - 1]);
+    }
+}
+
+//********************Functions to remove old rand_player data********************
 function deletePreviousData(dataPresent) {
     if (dataPresent) {
-        tableData = document.querySelectorAll(".tableData");
+        const tableData = document.querySelectorAll(".tableData");
         for (let i = 0; i < tableData.length; i++) {
             tableData[i].remove()
         }
@@ -68,47 +105,20 @@ function checkForPreviousData() {
     }
 }
 
-
-function createTableRowHeaders(careerTotals, yearlyTotals) {
-    const careerTableColNames = document.querySelector("#careerPlayerRowNames");
-    const yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames");
-    const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
-    if (headersNeeded) {
-        createTableHeader(careerTotals, careerTableColNames);
-        createTableHeader(yearlyTotals[0], yearlyTableColNames);
-    }
-}
-
-
+//********************Basic player data functions********************
 function getStatsCreateLink(data) {
     const anchorTag = document.querySelector("#randomPlayerLink");
-    fullName = data[0]["first_name"] + " " + data[0]["last_name"]
+    const fullName = data[0]["first_name"] + " " + data[0]["last_name"]
     anchorTag.href = data[0]['bb_ref_link']
     anchorTag.innerText = fullName
-
-    careerTotals = data[1]
-    yearlyTotals = data[2]["all_years"]
+    const careerTotals = data[1]
+    const yearlyTotals = data[2]["all_years"]
     return [careerTotals, yearlyTotals]
 }
 
 
-function createYearlyTotalsRows(yearlyTotals) {
-    const yearlyTable = document.querySelector("#playerYearly")
-    for (let i = 0; i < yearlyTotals.length; i++) {
-        if (i != 0) {
-            const newRow = document.createElement("tr");
-            newRow.classList.add("yearlyPlayerDataRow")
-            yearlyTable.insertAdjacentElement("beforeend", newRow)
-        }
-        yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow")
-        createTableData(yearlyTotals[i], yearlyTableData[yearlyTableData.length - 1]);
-    }
-}
-
-
-//Random player button functionality
-//Add async functionality?
-function revealRandomPlayer() {
+//********************Main function********************
+function randomPlayer() {
     deleteOldRows()
     fetch('rando_json/', {
         headers:{
@@ -124,7 +134,7 @@ function revealRandomPlayer() {
         checkForPreviousData()
         if (careerTotals) {
             const careerTableData = document.querySelector("#careerPlayerDataRow")
-            createTableRowHeaders(careerTotals, yearlyTotals)
+            createTableRowHeaders(careerTotals, yearlyTotals[0])
             createTableData(careerTotals, careerTableData);
             createYearlyTotalsRows(yearlyTotals)
         }
@@ -132,7 +142,7 @@ function revealRandomPlayer() {
 }
 
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
-randomPlayerBtn.addEventListener("click", revealRandomPlayer)
+randomPlayerBtn.addEventListener("click", randomPlayer)
 
 
 
