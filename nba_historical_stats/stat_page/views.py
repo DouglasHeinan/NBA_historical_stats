@@ -220,4 +220,4 @@ def create_js_yearly_dict(stats, all_fields):
 
 # stat_charting functions******************************************
 def chart_stat(request):
-    return "HELLO"
+    return JsonResponse({"greeting" : "HELLO"})

@@ -118,8 +118,8 @@ function getStatsCreateLink(data) {
 
 
 function revealButton() {
-    const showButton = document.querySelector("#makeStat");
-    showButton.addEventListener("click", chartStat)
+    const showButton = document.querySelector("#makeChart");
+    showButton.classList.remove("hidden")
 }
 
 
@@ -144,6 +144,8 @@ function randomPlayer() {
             createTableRowHeaders(careerTotals, yearlyTotals[0])
             createTableData(careerTotals, careerTableData);
             createYearlyTotalsRows(yearlyTotals)
+            revealButton()
+//            chartStat()
         }
     })
 }
@@ -161,12 +163,13 @@ function chartStat() {
         }
     })
     .then(response => {
-        return response
+        return response.json()
     })
     .then(data => {
-        console.log(response)
+        console.log(data.greeting)
     })
 }
 
 
-
+const chartPlayerThrees = document.querySelector("#makeChart");
+chartPlayerThrees.addEventListener("click", chartStat)
