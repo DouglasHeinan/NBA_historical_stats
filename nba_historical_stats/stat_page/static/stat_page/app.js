@@ -117,9 +117,16 @@ function getStatsCreateLink(data) {
 }
 
 
+function revealButton() {
+    const showButton = document.querySelector("#makeStat");
+    showButton.addEventListener("click", chartStat)
+}
+
+
 //********************Main function********************
 function randomPlayer() {
     deleteOldRows()
+    revealButton()
     fetch('rando_json/', {
         headers:{
             'Content-Type': 'application/json',
@@ -143,6 +150,23 @@ function randomPlayer() {
 
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", randomPlayer)
+
+
+//*********************CHART MAKING FUNCTIONS*************************
+function chartStat() {
+    fetch('chart_stat/', {
+        headers:{
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+        }
+    })
+    .then(response => {
+        return response
+    })
+    .then(data => {
+        console.log(response)
+    })
+}
 
 
 

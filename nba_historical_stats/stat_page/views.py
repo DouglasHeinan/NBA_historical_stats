@@ -8,6 +8,7 @@ from nba_api.stats.endpoints import playercareerstats
 import random
 import json
 import pandas as pd
+import plotly.express as px
 import requests
 
 
@@ -165,7 +166,6 @@ def check_team_color_logo_entries():
 
 
 # rand_player functions*******************************************
-
 def rando_player(request):
     rand_player, career_stats, yearly_stats = determine_player()
     all_career_fields = PlayerCareerStats._meta.get_fields()
@@ -217,3 +217,7 @@ def create_js_yearly_dict(stats, all_fields):
     js_dict["all_years"] = js_array
     return js_dict
 
+
+# stat_charting functions******************************************
+def chart_stat(request):
+    return "HELLO"
