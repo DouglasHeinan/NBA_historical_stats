@@ -175,7 +175,8 @@ def rando_player(request):
         player = {
             "first_name": rand_player.first_name,
             "last_name": rand_player.last_name,
-            "bb_ref_link": rand_player.bb_ref_link
+            "bb_ref_link": rand_player.bb_ref_link,
+            "id" : rand_player.player_id
         }
         if career_stats:
             career_stats_dict = create_js_career_dict(career_stats, all_career_fields)

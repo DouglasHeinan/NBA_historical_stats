@@ -145,17 +145,23 @@ function randomPlayer() {
             createTableData(careerTotals, careerTableData);
             createYearlyTotalsRows(yearlyTotals)
             revealButton()
-//            chartStat()
         }
+        return data[0]["id"]
     })
 }
 
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
-randomPlayerBtn.addEventListener("click", randomPlayer)
+curPlayerID = randomPlayerBtn.addEventListener("click", randomPlayer)
+//randomPlayerBtn.addEventListener("click", function () {
+//    curPlayerID = randomPlayer();
+//    console.log(curPlayerID)
+//    console.log(randomPlayer())
+//})
+
 
 
 //*********************CHART MAKING FUNCTIONS*************************
-function chartStat() {
+function chartStat(evt, curPlayerID) {
     fetch('chart_stat/', {
         headers:{
             'Content-Type': 'application/json',
@@ -167,9 +173,12 @@ function chartStat() {
     })
     .then(data => {
         console.log(data.greeting)
+        console.log(curPlayerID)
     })
 }
 
 
 const chartPlayerThrees = document.querySelector("#makeChart");
-chartPlayerThrees.addEventListener("click", chartStat)
+chartPlayerThrees.addEventListener("click", (evt) => {
+    chartStat(evt, curPlayerID)
+});
