@@ -146,7 +146,7 @@ function randomPlayer() {
             createYearlyTotalsRows(yearlyTotals)
             revealButton()
         }
-        return data[0]["id"]
+//        return data[0]["id"]
     })
 }
 
@@ -161,24 +161,24 @@ curPlayerID = randomPlayerBtn.addEventListener("click", randomPlayer)
 
 
 //*********************CHART MAKING FUNCTIONS*************************
-function chartStat(evt, curPlayerID) {
-    fetch('chart_stat/', {
-        headers:{
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-        }
-    })
-    .then(response => {
-        return response.json()
-    })
-    .then(data => {
-        console.log(data.greeting)
-        console.log(curPlayerID)
-    })
-}
+//function chartStat(evt, curPlayerID) {
+//    fetch('chart_stat/', {
+//        headers:{
+//            'Content-Type': 'application/json',
+//            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+//        }
+//    })
+//    .then(response => {
+//        return response.json()
+//    })
+//    .then(data => {
+//        console.log(data.greeting)
+//        console.log(curPlayerID)
+//    })
+//}
 
 
-const chartPlayerThrees = document.querySelector("#makeChart");
-chartPlayerThrees.addEventListener("click", (evt) => {
-    chartStat(evt, curPlayerID)
-});
+//const chartPlayerThrees = document.querySelector("#makeChart");
+//chartPlayerThrees.addEventListener("click", (evt) => {
+//    chartStat(evt, curPlayerID)
+//});
