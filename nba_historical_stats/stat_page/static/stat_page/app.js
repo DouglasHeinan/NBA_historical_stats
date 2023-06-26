@@ -1,5 +1,12 @@
 //********************Rando player table creation functions********************
 
+//***********Random Color Change Stuff for the sake of changing color**********
+setTimeout(() => {
+    document.body.style.backgroundColor = 'grey';
+}, 1000)
+
+changeColor =
+
 /**
 createTableHeader takes two arguments and returns nothing.
 

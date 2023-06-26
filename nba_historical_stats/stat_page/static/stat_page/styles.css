@@ -4,7 +4,7 @@
 }
 
 body {
-    background-color: grey;
+    transition: background-color 1s;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
