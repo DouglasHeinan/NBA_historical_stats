@@ -126,31 +126,30 @@ function revealButton() {
 
 
 //********************Main function********************
-function randomPlayer() {
+//function randomPlayer() {
+const randomPlayer = async() => {
     deleteOldRows()
     revealButton()
-    fetch('rando_json/', {
+
+    const playerRes = await fetch('rando_json/', {
         headers:{
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
         }
-    })
-    .then(response => {
-        return response.json() //Convert response to JSON
-    })
-    .then(data => {
-        const [careerTotals, yearlyTotals] = getStatsCreateLink(data)
-        checkForPreviousData()
-        if (careerTotals) {
-            const careerTableData = document.querySelector("#careerPlayerDataRow")
-            createTableRowHeaders(careerTotals, yearlyTotals[0])
-            createTableData(careerTotals, careerTableData);
-            createYearlyTotalsRows(yearlyTotals)
-            revealButton()
-        }
-//        return data[0]["id"]
-    })
+    });
+    const playerData = await playerRes.json()
+    const [careerTotals, yearlyTotals] = await getStatsCreateLink(playerData)
+    checkForPreviousData()
+    if (careerTotals) {
+        const careerTableData = document.querySelector("#careerPlayerDataRow")
+        createTableRowHeaders(careerTotals, yearlyTotals[0])
+        createTableData(careerTotals, careerTableData);
+        createYearlyTotalsRows(yearlyTotals)
+        revealButton()
+    }
 }
+
+
 
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 curPlayerID = randomPlayerBtn.addEventListener("click", randomPlayer)
