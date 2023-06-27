@@ -125,8 +125,15 @@ function revealButton() {
 }
 
 
+function createAndPopulateTable(careerTotals, yearlyTotals) {
+        const careerTableData = document.querySelector("#careerPlayerDataRow")
+        createTableRowHeaders(careerTotals, yearlyTotals[0])
+        createTableData(careerTotals, careerTableData);
+        createYearlyTotalsRows(yearlyTotals)
+        revealButton()
+}
+
 //********************Main function********************
-//function randomPlayer() {
 const randomPlayer = async() => {
     deleteOldRows()
     revealButton()
@@ -141,11 +148,7 @@ const randomPlayer = async() => {
     const [careerTotals, yearlyTotals] = await getStatsCreateLink(playerData)
     checkForPreviousData()
     if (careerTotals) {
-        const careerTableData = document.querySelector("#careerPlayerDataRow")
-        createTableRowHeaders(careerTotals, yearlyTotals[0])
-        createTableData(careerTotals, careerTableData);
-        createYearlyTotalsRows(yearlyTotals)
-        revealButton()
+        createAndPopulateTable(careerTotals, yearlyTotals)
     }
 }
 
