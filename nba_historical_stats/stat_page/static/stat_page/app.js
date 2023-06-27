@@ -133,17 +133,21 @@ function createAndPopulateTable(careerTotals, yearlyTotals) {
         revealButton()
 }
 
-//********************Main function********************
-const randomPlayer = async() => {
-    deleteOldRows()
-    revealButton()
-
+const fetchData = async() => {
     const playerRes = await fetch('rando_json/', {
         headers:{
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
         }
     });
+    return playerRes;
+}
+
+//********************Main function********************
+const randomPlayer = async() => {
+    deleteOldRows()
+    revealButton()
+    const playerRes = await fetchData();
     const playerData = await playerRes.json()
     const [careerTotals, yearlyTotals] = await getStatsCreateLink(playerData)
     checkForPreviousData()
