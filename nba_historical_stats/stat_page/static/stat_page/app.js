@@ -1,6 +1,21 @@
-//********************Rando player table creation functions********************
+const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
+curPlayerID = randomPlayerBtn.addEventListener("click", randomPlayer)
 
-//***********Random Color Change Stuff for the sake of changing color**********
+//********************Main function********************
+const randomPlayer = async() => {
+    deleteOldRows()
+    revealButton()
+    const playerRes = await fetchData();
+    const playerData = await playerRes.json()
+    const [careerTotals, yearlyTotals] = await getStatsCreateLink(playerData)
+    checkForPreviousData()
+    if (careerTotals) {
+        createAndPopulateTable(careerTotals, yearlyTotals)
+    }
+}
+
+
+//********************Rando player table creation functions********************
 
 /**
 createTableHeader takes two arguments and returns nothing.
@@ -143,28 +158,8 @@ const fetchData = async() => {
     return playerRes;
 }
 
-//********************Main function********************
-const randomPlayer = async() => {
-    deleteOldRows()
-    revealButton()
-    const playerRes = await fetchData();
-    const playerData = await playerRes.json()
-    const [careerTotals, yearlyTotals] = await getStatsCreateLink(playerData)
-    checkForPreviousData()
-    if (careerTotals) {
-        createAndPopulateTable(careerTotals, yearlyTotals)
-    }
-}
 
 
-
-const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
-curPlayerID = randomPlayerBtn.addEventListener("click", randomPlayer)
-//randomPlayerBtn.addEventListener("click", function () {
-//    curPlayerID = randomPlayer();
-//    console.log(curPlayerID)
-//    console.log(randomPlayer())
-//})
 
 
 
