@@ -20,28 +20,30 @@ let curPlayer = null;
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await randomPlayer();
+    makeChart(curPlayer)
 })
 
 
 //********************Chart Player*******************************
-//function makeChart(player) {
-//	graphDiv = document.getElementById('plot');
-//	years = [];
-//	fg3_pcts = [];
-//	for (let i = 0; i < players["all_years"].length; i++) {
-//        year = players["all_years"][i]["year"]
-//	    years.push(year)
-//	}
-//	for (let i = 0; i < players["all_years"].length; i++) {
-//        fg3_pct = players["all_years"][i]["fg3_pct"]
-//	    fg3_pcts.push(fg_pct)
-//	}
-//
-//	Plotly.newPlot( graphDiv, [{
-//	x: years,
-//	y: [1, 2, 4, 8, 16] }], {
-//	margin: { t: 0 } } );
-//}
+function makeChart(player) {
+    yearsPlayed = player[2]["all_years"].length
+	graphDiv = document.getElementById('plot');
+	years = [];
+	fg3_pcts = [];
+	for (let i = 0; i < yearsPlayed.length; i++) {
+        year = player[2]["all_years"][i]["year"]
+	    years.push(year)
+	}
+	for (let i = 0; i < yearsPlayed.length; i++) {
+        fg3_pct = players["all_years"][i]["fg3_pct"]
+	    fg3_pcts.push(fg3_pct)
+	}
+
+	Plotly.newPlot( graphDiv, [{
+	x: years,
+	y: [1, 2, 4, 8, 16] }], {
+	margin: { t: 0 } } );
+}
 
 //********************Rando player table creation functions********************
 
