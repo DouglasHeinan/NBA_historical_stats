@@ -13,18 +13,35 @@ const randomPlayer = async() => {
     if (careerTotals) {
         createAndPopulateTable(careerTotals, yearlyTotals)
     }
-    return playerID
+    return playerData
 }
 
-let curPlayerID = null;
+let curPlayer = null;
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", async() => {
-    curPlayerID = await randomPlayer();
+    curPlayer = await randomPlayer();
 })
 
 
 //********************Chart Player*******************************
-
+//function makeChart(player) {
+//	graphDiv = document.getElementById('plot');
+//	years = [];
+//	fg3_pcts = [];
+//	for (let i = 0; i < players["all_years"].length; i++) {
+//        year = players["all_years"][i]["year"]
+//	    years.push(year)
+//	}
+//	for (let i = 0; i < players["all_years"].length; i++) {
+//        fg3_pct = players["all_years"][i]["fg3_pct"]
+//	    fg3_pcts.push(fg_pct)
+//	}
+//
+//	Plotly.newPlot( graphDiv, [{
+//	x: years,
+//	y: [1, 2, 4, 8, 16] }], {
+//	margin: { t: 0 } } );
+//}
 
 //********************Rando player table creation functions********************
 
@@ -193,7 +210,3 @@ const fetchData = async() => {
 //}
 
 
-//const chartPlayerThrees = document.querySelector("#makeChart");
-//chartPlayerThrees.addEventListener("click", (evt) => {
-//    chartStat(evt, curPlayerID)
-//});
