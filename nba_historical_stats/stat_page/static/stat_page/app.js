@@ -1,18 +1,29 @@
-const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
-curPlayerID = randomPlayerBtn.addEventListener("click", randomPlayer)
+//********************Main functions********************
 
-//********************Main function********************
+
+//***************Random Player**************************
 const randomPlayer = async() => {
+    curPlayerID = null
     deleteOldRows()
     revealButton()
     const playerRes = await fetchData();
     const playerData = await playerRes.json()
-    const [careerTotals, yearlyTotals] = await getStatsCreateLink(playerData)
+    const [careerTotals, yearlyTotals, playerID] = getStatsCreateLink(playerData)
     checkForPreviousData()
     if (careerTotals) {
         createAndPopulateTable(careerTotals, yearlyTotals)
     }
+    return playerID
 }
+
+let curPlayerID = null;
+const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
+randomPlayerBtn.addEventListener("click", async() => {
+    curPlayerID = await randomPlayer();
+})
+
+
+//********************Chart Player*******************************
 
 
 //********************Rando player table creation functions********************
@@ -130,7 +141,8 @@ function getStatsCreateLink(data) {
     anchorTag.innerText = fullName
     const careerTotals = data[1]
     const yearlyTotals = data[2]["all_years"]
-    return [careerTotals, yearlyTotals]
+    const id = data[1]["id"]
+    return [careerTotals, yearlyTotals, id]
 }
 
 
