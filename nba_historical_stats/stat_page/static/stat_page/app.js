@@ -29,19 +29,23 @@ function makeChart(player) {
     yearsPlayed = player[2]["all_years"].length
 	graphDiv = document.getElementById('plot');
 	years = [];
-	fg3_pcts = [];
-	for (let i = 0; i < yearsPlayed.length; i++) {
+	fg3Pcts = [];
+	for (let i = 0; i < yearsPlayed; i++) {
         year = player[2]["all_years"][i]["year"]
 	    years.push(year)
 	}
-	for (let i = 0; i < yearsPlayed.length; i++) {
-        fg3_pct = players["all_years"][i]["fg3_pct"]
-	    fg3_pcts.push(fg3_pct)
+	for (let i = 0; i < yearsPlayed; i++) {
+        fg3Pct = player[2]["all_years"][i]["fg3_pct"]
+        if (!fg3Pct) {
+            fg3Pct = 0;
+        }
+	    fg3Pcts.push(fg3Pct)
 	}
+	console.log(fg3Pcts)
 
 	Plotly.newPlot( graphDiv, [{
 	x: years,
-	y: [1, 2, 4, 8, 16] }], {
+	y: fg3Pcts }], {
 	margin: { t: 0 } } );
 }
 
