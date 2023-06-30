@@ -181,6 +181,9 @@ def rando_player(request):
         if career_stats:
             career_stats_dict = create_js_career_dict(career_stats, all_career_fields)
             yearly_stats_dict = create_js_yearly_dict(yearly_stats, all_yearly_fields)
+        else:
+            career_stats_dict = None
+            yearly_stats_dict = None
         return JsonResponse([player, career_stats_dict, yearly_stats_dict], safe=False)
 
 
@@ -218,7 +221,3 @@ def create_js_yearly_dict(stats, all_fields):
     js_dict["all_years"] = js_array
     return js_dict
 
-
-# stat_charting functions******************************************
-# def chart_stat(request):
-#     return JsonResponse({"greeting" : "HELLO"})

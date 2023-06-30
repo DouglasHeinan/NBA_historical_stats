@@ -3,45 +3,58 @@
 
 //***************Random Player**************************
 const randomPlayer = async() => {
-    curPlayerID = null
-    deleteOldRows()
-    revealButton()
+    curPlayerID = null;
+    deleteOldRows();
     const playerRes = await fetchData();
-    const playerData = await playerRes.json()
-    const [careerTotals, yearlyTotals, playerID] = getStatsCreateLink(playerData)
-    checkForPreviousData()
+    const playerData = await playerRes.json();
+    const [careerTotals, yearlyTotals] = getStatsCreateLink(playerData);
+    checkForPreviousData();
     if (careerTotals) {
-        createAndPopulateTable(careerTotals, yearlyTotals)
+        createAndPopulateTable(careerTotals, yearlyTotals);
+        toggleChartButton("show");
+    } else {
+        toggleChartButton("hidden");
     }
-    return playerData
+    return playerData;
 }
+
+
+const fetchData = async() => {
+    const playerRes = await fetch('rando_json/', {
+        headers:{
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+        }
+    });
+    return playerRes;
+}
+
 
 let curPlayer = null;
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await randomPlayer();
-    makeChart(curPlayer)
+//    makeChart(curPlayer);
 })
 
 
 //********************Chart Player*******************************
 function makeChart(player) {
-    yearsPlayed = player[2]["all_years"].length
+    yearsPlayed = player[2]["all_years"].length;
 	graphDiv = document.getElementById('plot');
 	years = [];
 	fg3Pcts = [];
 	for (let i = 0; i < yearsPlayed; i++) {
-        year = player[2]["all_years"][i]["year"]
-	    years.push(year)
+        year = player[2]["all_years"][i]["year"];
+	    years.push(year);
 	}
 	for (let i = 0; i < yearsPlayed; i++) {
-        fg3Pct = player[2]["all_years"][i]["fg3_pct"]
+        fg3Pct = player[2]["all_years"][i]["fg3_pct"];
         if (!fg3Pct) {
             fg3Pct = 0;
         }
-	    fg3Pcts.push(fg3Pct)
+	    fg3Pcts.push(fg3Pct);
 	}
-	console.log(fg3Pcts)
 
 	Plotly.newPlot( graphDiv, [{
 	x: years,
@@ -61,12 +74,12 @@ each <th> element for the player table.
 @param - row - The specific table row in the html file this row of header is added to
 */
 function createTableHeader(data, row) {
-    const rowNames = Object.keys(data)
+    const rowNames = Object.keys(data);
     for (let i = 1; i < rowNames.length; i++) {
         const colName = document.createElement("th");
-        colName.classList.add("tableHeader")
+        colName.classList.add("tableHeader");
         colName.innerText = rowNames[i];
-        row.insertAdjacentElement("beforeend", colName)
+        row.insertAdjacentElement("beforeend", colName);
     }
 }
 
@@ -80,16 +93,16 @@ each <td> element for the player table.
 @param table - The specific table the player data is to be added to.
 */
 function createTableData(data, table) {
-    values = Object.values(data)
+    values = Object.values(data);
     for (let i = 1; i < values.length; i++) {
         const colData = document.createElement("td");
-        colData.classList.add("tableData")
+        colData.classList.add("tableData");
         colData.style.textAlign = "center";
         if (!values[i]) {
-            values[i] = '-'
+            values[i] = '-';
         }
         colData.innerText = values[i];
-        table.insertAdjacentElement("beforeend", colData)
+        table.insertAdjacentElement("beforeend", colData);
     }
 }
 
@@ -118,14 +131,14 @@ function createTableRowHeaders(careerTotals, yearlyTotals) {
 
 
 function createYearlyTotalsRows(yearlyTotals) {
-    const yearlyTable = document.querySelector("#playerYearly")
+    const yearlyTable = document.querySelector("#playerYearly");
     for (let i = 0; i < yearlyTotals.length; i++) {
         if (i != 0) {
             const newRow = document.createElement("tr");
-            newRow.classList.add("yearlyPlayerDataRow")
-            yearlyTable.insertAdjacentElement("beforeend", newRow)
+            newRow.classList.add("yearlyPlayerDataRow");
+            yearlyTable.insertAdjacentElement("beforeend", newRow);
         }
-        const yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow")
+        const yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow");
         createTableData(yearlyTotals[i], yearlyTableData[yearlyTableData.length - 1]);
     }
 }
@@ -135,7 +148,7 @@ function deletePreviousData(dataPresent) {
     if (dataPresent) {
         const tableData = document.querySelectorAll(".tableData");
         for (let i = 0; i < tableData.length; i++) {
-            tableData[i].remove()
+            tableData[i].remove();
         }
     }
 }
@@ -152,67 +165,46 @@ function deleteOldRows() {
 function checkForPreviousData() {
     const dataPresent = document.querySelectorAll(".tableData") != [];
     if (dataPresent) {
-        deletePreviousData(dataPresent)
+        deletePreviousData(dataPresent);
     }
 }
 
 //********************Basic player data functions********************
 function getStatsCreateLink(data) {
     const anchorTag = document.querySelector("#randomPlayerLink");
-    const fullName = data[0]["first_name"] + " " + data[0]["last_name"]
-    anchorTag.href = data[0]['bb_ref_link']
-    anchorTag.innerText = fullName
-    const careerTotals = data[1]
-    const yearlyTotals = data[2]["all_years"]
-    const id = data[1]["id"]
-    return [careerTotals, yearlyTotals, id]
+    const fullName = data[0]["first_name"] + " " + data[0]["last_name"];
+    anchorTag.href = data[0]['bb_ref_link'];
+    anchorTag.innerText = fullName;
+    if (data[2]) {
+        const careerTotals = data[1];
+        const yearlyTotals = data[2]["all_years"];
+    } else {
+        careerTotals = null;
+        yearlyTotals = null;
+    }
+    return [careerTotals, yearlyTotals];
 }
 
 
-function revealButton() {
+function toggleChartButton(toggle) {
     const showButton = document.querySelector("#makeChart");
-    showButton.classList.remove("hidden")
+    console.log(toggle)
+    if (toggle == "show") {
+        showButton.classList.remove("hidden");
+    } else {
+        showButton.classList.add("hidden");
+    }
 }
 
 
 function createAndPopulateTable(careerTotals, yearlyTotals) {
-        const careerTableData = document.querySelector("#careerPlayerDataRow")
-        createTableRowHeaders(careerTotals, yearlyTotals[0])
+        const careerTableData = document.querySelector("#careerPlayerDataRow");
+        createTableRowHeaders(careerTotals, yearlyTotals[0]);
         createTableData(careerTotals, careerTableData);
-        createYearlyTotalsRows(yearlyTotals)
-        revealButton()
-}
-
-const fetchData = async() => {
-    const playerRes = await fetch('rando_json/', {
-        headers:{
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-        }
-    });
-    return playerRes;
+        createYearlyTotalsRows(yearlyTotals);
 }
 
 
 
-
-
-
-//*********************CHART MAKING FUNCTIONS*************************
-//function chartStat(evt, curPlayerID) {
-//    fetch('chart_stat/', {
-//        headers:{
-//            'Content-Type': 'application/json',
-//            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-//        }
-//    })
-//    .then(response => {
-//        return response.json()
-//    })
-//    .then(data => {
-//        console.log(data.greeting)
-//        console.log(curPlayerID)
-//    })
-//}
 
 
