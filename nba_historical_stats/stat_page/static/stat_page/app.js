@@ -9,6 +9,7 @@ const randomPlayer = async() => {
     const playerData = await playerRes.json();
     const [careerTotals, yearlyTotals] = getStatsCreateLink(playerData);
     checkForPreviousData();
+    console.log(playerData)
     if (careerTotals) {
         createAndPopulateTable(careerTotals, yearlyTotals);
         toggleChartButton("show");
@@ -34,7 +35,7 @@ let curPlayer = null;
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await randomPlayer();
-//    makeChart(curPlayer);
+    makeChart(curPlayer);
 })
 
 
@@ -42,24 +43,29 @@ randomPlayerBtn.addEventListener("click", async() => {
 function makeChart(player) {
     yearsPlayed = player[2]["all_years"].length;
 	graphDiv = document.getElementById('plot');
-	years = [];
-	fg3Pcts = [];
-	for (let i = 0; i < yearsPlayed; i++) {
-        year = player[2]["all_years"][i]["year"];
-	    years.push(year);
-	}
-	for (let i = 0; i < yearsPlayed; i++) {
-        fg3Pct = player[2]["all_years"][i]["fg3_pct"];
-        if (!fg3Pct) {
-            fg3Pct = 0;
-        }
-	    fg3Pcts.push(fg3Pct);
-	}
-
+	toGraphX = "year";
+	toGraphY = "min";
+	xAxis = makeAxis(yearsPlayed, player, toGraphX);
+	yAxis = makeAxis(yearsPlayed, player, toGraphY);
 	Plotly.newPlot( graphDiv, [{
-	x: years,
-	y: fg3Pcts }], {
+	x: xAxis,
+	y: yAxis }], {
 	margin: { t: 0 } } );
+}
+//Need to return list of player objects that only inlude the necessary years,
+//not a list of years.
+
+
+function makeAxis(yearsPlayed, player, toGraph) {
+    let axes = [];
+    for (let i = 0; i < yearsPlayed; i++) {
+        let axis = player[2]["all_years"][i][toGraph];
+        if (!axis) {
+            axis = 0;
+        }
+        axes.push(axis);
+    }
+    return axes;
 }
 
 //********************Rando player table creation functions********************
@@ -175,12 +181,11 @@ function getStatsCreateLink(data) {
     const fullName = data[0]["first_name"] + " " + data[0]["last_name"];
     anchorTag.href = data[0]['bb_ref_link'];
     anchorTag.innerText = fullName;
+    let careerTotals = null;
+    let yearlyTotals = null;
     if (data[2]) {
-        const careerTotals = data[1];
-        const yearlyTotals = data[2]["all_years"];
-    } else {
-        careerTotals = null;
-        yearlyTotals = null;
+        careerTotals = data[1];
+        yearlyTotals = data[2]["all_years"];
     }
     return [careerTotals, yearlyTotals];
 }
@@ -188,7 +193,6 @@ function getStatsCreateLink(data) {
 
 function toggleChartButton(toggle) {
     const showButton = document.querySelector("#makeChart");
-    console.log(toggle)
     if (toggle == "show") {
         showButton.classList.remove("hidden");
     } else {

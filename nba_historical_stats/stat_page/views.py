@@ -167,7 +167,7 @@ def check_team_color_logo_entries():
 
 # rand_player functions*******************************************
 def rando_player(request):
-    rand_player, career_stats, yearly_stats = determine_player()
+    rand_player, career_stats, yearly_stats, totals_only = determine_player()
     all_career_fields = PlayerCareerStats._meta.get_fields()
     all_yearly_fields = PlayerYearlyStats._meta.get_fields()
 
@@ -181,10 +181,12 @@ def rando_player(request):
         if career_stats:
             career_stats_dict = create_js_career_dict(career_stats, all_career_fields)
             yearly_stats_dict = create_js_yearly_dict(yearly_stats, all_yearly_fields)
+            totals_only = create_js_yearly_dict(totals_only, all_yearly_fields)
         else:
             career_stats_dict = None
             yearly_stats_dict = None
-        return JsonResponse([player, career_stats_dict, yearly_stats_dict], safe=False)
+            totals_only = None
+        return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
 
 
 def determine_player():
@@ -197,10 +199,14 @@ def determine_player():
     try:
         career_stats = PlayerCareerStats.objects.get(player_id=rand_int)
         yearly_stats = PlayerYearlyStats.objects.filter(player=rand_int)
+        totals_only = filter_yearly_totals(yearly_stats)
     except:
         career_stats = None
         yearly_stats = None
-    return rand_player, career_stats, yearly_stats
+        totals_only = None
+    print(len(yearly_stats))
+    print(len(totals_only))
+    return rand_player, career_stats, yearly_stats, totals_only
 
 
 def create_js_career_dict(stats, all_fields):
@@ -221,3 +227,10 @@ def create_js_yearly_dict(stats, all_fields):
     js_dict["all_years"] = js_array
     return js_dict
 
+
+def filter_yearly_totals(yearly_stats):
+    totals_only = []
+    for stat in reversed(yearly_stats):
+        if stat.year not in totals_only:
+            totals_only.append(stat)
+    return totals_only
