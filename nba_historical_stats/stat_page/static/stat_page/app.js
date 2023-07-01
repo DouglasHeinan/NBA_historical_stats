@@ -9,7 +9,6 @@ const randomPlayer = async() => {
     const playerData = await playerRes.json();
     const [careerTotals, yearlyTotals] = getStatsCreateLink(playerData);
     checkForPreviousData();
-    console.log(playerData)
     if (careerTotals) {
         createAndPopulateTable(careerTotals, yearlyTotals);
         toggleChartButton("show");
@@ -34,14 +33,29 @@ const fetchData = async() => {
 let curPlayer = null;
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
+const dropdownDiv = document.querySelector(".dropdownOptions");
+const chart = document.querySelector("#plot");
 
 randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await randomPlayer();
+    plot.classList.add("hidden");
 })
 
 graphingBtn.addEventListener("click", function() {
-    makeChart(curPlayer)
+    toggleHidden(dropdownDiv);
+//    dropdownDiv.classList.remove("hidden");
+//    plot.classList.remove("hidden")
+//    makeChart(curPlayer)
 })
+
+
+function toggleHidden(element) {
+    if (element.classList.contains("hidden")) {
+        element.classList.remove("hidden");
+    } else {
+        element.classList.add("hidden")
+    }
+}
 
 
 //********************Chart Player*******************************
@@ -63,15 +77,25 @@ function makeAxis(yearsPlayed, player, toGraph) {
     let axes = [];
     for (let i = 0; i < yearsPlayed; i++) {
         let axis = player[3]["total_years"][i][toGraph];
-        if (!axis) {
-            axis = 0;
-        }
-        if (toGraph === "year") {
-            axis = axis.slice(0, 2) + axis.slice(-2);
-        }
+        axis = adjustAxis(axis, toGraph)
         axes.push(axis);
     }
     return axes;
+}
+
+
+function adjustAxis(axis, toGraph) {
+    if (!axis) {
+        axis = 0;
+    }
+    if (toGraph === "year") {
+        if (axis === "1999-00") {
+            axis = "2000";
+        } else {
+            axis = axis.slice(0, 2) + axis.slice(-2);
+        }
+    }
+    return axis
 }
 
 //********************Rando player table creation functions********************
