@@ -194,7 +194,8 @@ def determine_player():
     all_players = Player.objects.all()
     for player in all_players:
         player_ids.append(player.player_id)
-    rand_int = random.choice(player_ids)
+    rand_int = 201975
+    # rand_int = random.choice(player_ids)
     rand_player = Player.objects.get(player_id=rand_int)
     try:
         career_stats = PlayerCareerStats.objects.get(player_id=rand_int)
@@ -204,8 +205,6 @@ def determine_player():
         career_stats = None
         yearly_stats = None
         totals_only = None
-    print(len(yearly_stats))
-    print(len(totals_only))
     return rand_player, career_stats, yearly_stats, totals_only
 
 
@@ -229,8 +228,10 @@ def create_js_yearly_dict(stats, all_fields):
 
 
 def filter_yearly_totals(yearly_stats):
+    years = []
     totals_only = []
-    for stat in reversed(yearly_stats):
-        if stat.year not in totals_only:
-            totals_only.append(stat)
+    for stat in yearly_stats[::-1]:
+        if stat.year not in years:
+            years.append(stat.year)
+            totals_only.insert(0, stat)
     return totals_only
