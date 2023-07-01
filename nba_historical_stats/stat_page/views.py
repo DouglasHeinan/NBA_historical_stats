@@ -194,8 +194,7 @@ def determine_player():
     all_players = Player.objects.all()
     for player in all_players:
         player_ids.append(player.player_id)
-    rand_int = 201975
-    # rand_int = random.choice(player_ids)
+    rand_int = random.choice(player_ids)
     rand_player = Player.objects.get(player_id=rand_int)
     try:
         career_stats = PlayerCareerStats.objects.get(player_id=rand_int)

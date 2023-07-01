@@ -33,9 +33,14 @@ const fetchData = async() => {
 
 let curPlayer = null;
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
+const graphingBtn = document.querySelector("#makeChart");
+
 randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await randomPlayer();
-    makeChart(curPlayer);
+})
+
+graphingBtn.addEventListener("click", function() {
+    makeChart(curPlayer)
 })
 
 
@@ -47,8 +52,6 @@ function makeChart(player) {
 	toGraphY = "min";
 	xAxis = makeAxis(yearsPlayed, player, toGraphX);
 	yAxis = makeAxis(yearsPlayed, player, toGraphY);
-	console.log(xAxis)
-	console.log(yAxis)
 	Plotly.newPlot( graphDiv, [{
 	x: xAxis,
 	y: yAxis }], {
