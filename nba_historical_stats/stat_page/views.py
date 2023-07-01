@@ -180,8 +180,8 @@ def rando_player(request):
         }
         if career_stats:
             career_stats_dict = create_js_career_dict(career_stats, all_career_fields)
-            yearly_stats_dict = create_js_yearly_dict(yearly_stats, all_yearly_fields)
-            totals_only = create_js_yearly_dict(totals_only, all_yearly_fields)
+            yearly_stats_dict = create_js_yearly_dict(yearly_stats, all_yearly_fields, False)
+            totals_only = create_js_yearly_dict(totals_only, all_yearly_fields, True)
         else:
             career_stats_dict = None
             yearly_stats_dict = None
@@ -215,7 +215,7 @@ def create_js_career_dict(stats, all_fields):
     return js_dict
 
 
-def create_js_yearly_dict(stats, all_fields):
+def create_js_yearly_dict(stats, all_fields, only_total):
     js_dict = {}
     js_array = []
     for stat in stats:
@@ -223,7 +223,10 @@ def create_js_yearly_dict(stats, all_fields):
         for i in range(len(all_fields) - 1):
             year_dict[all_fields[i].name] = getattr(stat, all_fields[i].name)
         js_array.append(year_dict)
-    js_dict["all_years"] = js_array
+    if only_total:
+        js_dict["total_years"] = js_array
+    else:
+        js_dict["all_years"] = js_array
     return js_dict
 
 

@@ -41,27 +41,30 @@ randomPlayerBtn.addEventListener("click", async() => {
 
 //********************Chart Player*******************************
 function makeChart(player) {
-    yearsPlayed = player[2]["all_years"].length;
+    yearsPlayed = player[3]["total_years"].length;
 	graphDiv = document.getElementById('plot');
 	toGraphX = "year";
 	toGraphY = "min";
 	xAxis = makeAxis(yearsPlayed, player, toGraphX);
 	yAxis = makeAxis(yearsPlayed, player, toGraphY);
+	console.log(xAxis)
+	console.log(yAxis)
 	Plotly.newPlot( graphDiv, [{
 	x: xAxis,
 	y: yAxis }], {
 	margin: { t: 0 } } );
 }
-//Need to return list of player objects that only inlude the necessary years,
-//not a list of years.
 
 
 function makeAxis(yearsPlayed, player, toGraph) {
     let axes = [];
     for (let i = 0; i < yearsPlayed; i++) {
-        let axis = player[2]["all_years"][i][toGraph];
+        let axis = player[3]["total_years"][i][toGraph];
         if (!axis) {
             axis = 0;
+        }
+        if (toGraph === "year") {
+            axis = axis.slice(0, 2) + axis.slice(-2);
         }
         axes.push(axis);
     }
