@@ -8,6 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: grey;
 }
 
 #wrapper {
@@ -121,7 +122,8 @@ tr {
 
 .chart {
     width: 600px;
-    height: 250px;
+    height: 350px;	graphDiv = document.getElementById('plot');
+    margin: 1em auto;
 }
 /*******************************FOOTER******************************/
 #footer {

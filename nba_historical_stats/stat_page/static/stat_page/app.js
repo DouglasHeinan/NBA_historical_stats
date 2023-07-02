@@ -34,6 +34,7 @@ let curPlayer = null;
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
 const dropdownDiv = document.querySelector(".dropdownOptions");
+const dropBtns = document.querySelectorAll(".statDrop");
 const chart = document.querySelector("#plot");
 
 randomPlayerBtn.addEventListener("click", async() => {
@@ -43,10 +44,18 @@ randomPlayerBtn.addEventListener("click", async() => {
 
 graphingBtn.addEventListener("click", function() {
     toggleHidden(dropdownDiv);
-//    dropdownDiv.classList.remove("hidden");
-//    plot.classList.remove("hidden")
-//    makeChart(curPlayer)
 })
+
+
+const n = dropBtns.length
+for (let i = 0; i < n; i++) {
+    dropBtns[i].addEventListener("click", function() {
+        statToGrab = dropBtns[i].innerText
+        toggleHidden(dropdownDiv)
+        chart.classList.remove("hidden")
+        makeChart(curPlayer, statToGrab)
+    })
+}
 
 
 function toggleHidden(element) {
@@ -59,14 +68,13 @@ function toggleHidden(element) {
 
 
 //********************Chart Player*******************************
-function makeChart(player) {
+function makeChart(player, stat) {
     yearsPlayed = player[3]["total_years"].length;
-	graphDiv = document.getElementById('plot');
 	toGraphX = "year";
-	toGraphY = "min";
+	toGraphY = stat;
 	xAxis = makeAxis(yearsPlayed, player, toGraphX);
 	yAxis = makeAxis(yearsPlayed, player, toGraphY);
-	Plotly.newPlot( graphDiv, [{
+	Plotly.newPlot( chart, [{
 	x: xAxis,
 	y: yAxis }], {
 	margin: { t: 0 } } );

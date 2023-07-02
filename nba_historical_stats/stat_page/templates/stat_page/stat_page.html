@@ -36,11 +36,12 @@
     <button id="makeChart" class="hidden dropdownBtn">Make chart</button>
     <div class="dropdownOptions hidden">
         {% for stat in stat_categories %}
-        <a>{{ stat }}</a>
+        <a class="statDrop">{{ stat }}</a>
         {% endfor %}
     </div>
-    <div id="plot" class="chart"></div>
 </div>
+<div id="plot" class="chart"></div>
+
 
 
 <!--<div>-->
