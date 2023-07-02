@@ -154,7 +154,6 @@ const fetchData = async() => {
 * @param {Object} data - An array of the player's statistical data.
 */
 function createLink(data) {
-    console.log(data)
     const fullName = data[0]["first_name"] + " " + data[0]["last_name"];
     randPlayerLink.href = data[0]['bb_ref_link'];
     randPlayerLink.innerText = fullName;
@@ -248,11 +247,9 @@ function createTableData(data, table) {
 
 function createYearlyTotalsRows(yearlyTotals) {
     for (let i = 0; i < yearlyTotals.length; i++) {
-//        if (i != 0) {
         const newRow = document.createElement("tr");
         newRow.classList.add("yearlyPlayerDataRow");
         yearlyTable.insertAdjacentElement("beforeend", newRow);
-//        }
         const yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow");
         createTableData(yearlyTotals[i], yearlyTableData[yearlyTableData.length - 1]);
     }
