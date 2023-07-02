@@ -1,64 +1,52 @@
-//********************Main functions********************
 
+//********************Query Selectors********************
 
-//***************Random Player**************************
-const randomPlayer = async() => {
-    curPlayerID = null;
-    deleteOldRows();
-    const playerRes = await fetchData();
-    const playerData = await playerRes.json();
-    const [careerTotals, yearlyTotals] = getStatsCreateLink(playerData);
-    checkForPreviousData();
-    if (careerTotals) {
-        createAndPopulateTable(careerTotals, yearlyTotals);
-        toggleChartButton("show");
-    } else {
-        toggleChartButton("hidden");
-    }
-    return playerData;
-}
-
-
-const fetchData = async() => {
-    const playerRes = await fetch('rando_json/', {
-        headers:{
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-        }
-    });
-    return playerRes;
-}
-
-
-let curPlayer = null;
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
+const graphTypeBtn = document.querySelector("#selectChartType");
 const dropdownDiv = document.querySelector(".dropdownOptions");
 const dropBtns = document.querySelectorAll(".statDrop");
 const chart = document.querySelector("#plot");
+
+
+//********************Global Variables******************
+
+let curPlayer = null;
+const statBtnLength = dropBtns.length;
+
+
+//***********************Event Listeners***************
 
 randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await randomPlayer();
     plot.classList.add("hidden");
 })
 
+
 graphingBtn.addEventListener("click", function() {
     toggleHidden(dropdownDiv);
 })
 
 
-const n = dropBtns.length
-for (let i = 0; i < n; i++) {
+for (let i = 0; i < statBtnLength; i++) {
     dropBtns[i].addEventListener("click", function() {
-        statToGrab = dropBtns[i].innerText
-        toggleHidden(dropdownDiv)
-        chart.classList.remove("hidden")
-        makeChart(curPlayer, statToGrab)
+        statToGrab = dropBtns[i].innerText;
+        toggleHidden(dropdownDiv);
+        chart.classList.remove("hidden");
+        makeChart(curPlayer, statToGrab);
     })
 }
 
 
+//*********************Utility Functions***************
+//These functions are called by other functions throughout this file.
+
+/**
+* This function toggles the 'hidden' class of the passed element.
+* @param {Object} element - An html element whose 'hidden' class is to be toggled.
+*/
 function toggleHidden(element) {
+    console.log(typeof element)
     if (element.classList.contains("hidden")) {
         element.classList.remove("hidden");
     } else {
@@ -67,7 +55,15 @@ function toggleHidden(element) {
 }
 
 
+
 //********************Chart Player*******************************
+//These function are all related to  chart creation and population.
+
+/**
+* Creates a graph of the user-chosen stat for the user-chosen player.
+* @param {Object} player - An array of dictionaries containing all player information.
+* @param {String} stat - The statistical category (e.g., 'gp' or 'min') that is to be graphed.
+*/
 function makeChart(player, stat) {
     yearsPlayed = player[3]["total_years"].length;
 	toGraphX = "year";
@@ -80,7 +76,13 @@ function makeChart(player, stat) {
 	margin: { t: 0 } } );
 }
 
-
+/**
+* makeAxis is called by makeChart to create the axes used in making said chart.
+* @param {Number} yearsPlayed - The number of seasons played by this player.
+* @param {Object} player - An array of dictionaries containing all player information.
+* @param {String} toGraph - The stat the user is graphing.
+* @return - The axes used by makeChart to create the graph.
+*/
 function makeAxis(yearsPlayed, player, toGraph) {
     let axes = [];
     for (let i = 0; i < yearsPlayed; i++) {
@@ -106,16 +108,42 @@ function adjustAxis(axis, toGraph) {
     return axis
 }
 
+
+//***************Random Player**************************
+const randomPlayer = async() => {
+    deleteOldRows();
+    const playerRes = await fetchData();
+    const playerData = await playerRes.json();
+    const [careerTotals, yearlyTotals] = getStatsCreateLink(playerData);
+    checkForPreviousData();
+    if (careerTotals) {
+        createAndPopulateTable(careerTotals, yearlyTotals);
+        if (graphingBtn.classList.contains("hidden")) {
+            toggleHidden(graphingBtn);
+        }
+    } else {
+        toggleHidden(graphingBtn)
+    }
+    return playerData;
+}
+
+
+const fetchData = async() => {
+    const playerRes = await fetch('rando_json/', {
+        headers:{
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+        }
+    });
+    return playerRes;
+}
+
 //********************Rando player table creation functions********************
 
 /**
-createTableHeader takes two arguments and returns nothing.
-
-It takes in a dictionary of player information and uses the keys to create, name, and insert
-each <th> element for the player table.
-
-@param data - A dictionary of player data
-@param - row - The specific table row in the html file this row of header is added to
+* Creates, names, and inserts each <th> element for the player table.
+* @param {Object} data - A dictionary of player data
+* @param {Object} row - The specific table row in the html file to which this element is added.
 */
 function createTableHeader(data, row) {
     const rowNames = Object.keys(data);
@@ -128,13 +156,9 @@ function createTableHeader(data, row) {
 }
 
 /**
-createTableData takes two arguments and returns nothing.
-
-This function takes in a dictionary of player data and uses the values to create, populate, and insert
-each <td> element for the player table.
-
-@param data - A dictionary of player data
-@param table - The specific table the player data is to be added to.
+* This function creates, populates, and inserts each <td> element for the player table.
+* @param {Object} data - The player's statistical data.
+* @param {Object} table - The html table the player data is to be added to.
 */
 function createTableData(data, table) {
     values = Object.values(data);
@@ -152,16 +176,9 @@ function createTableData(data, table) {
 
 
 /**
-createTableRowHeaders takes two arguments and returns nothing.
-
-This function takes in two dictionaries and checks to see if <th> elements have been created
-for the data in those dictionaries. If this is the first time the randomPlayer function
-has been called, those <th> elements will not have been created. On all subsequent
-calls of that function, those elements will already exist and be populated and this function
-do nothing.
-
-@param careerTotals - A dictionary of table columns headers
-@param yearlyTotals - A dictionary of table columns headers
+* This function calls two other functions that create and populate the two <th> elements.
+* @param {Object} careerTotals - A dictionary of table columns headers
+* @param {Object} yearlyTotals - An array of dictionaries of table columns headers
 */
 function createTableRowHeaders(careerTotals, yearlyTotals) {
     const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
@@ -229,21 +246,16 @@ function getStatsCreateLink(data) {
 }
 
 
-function toggleChartButton(toggle) {
-    const showButton = document.querySelector("#makeChart");
-    if (toggle == "show") {
-        showButton.classList.remove("hidden");
-    } else {
-        showButton.classList.add("hidden");
-    }
-}
-
-
+/**
+* Calls three other functions that create and populate the player stat table.
+* @param {Object} careerTotals - A player's career statistical data.
+* @param {Object} yearlyTotals - An array of a player's year-to-year statistical data.
+*/
 function createAndPopulateTable(careerTotals, yearlyTotals) {
-        const careerTableData = document.querySelector("#careerPlayerDataRow");
-        createTableRowHeaders(careerTotals, yearlyTotals[0]);
-        createTableData(careerTotals, careerTableData);
-        createYearlyTotalsRows(yearlyTotals);
+    const careerTableData = document.querySelector("#careerPlayerDataRow");
+    createTableRowHeaders(careerTotals, yearlyTotals[0]);
+    createTableData(careerTotals, careerTableData);
+    createYearlyTotalsRows(yearlyTotals);
 }
 
 
