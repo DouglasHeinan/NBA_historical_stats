@@ -1,8 +1,11 @@
 
 //********************Query Selectors********************
 
+const randPlayerLink = document.querySelector("#randomPlayerLink");
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
+const careerTableData = document.querySelector("#careerPlayerDataRow");
+const yearlyTable = document.querySelector("#playerYearly");
 const graphTypeBtn = document.querySelector("#selectChartType");
 const dropdownDiv = document.querySelector(".dropdownOptions");
 const dropBtns = document.querySelectorAll(".statDrop");
@@ -46,7 +49,6 @@ for (let i = 0; i < statBtnLength; i++) {
 * @param {Object} element - An html element whose 'hidden' class is to be toggled.
 */
 function toggleHidden(element) {
-    console.log(typeof element)
     if (element.classList.contains("hidden")) {
         element.classList.remove("hidden");
     } else {
@@ -81,7 +83,7 @@ function makeChart(player, stat) {
 * @param {Number} yearsPlayed - The number of seasons played by this player.
 * @param {Object} player - An array of dictionaries containing all player information.
 * @param {String} toGraph - The stat the user is graphing.
-* @return - The axes used by makeChart to create the graph.
+* @return {Object} - An array of axes used by makeChart to create the graph.
 */
 function makeAxis(yearsPlayed, player, toGraph) {
     let axes = [];
@@ -93,7 +95,12 @@ function makeAxis(yearsPlayed, player, toGraph) {
     return axes;
 }
 
-
+/**
+adjustAxis is called by makeAxis; it adjusts year values to read as a single year and '-' values to read as zero.
+@param {*} axis - The value of the stat/column currently being assigne an axis value.
+@param {String} toGraph - The stat/column currently being assigned an axis value.
+@return {*} - The axis value after adjustment.
+*/
 function adjustAxis(axis, toGraph) {
     if (!axis) {
         axis = 0;
@@ -110,12 +117,13 @@ function adjustAxis(axis, toGraph) {
 
 
 //***************Random Player**************************
+
 const randomPlayer = async() => {
-    deleteOldRows();
     const playerRes = await fetchData();
     const playerData = await playerRes.json();
-    const [careerTotals, yearlyTotals] = getStatsCreateLink(playerData);
-    checkForPreviousData();
+    createLink(playerData);
+    const [careerTotals, yearlyTotals] = getStats(playerData);
+    deletePreviousData();
     if (careerTotals) {
         createAndPopulateTable(careerTotals, yearlyTotals);
         if (graphingBtn.classList.contains("hidden")) {
@@ -138,22 +146,85 @@ const fetchData = async() => {
     return playerRes;
 }
 
+
+//********************Basic player data functions********************
+
+/**
+* Populates the player name and creates the link for the randomPlayerLink anchor tag.
+* @param {Object} data - An array of the player's statistical data.
+*/
+function createLink(data) {
+    console.log(data)
+    const fullName = data[0]["first_name"] + " " + data[0]["last_name"];
+    randPlayerLink.href = data[0]['bb_ref_link'];
+    randPlayerLink.innerText = fullName;
+}
+
+
+/**
+* Retrieves the players career and year-to-year statistical data.
+* @param {Object} data - An array of the player's statistical data.
+* return {Object} - An array containing the player's career and year-to-year statistical data.
+*/
+function getStats(data){
+    let careerTotals = null;
+    let yearlyTotals = null;
+    if (data[2]) {
+        careerTotals = data[1];
+        yearlyTotals = data[2]["all_years"];
+    }
+    return [careerTotals, yearlyTotals];
+}
+
+
+/**
+* Removes all empty <tr> elements and all present <td> elements from the player table.
+*/
+function deletePreviousData() {
+    const dataPresent = document.querySelectorAll(".tableData") != [];
+    const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
+    for (i = 1; i < toDelete.length; i++) {
+        toDelete[i].remove();
+    }
+    if (dataPresent) {
+        const tableData = document.querySelectorAll(".tableData");
+        for (let i = 0; i < tableData.length; i++) {
+            tableData[i].remove();
+        }
+    }
+}
+
+
 //********************Rando player table creation functions********************
 
 /**
-* Creates, names, and inserts each <th> element for the player table.
-* @param {Object} data - A dictionary of player data
-* @param {Object} row - The specific table row in the html file to which this element is added.
+* Calls three other functions that create and populate the player stat table.
+* @param {Object} careerTotals - A player's career statistical data.
+* @param {Object} yearlyTotals - An array of a player's year-to-year statistical data.
 */
-function createTableHeader(data, row) {
-    const rowNames = Object.keys(data);
-    for (let i = 1; i < rowNames.length; i++) {
-        const colName = document.createElement("th");
-        colName.classList.add("tableHeader");
-        colName.innerText = rowNames[i];
-        row.insertAdjacentElement("beforeend", colName);
+function createAndPopulateTable(careerTotals, yearlyTotals) {
+    createTableRowHeaders(careerTotals, yearlyTotals[0]);
+    createTableData(careerTotals, careerTableData);
+    createYearlyTotalsRows(yearlyTotals);
+}
+
+
+/**
+* This function checks if headers have been created and, if not, calls the function that creates and populates
+* the two rows of <th> elements.
+* @param {Object} careerTotals - A dictionary of table columns headers
+* @param {Object} yearlyTotals - An array of dictionaries of table columns headers
+*/
+function createTableRowHeaders(careerTotals, yearlyTotals) {
+    const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
+    if (headersNeeded) {
+        const careerTableColNames = document.querySelector("#careerPlayerRowNames");
+        const yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames");
+        createTableHeader(careerTotals, careerTableColNames);
+        createTableHeader(yearlyTotals, yearlyTableColNames);
     }
 }
+
 
 /**
 * This function creates, populates, and inserts each <td> element for the player table.
@@ -175,90 +246,30 @@ function createTableData(data, table) {
 }
 
 
-/**
-* This function calls two other functions that create and populate the two <th> elements.
-* @param {Object} careerTotals - A dictionary of table columns headers
-* @param {Object} yearlyTotals - An array of dictionaries of table columns headers
-*/
-function createTableRowHeaders(careerTotals, yearlyTotals) {
-    const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
-    if (headersNeeded) {
-        const careerTableColNames = document.querySelector("#careerPlayerRowNames");
-        const yearlyTableColNames = document.querySelector("#yearlyPlayerRowNames");
-        createTableHeader(careerTotals, careerTableColNames);
-        createTableHeader(yearlyTotals, yearlyTableColNames);
-    }
-}
-
-
 function createYearlyTotalsRows(yearlyTotals) {
-    const yearlyTable = document.querySelector("#playerYearly");
     for (let i = 0; i < yearlyTotals.length; i++) {
-        if (i != 0) {
-            const newRow = document.createElement("tr");
-            newRow.classList.add("yearlyPlayerDataRow");
-            yearlyTable.insertAdjacentElement("beforeend", newRow);
-        }
+//        if (i != 0) {
+        const newRow = document.createElement("tr");
+        newRow.classList.add("yearlyPlayerDataRow");
+        yearlyTable.insertAdjacentElement("beforeend", newRow);
+//        }
         const yearlyTableData = document.querySelectorAll(".yearlyPlayerDataRow");
         createTableData(yearlyTotals[i], yearlyTableData[yearlyTableData.length - 1]);
     }
 }
 
-//********************Functions to remove old rand_player data********************
-function deletePreviousData(dataPresent) {
-    if (dataPresent) {
-        const tableData = document.querySelectorAll(".tableData");
-        for (let i = 0; i < tableData.length; i++) {
-            tableData[i].remove();
-        }
-    }
-}
-
-
-function deleteOldRows() {
-    const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
-    for (i = 1; i < toDelete.length; i++) {
-        toDelete[i].remove();
-    }
-}
-
-
-function checkForPreviousData() {
-    const dataPresent = document.querySelectorAll(".tableData") != [];
-    if (dataPresent) {
-        deletePreviousData(dataPresent);
-    }
-}
-
-//********************Basic player data functions********************
-function getStatsCreateLink(data) {
-    const anchorTag = document.querySelector("#randomPlayerLink");
-    const fullName = data[0]["first_name"] + " " + data[0]["last_name"];
-    anchorTag.href = data[0]['bb_ref_link'];
-    anchorTag.innerText = fullName;
-    let careerTotals = null;
-    let yearlyTotals = null;
-    if (data[2]) {
-        careerTotals = data[1];
-        yearlyTotals = data[2]["all_years"];
-    }
-    return [careerTotals, yearlyTotals];
-}
-
 
 /**
-* Calls three other functions that create and populate the player stat table.
-* @param {Object} careerTotals - A player's career statistical data.
-* @param {Object} yearlyTotals - An array of a player's year-to-year statistical data.
+* Creates, names, and inserts each <th> element for the player table.
+* @param {Object} data - A dictionary of player data
+* @param {Object} row - The specific table row in the html file to which this element is added.
 */
-function createAndPopulateTable(careerTotals, yearlyTotals) {
-    const careerTableData = document.querySelector("#careerPlayerDataRow");
-    createTableRowHeaders(careerTotals, yearlyTotals[0]);
-    createTableData(careerTotals, careerTableData);
-    createYearlyTotalsRows(yearlyTotals);
+function createTableHeader(data, row) {
+    const rowNames = Object.keys(data);
+    for (let i = 1; i < rowNames.length; i++) {
+        const colName = document.createElement("th");
+        colName.classList.add("tableHeader");
+        colName.innerText = rowNames[i];
+        row.insertAdjacentElement("beforeend", colName);
+    }
 }
-
-
-
-
-
