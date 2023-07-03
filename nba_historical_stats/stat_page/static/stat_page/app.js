@@ -44,6 +44,7 @@ for (let i = 0; i < statBtnLength; i++) {
 //*********************Utility Functions***************
 //These functions are called by other functions throughout this file.
 
+
 /**
 * This function toggles the 'hidden' class of the passed element.
 * @param {Object} element - An html element whose 'hidden' class is to be toggled.
@@ -57,9 +58,9 @@ function toggleHidden(element) {
 }
 
 
-
 //********************Chart Player*******************************
 //These function are all related to  chart creation and population.
+
 
 /**
 * Creates a graph of the user-chosen stat for the user-chosen player.
@@ -118,12 +119,44 @@ function adjustAxis(axis, toGraph) {
 
 //***************Random Player**************************
 
-const randomPlayer = async() => {
-    const playerRes = await fetchData();
+/**
+* Calls functions that create links and tables for a random player.
+*/
+async function randomPlayer() {
+    deletePreviousData();
+    const playerRes = await fetchRandPlayer();
     const playerData = await playerRes.json();
     createLink(playerData);
     const [careerTotals, yearlyTotals] = getStats(playerData);
-    deletePreviousData();
+    makeTables(careerTotals, yearlyTotals);
+    return playerData;
+}
+
+
+/**
+* An async function that retrieves a python dictionary of a random player's information and
+* statistices from the 'rando_json/' function in views.py.
+* @return {Object} - The response (a promise) from the API.
+*/
+async function fetchRandPlayer() {
+    const playerRes = await fetch('rando_json/', {
+        headers:{
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+        }
+    });
+    console.log(playerRes)
+    return playerRes;
+}
+
+
+/**
+* If there is any player data, uses it to call the table-creating functions.
+* Also toggles graphing button visibility as necessary.
+* @param {Object} careerTotals - A player's career statistics.
+* @param {Object} yearlyTotals - An array of year-to-year player statistics.
+*/
+function makeTables(careerTotals, yearlyTotals) {
     if (careerTotals) {
         createAndPopulateTable(careerTotals, yearlyTotals);
         if (graphingBtn.classList.contains("hidden")) {
@@ -132,22 +165,19 @@ const randomPlayer = async() => {
     } else {
         toggleHidden(graphingBtn)
     }
-    return playerData;
 }
 
 
-const fetchData = async() => {
-    const playerRes = await fetch('rando_json/', {
-        headers:{
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-        }
-    });
-    return playerRes;
-}
+//***************************Player Search***************************
+
+/**
+NEEDS NOTES*******************
+*/
+
 
 
 //********************Basic player data functions********************
+
 
 /**
 * Populates the player name and creates the link for the randomPlayerLink anchor tag.
@@ -182,7 +212,7 @@ function getStats(data){
 function deletePreviousData() {
     const dataPresent = document.querySelectorAll(".tableData") != [];
     const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
-    for (i = 1; i < toDelete.length; i++) {
+    for (i = 0; i < toDelete.length; i++) {
         toDelete[i].remove();
     }
     if (dataPresent) {
@@ -194,7 +224,8 @@ function deletePreviousData() {
 }
 
 
-//********************Rando player table creation functions********************
+//********************Table creation functions********************
+
 
 /**
 * Calls three other functions that create and populate the player stat table.
@@ -211,8 +242,8 @@ function createAndPopulateTable(careerTotals, yearlyTotals) {
 /**
 * This function checks if headers have been created and, if not, calls the function that creates and populates
 * the two rows of <th> elements.
-* @param {Object} careerTotals - A dictionary of table columns headers
-* @param {Object} yearlyTotals - An array of dictionaries of table columns headers
+* @param {Object} careerTotals - A player's total career statistics.
+* @param {Object} yearlyTotals - An array of player year-to-year statistics.
 */
 function createTableRowHeaders(careerTotals, yearlyTotals) {
     const headersNeeded = document.querySelectorAll(".tableHeader").length == 0;
@@ -244,7 +275,10 @@ function createTableData(data, table) {
     }
 }
 
-
+/**
+* Creates a row for each year of a player's career in the yearlyPlayerData table.
+* @param {Object} yearlyTotals - An array of player year-to-year statistics.
+*/
 function createYearlyTotalsRows(yearlyTotals) {
     for (let i = 0; i < yearlyTotals.length; i++) {
         const newRow = document.createElement("tr");
