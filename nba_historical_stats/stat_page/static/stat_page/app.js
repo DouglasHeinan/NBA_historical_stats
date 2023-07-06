@@ -1,7 +1,7 @@
 
 //********************Query Selectors********************
 
-const randPlayerLink = document.querySelector("#randomPlayerLink");
+const playerLink = document.querySelector("#playerLink");
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
 const careerTableData = document.querySelector("#careerPlayerDataRow");
@@ -10,18 +10,29 @@ const graphTypeBtn = document.querySelector("#selectChartType");
 const dropdownDiv = document.querySelector(".dropdownOptions");
 const dropBtns = document.querySelectorAll(".statDrop");
 const chart = document.querySelector("#plot");
+const serachBtn = document.querySelector("#searchBtn");
 
 
 //********************Global Variables******************
 
 let curPlayer = null;
 const statBtnLength = dropBtns.length;
+const fetchHeaders = {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest' //Necessary to work with request.is_ajax()
+}
+
 
 
 //***********************Event Listeners***************
+searchBtn.addEventListener("click", async() => {
+    curPlayer = await searchPlayer();
+    plot.classList.add("hidden");
+})
+
 
 randomPlayerBtn.addEventListener("click", async() => {
-    curPlayer = await randomPlayer();
+    curPlayer = await retrievePlayer(fetchRandPlayer);
     plot.classList.add("hidden");
 })
 
@@ -100,7 +111,7 @@ function makeAxis(yearsPlayed, player, toGraph) {
 adjustAxis is called by makeAxis; it adjusts year values to read as a single year and '-' values to read as zero.
 @param {*} axis - The value of the stat/column currently being assigne an axis value.
 @param {String} toGraph - The stat/column currently being assigned an axis value.
-@return {*} - The axis value after adjustment.
+@return {*} - The axis value after adjustment, could be a String or Number.
 */
 function adjustAxis(axis, toGraph) {
     if (!axis) {
@@ -122,9 +133,9 @@ function adjustAxis(axis, toGraph) {
 /**
 * Calls functions that create links and tables for a random player.
 */
-async function randomPlayer() {
+async function retrievePlayer(fetchFunc) {
     deletePreviousData();
-    const playerRes = await fetchRandPlayer();
+    const playerRes = await fetchFunc();
     const playerData = await playerRes.json();
     createLink(playerData);
     const [careerTotals, yearlyTotals] = getStats(playerData);
@@ -140,12 +151,8 @@ async function randomPlayer() {
 */
 async function fetchRandPlayer() {
     const playerRes = await fetch('rando_json/', {
-        headers:{
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-        }
+        headers:fetchHeaders
     });
-    console.log(playerRes)
     return playerRes;
 }
 
@@ -173,6 +180,21 @@ function makeTables(careerTotals, yearlyTotals) {
 /**
 NEEDS NOTES*******************
 */
+async function fetchSearchedPlayer() {
+    const playerRes = await fetch("")
+}
+
+
+//async function fetchRandPlayer() {
+//    const playerRes = await fetch('rando_json/', {
+//        headers:{
+//            'Content-Type': 'application/json',
+//            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+//        }
+//    });
+//    return playerRes;
+//}
+
 
 
 
@@ -180,13 +202,13 @@ NEEDS NOTES*******************
 
 
 /**
-* Populates the player name and creates the link for the randomPlayerLink anchor tag.
+* Populates the player name and creates the link for the retrievePlayerLink anchor tag.
 * @param {Object} data - An array of the player's statistical data.
 */
 function createLink(data) {
     const fullName = data[0]["first_name"] + " " + data[0]["last_name"];
-    randPlayerLink.href = data[0]['bb_ref_link'];
-    randPlayerLink.innerText = fullName;
+    playerLink.href = data[0]['bb_ref_link'];
+    playerLink.innerText = fullName;
 }
 
 

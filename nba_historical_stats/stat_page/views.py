@@ -172,17 +172,12 @@ def check_team_color_logo_entries():
 
 # rand_player functions*******************************************
 def rando_player(request):
-    rand_player, career_stats, yearly_stats, totals_only = determine_player()
-    all_career_fields = PlayerCareerStats._meta.get_fields()
-    all_yearly_fields = PlayerYearlyStats._meta.get_fields()
-
+    rand_player = determine_rand_player()
+    career_stats, yearly_stats, totals_only = getFetchedPlayerStats(rand_player.player_id)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        player = {
-            "first_name": rand_player.first_name,
-            "last_name": rand_player.last_name,
-            "bb_ref_link": rand_player.bb_ref_link,
-            "id" : rand_player.player_id
-        }
+        all_career_fields = PlayerCareerStats._meta.get_fields()
+        all_yearly_fields = PlayerYearlyStats._meta.get_fields()
+        player = get_fetched_player_dict(rand_player)
         if career_stats:
             career_stats_dict = create_js_career_dict(career_stats, all_career_fields)
             yearly_stats_dict = create_js_yearly_dict(yearly_stats, all_yearly_fields, False)
@@ -194,22 +189,36 @@ def rando_player(request):
         return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
 
 
-def determine_player():
+def get_fetched_player_dict(rand_player):
+    info = {
+        "first_name": rand_player.first_name,
+        "last_name": rand_player.last_name,
+        "bb_ref_link": rand_player.bb_ref_link,
+        "id" : rand_player.player_id
+    }
+    return info
+
+
+def determine_rand_player():
     player_ids = []
     all_players = Player.objects.all()
     for player in all_players:
         player_ids.append(player.player_id)
     rand_int = random.choice(player_ids)
     rand_player = Player.objects.get(player_id=rand_int)
+    return rand_player
+
+
+def getFetchedPlayerStats(id):
     try:
-        career_stats = PlayerCareerStats.objects.get(player_id=rand_int)
-        yearly_stats = PlayerYearlyStats.objects.filter(player=rand_int)
+        career_stats = PlayerCareerStats.objects.get(player_id=id)
+        yearly_stats = PlayerYearlyStats.objects.filter(player=id)
         totals_only = filter_yearly_totals(yearly_stats)
     except:
         career_stats = None
         yearly_stats = None
         totals_only = None
-    return rand_player, career_stats, yearly_stats, totals_only
+    return career_stats, yearly_stats, totals_only
 
 
 def create_js_career_dict(stats, all_fields):
