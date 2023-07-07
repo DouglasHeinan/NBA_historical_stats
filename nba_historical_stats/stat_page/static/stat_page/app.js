@@ -130,6 +130,7 @@ function adjustAxis(axis, toGraph) {
 
 //***************Random Player**************************
 
+
 /**
 * Calls functions that create links and tables for a random player.
 */
@@ -150,7 +151,7 @@ async function retrievePlayer(fetchFunc) {
 * @return {Object} - The response (a promise) from the API.
 */
 async function fetchRandPlayer() {
-    const playerRes = await fetch('rando_json/', {
+    const playerRes = await fetch('rando_player/', {
         headers:fetchHeaders
     });
     return playerRes;
@@ -181,21 +182,11 @@ function makeTables(careerTotals, yearlyTotals) {
 NEEDS NOTES*******************
 */
 async function fetchSearchedPlayer() {
-    const playerRes = await fetch("")
+    const playerRes = await fetch("search_player/"), {
+        headers:fetchHeaders
+    }
+    return playerRes;
 }
-
-
-//async function fetchRandPlayer() {
-//    const playerRes = await fetch('rando_json/', {
-//        headers:{
-//            'Content-Type': 'application/json',
-//            'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-//        }
-//    });
-//    return playerRes;
-//}
-
-
 
 
 //********************Basic player data functions********************

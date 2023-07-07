@@ -173,30 +173,10 @@ def check_team_color_logo_entries():
 # rand_player functions*******************************************
 def rando_player(request):
     rand_player = determine_rand_player()
-    career_stats, yearly_stats, totals_only = getFetchedPlayerStats(rand_player.player_id)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        all_career_fields = PlayerCareerStats._meta.get_fields()
-        all_yearly_fields = PlayerYearlyStats._meta.get_fields()
-        player = get_fetched_player_dict(rand_player)
-        if career_stats:
-            career_stats_dict = create_js_career_dict(career_stats, all_career_fields)
-            yearly_stats_dict = create_js_yearly_dict(yearly_stats, all_yearly_fields, False)
-            totals_only = create_js_yearly_dict(totals_only, all_yearly_fields, True)
-        else:
-            career_stats_dict = None
-            yearly_stats_dict = None
-            totals_only = None
+        player = get_fetched_player_info_dict(rand_player)
+        career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(rand_player)
         return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
-
-
-def get_fetched_player_dict(rand_player):
-    info = {
-        "first_name": rand_player.first_name,
-        "last_name": rand_player.last_name,
-        "bb_ref_link": rand_player.bb_ref_link,
-        "id" : rand_player.player_id
-    }
-    return info
 
 
 def determine_rand_player():
@@ -209,7 +189,48 @@ def determine_rand_player():
     return rand_player
 
 
-def getFetchedPlayerStats(id):
+# Serched player functions***************************************
+def search_player(request):
+    print(searched)
+    searched_player = determine_searched_player(searched)
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        player = get_fetched_player_info_dict(searched_player)
+        career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(searched_plaer)
+        return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
+
+
+def determine_searched_player(searched):
+    pass
+
+
+
+# Player info retrievel****************************************
+def get_fetched_player_info_dict(rand_player):
+    info = {
+        "first_name": rand_player.first_name,
+        "last_name": rand_player.last_name,
+        "bb_ref_link": rand_player.bb_ref_link,
+        "id" : rand_player.player_id
+    }
+    return info
+
+
+def get_fetched_player_stats_dicts(player):
+    career_stats, yearly_stats, totals_only = get_fetched_player_stats(player.player_id)
+    all_career_fields = PlayerCareerStats._meta.get_fields()
+    all_yearly_fields = PlayerYearlyStats._meta.get_fields()
+    if career_stats:
+        career_stats_dict = create_js_career_dict(career_stats, all_career_fields)
+        yearly_stats_dict = create_js_yearly_dict(yearly_stats, all_yearly_fields, False)
+        totals_only = create_js_yearly_dict(totals_only, all_yearly_fields, True)
+    else:
+        career_stats_dict = None
+        yearly_stats_dict = None
+        totals_only = None
+    return career_stats_dict, yearly_stats_dict, totals_only
+
+
+def get_fetched_player_stats(id):
     try:
         career_stats = PlayerCareerStats.objects.get(player_id=id)
         yearly_stats = PlayerYearlyStats.objects.filter(player=id)
