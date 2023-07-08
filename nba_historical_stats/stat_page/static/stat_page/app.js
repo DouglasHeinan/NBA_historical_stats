@@ -258,10 +258,11 @@ function deletePreviousData() {
 
 
 function hideTables() {
+    graphingBtn.classList.add("hidden")
     const tables = document.querySelectorAll(".tableDiv");
-    for (table in tables) {
-        console.log(table)
-        table.classList.add("hidden")
+    console.log(tables)
+    for (i = 0; i < tables.length; i++) {
+        tables[i].classList.add("hidden")
     }
 }
 
