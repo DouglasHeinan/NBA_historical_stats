@@ -28,6 +28,10 @@ th, td {
     border: 1px solid black;
 }
 
+ul {
+    list-style: none;
+}
+
 /*******************************FONTS*******************************/
 .bigFont {
     font-size: 5em;

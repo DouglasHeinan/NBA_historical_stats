@@ -1,6 +1,7 @@
 
 //********************Query Selectors********************
 
+const playerLinkDiv = document.querySelector("#playerLinkDiv");
 const playerLink = document.querySelector("#playerLink");
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
@@ -11,7 +12,9 @@ const dropdownDiv = document.querySelector(".dropdownOptions");
 const dropBtns = document.querySelectorAll(".statDrop");
 const chart = document.querySelector("#plot");
 const searchBtn = document.querySelector("#searchBtn");
-const searchInput = document.querySelector("#searchInput")
+const searchInput = document.querySelector("#searchInput");
+const nameList = document.querySelector("#listPlayerNames");
+const nameDiv = document.querySelector("#divPlayerNames");
 
 
 //********************Global Variables******************
@@ -71,7 +74,7 @@ function toggleHidden(element) {
 
 
 //********************Chart Player*******************************
-//These function are all related to  chart creation and population.
+//These function are all related to chart creation and population.
 
 
 /**
@@ -140,14 +143,16 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
     if (playerData[0]["one_player"] == true) {
-        createLink(playerData);
+        toggleHidden(playerLinkDiv);
+        createBBRefLink(playerData);
         const [careerTotals, yearlyTotals] = getStats(playerData);
         makeTables(careerTotals, yearlyTotals);
         return playerData;
     } else {
-        console.log(playerData[1])
+        hideTables();
+        toggleHidden(nameDiv);
         for (player in playerData[1]) {
-
+            createPlayerPageLink(player)
         }
     }
 }
@@ -204,10 +209,17 @@ async function fetchSearchedPlayer(searched) {
 * Populates the player name and creates the link for the retrievePlayerLink anchor tag.
 * @param {Object} data - An array of the player's statistical data.
 */
-function createLink(data) {
+function createBBRefLink(data) {
     const fullName = data[1]["first_name"] + " " + data[1]["last_name"];
     playerLink.href = data[1]['bb_ref_link'];
     playerLink.innerText = fullName;
+}
+
+
+function createPlayerPageLink(player) {
+    fullName = player["first_name"] + " " + player["last_name"]
+    playerLink.classList.add = playerPage;
+    playerLink.innerText = full_name;
 }
 
 
@@ -231,16 +243,25 @@ function getStats(data){
 * Removes all empty <tr> elements and all present <td> elements from the player table.
 */
 function deletePreviousData() {
-    const dataPresent = document.querySelectorAll(".tableData") != [];
+    if (playerLink.innerText) {
+        toggleHidden(playerLinkDiv)
+    }
     const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
     for (i = 0; i < toDelete.length; i++) {
         toDelete[i].remove();
     }
-    if (dataPresent) {
-        const tableData = document.querySelectorAll(".tableData");
-        for (let i = 0; i < tableData.length; i++) {
-            tableData[i].remove();
-        }
+    const tableData = document.querySelectorAll(".tableData");
+    for (let i = 0; i < tableData.length; i++) {
+        tableData[i].remove();
+    }
+}
+
+
+function hideTables() {
+    const tables = document.querySelectorAll(".tableDiv");
+    for (table in tables) {
+        console.log(table)
+        table.classList.add("hidden")
     }
 }
 
