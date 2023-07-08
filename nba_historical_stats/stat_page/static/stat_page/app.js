@@ -80,7 +80,7 @@ function toggleHidden(element) {
 * @param {String} stat - The statistical category (e.g., 'gp' or 'min') that is to be graphed.
 */
 function makeChart(player, stat) {
-    yearsPlayed = player[3]["total_years"].length;
+    yearsPlayed = player[4]["total_years"].length;
 	toGraphX = "year";
 	toGraphY = stat;
 	xAxis = makeAxis(yearsPlayed, player, toGraphX);
@@ -101,7 +101,7 @@ function makeChart(player, stat) {
 function makeAxis(yearsPlayed, player, toGraph) {
     let axes = [];
     for (let i = 0; i < yearsPlayed; i++) {
-        let axis = player[3]["total_years"][i][toGraph];
+        let axis = player[4]["total_years"][i][toGraph];
         axis = adjustAxis(axis, toGraph)
         axes.push(axis);
     }
@@ -139,11 +139,17 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
     deletePreviousData();
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
-    console.log(playerData)
-    createLink(playerData);
-    const [careerTotals, yearlyTotals] = getStats(playerData);
-    makeTables(careerTotals, yearlyTotals);
-    return playerData;
+    if (playerData[0]["one_player"] == true) {
+        createLink(playerData);
+        const [careerTotals, yearlyTotals] = getStats(playerData);
+        makeTables(careerTotals, yearlyTotals);
+        return playerData;
+    } else {
+        console.log(playerData[1])
+        for (player in playerData[1]) {
+
+        }
+    }
 }
 
 
@@ -199,8 +205,8 @@ async function fetchSearchedPlayer(searched) {
 * @param {Object} data - An array of the player's statistical data.
 */
 function createLink(data) {
-    const fullName = data[0]["first_name"] + " " + data[0]["last_name"];
-    playerLink.href = data[0]['bb_ref_link'];
+    const fullName = data[1]["first_name"] + " " + data[1]["last_name"];
+    playerLink.href = data[1]['bb_ref_link'];
     playerLink.innerText = fullName;
 }
 
@@ -214,8 +220,8 @@ function getStats(data){
     let careerTotals = null;
     let yearlyTotals = null;
     if (data[2]) {
-        careerTotals = data[1];
-        yearlyTotals = data[2]["all_years"];
+        careerTotals = data[2];
+        yearlyTotals = data[3]["all_years"];
     }
     return [careerTotals, yearlyTotals];
 }

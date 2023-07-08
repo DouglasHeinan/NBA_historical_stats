@@ -171,10 +171,12 @@ def check_team_color_logo_entries():
 # rand_player functions*******************************************
 def rando_player(request):
     rand_player = determine_rand_player()
+    num_players = {}
+    num_players["one_player"] = True
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         player = get_fetched_player_info_dict(rand_player)
         career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(rand_player)
-        return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
+        return JsonResponse([num_players, player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
 
 
 def determine_rand_player():
@@ -190,21 +192,20 @@ def determine_rand_player():
 # Serched player functions***************************************
 def search_player(request, searched):
     searched_players = determine_searched_player(searched)
+    num_players = {}
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         if len(searched_players) == 1:
+            num_players["one_player"] = True
             player = get_fetched_player_info_dict(searched_players[0])
             career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(searched_players[0])
-            return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
+            return JsonResponse([num_players, player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
         else:
-            players = []
+            num_players["one_player"] = False
+            players = {}
             for player in searched_players:
-                new_player = get_fetched_player_oinfo_dict(player)
-                players.append(new_player)
-            # players = {}
-            # for player in searched_players:
-            #     new_player = get_fetched_player_info_dict(player)
-            #     players[f"{new_player['first_name']} {new_player['last_name']}"] = new_player
-            # return JsonResponse(players)
+                new_player = get_fetched_player_info_dict(player)
+                players[f"{new_player['first_name']} {new_player['last_name']}"] = new_player
+            return JsonResponse([num_players, players], safe=False)
 
         # player = get_fetched_player_info_dict(searched_player)
         # career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(searched_player)
