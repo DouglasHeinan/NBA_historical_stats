@@ -12,6 +12,7 @@ const dropdownDiv = document.querySelector(".dropdownOptions");
 const dropBtns = document.querySelectorAll(".statDrop");
 const chart = document.querySelector("#plot");
 const searchBtn = document.querySelector("#searchBtn");
+const searchResultsList = document.querySelector("#searchedPlayerList");
 const searchInput = document.querySelector("#searchInput");
 const nameList = document.querySelector("#listPlayerNames");
 const nameDiv = document.querySelector("#divPlayerNames");
@@ -150,9 +151,9 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
         return playerData;
     } else {
         hideTables();
-        toggleHidden(nameDiv);
-        for (player in playerData[1]) {
-            createPlayerPageLink(player)
+        const players = Object.values(playerData[1])
+        for (let i = 0; i < players.length; i++) {
+            createPlayerPageLink(players[i])
         }
     }
 }
@@ -217,10 +218,18 @@ function createBBRefLink(data) {
 
 
 function createPlayerPageLink(player) {
+    newListTag = document.createElement("li");
+    newAnchorTag = document.createElement("a");
     fullName = player["first_name"] + " " + player["last_name"]
-    playerLink.classList.add = playerPage;
-    playerLink.innerText = full_name;
+    newAnchorTag.classList.add("playerPage");
+    newAnchorTag.innerText = fullName;
+    newAnchorTag.href = "#";
+    newListTag.insertAdjacentElement("beforeend", newAnchorTag)
+    nameList.insertAdjacentElement("beforeend", newListTag)
 }
+
+
+
 
 
 /**
@@ -258,11 +267,14 @@ function deletePreviousData() {
 
 
 function hideTables() {
-    graphingBtn.classList.add("hidden")
+//    searchResultsList.classList.remove("hidden")
+//    nameDiv.classList.remove("hidden");
+    playerLink.innerText = "";
+//    nameDiv.classList.add("hidden");
+    graphingBtn.classList.add("hidden");
     const tables = document.querySelectorAll(".tableDiv");
-    console.log(tables)
     for (i = 0; i < tables.length; i++) {
-        tables[i].classList.add("hidden")
+        tables[i].classList.add("hidden");
     }
 }
 
