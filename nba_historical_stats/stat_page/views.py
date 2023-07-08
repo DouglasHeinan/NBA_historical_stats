@@ -62,8 +62,6 @@ def create_player_db_entries(all_players):
 
 
 def create_player_statistical_db(player, stat_group):
-    print(player.first_name + " " + player.last_name)
-    print(player.player_id)
     raw_stats = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
     all_player_stats = raw_stats.get_dict()
     if stat_group == "yearly":
@@ -190,27 +188,55 @@ def determine_rand_player():
 
 
 # Serched player functions***************************************
-def search_player(request):
-    print(searched)
-    searched_player = determine_searched_player(searched)
+def search_player(request, searched):
+    searched_players = determine_searched_player(searched)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        player = get_fetched_player_info_dict(searched_player)
-        career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(searched_plaer)
-        return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
+        if len(searched_players) == 1:
+            player = get_fetched_player_info_dict(searched_players[0])
+            career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(searched_players[0])
+            return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
+        else:
+            players = []
+            for player in searched_players:
+                new_player = get_fetched_player_oinfo_dict(player)
+                players.append(new_player)
+            # players = {}
+            # for player in searched_players:
+            #     new_player = get_fetched_player_info_dict(player)
+            #     players[f"{new_player['first_name']} {new_player['last_name']}"] = new_player
+            # return JsonResponse(players)
+
+        # player = get_fetched_player_info_dict(searched_player)
+        # career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(searched_player)
+        # return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
 
 
 def determine_searched_player(searched):
-    pass
+    search_terms = []
+    partials = []
+    words = searched.split(" ")
+    for word in words:
+        f_names = Player.objects.filter(first_name=word.capitalize())
+        for name in f_names:
+            search_terms.append(name)
+        l_names = Player.objects.filter(last_name=word.capitalize())
+        for name in l_names:
+            search_terms.append(name)
+    for term in search_terms:
+        if searched.lower() == term.first_name.lower() + " " + term.last_name.lower():
+            return [term]
+    return search_terms
+
 
 
 
 # Player info retrievel****************************************
-def get_fetched_player_info_dict(rand_player):
+def get_fetched_player_info_dict(player):
     info = {
-        "first_name": rand_player.first_name,
-        "last_name": rand_player.last_name,
-        "bb_ref_link": rand_player.bb_ref_link,
-        "id" : rand_player.player_id
+        "first_name": player.first_name,
+        "last_name": player.last_name,
+        "bb_ref_link": player.bb_ref_link,
+        "id" : player.player_id
     }
     return info
 

@@ -10,7 +10,8 @@ const graphTypeBtn = document.querySelector("#selectChartType");
 const dropdownDiv = document.querySelector(".dropdownOptions");
 const dropBtns = document.querySelectorAll(".statDrop");
 const chart = document.querySelector("#plot");
-const serachBtn = document.querySelector("#searchBtn");
+const searchBtn = document.querySelector("#searchBtn");
+const searchInput = document.querySelector("#searchInput")
 
 
 //********************Global Variables******************
@@ -26,7 +27,7 @@ const fetchHeaders = {
 
 //***********************Event Listeners***************
 searchBtn.addEventListener("click", async() => {
-    curPlayer = await searchPlayer();
+    curPlayer = await retrievePlayer(fetchSearchedPlayer, searchInput.value);
     plot.classList.add("hidden");
 })
 
@@ -134,10 +135,11 @@ function adjustAxis(axis, toGraph) {
 /**
 * Calls functions that create links and tables for a random player.
 */
-async function retrievePlayer(fetchFunc) {
+async function retrievePlayer(fetchFunc, ...optionalArg) {
     deletePreviousData();
-    const playerRes = await fetchFunc();
+    const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
+    console.log(playerData)
     createLink(playerData);
     const [careerTotals, yearlyTotals] = getStats(playerData);
     makeTables(careerTotals, yearlyTotals);
@@ -181,10 +183,10 @@ function makeTables(careerTotals, yearlyTotals) {
 /**
 NEEDS NOTES*******************
 */
-async function fetchSearchedPlayer() {
-    const playerRes = await fetch("search_player/"), {
+async function fetchSearchedPlayer(searched) {
+    const playerRes = await fetch(`search_player/${searched}`, {
         headers:fetchHeaders
-    }
+    });
     return playerRes;
 }
 
