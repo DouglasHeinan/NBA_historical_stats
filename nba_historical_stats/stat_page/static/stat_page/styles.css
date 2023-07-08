@@ -47,6 +47,11 @@ ul {
     font-size: 1.5em;
 }
 
+.playerPage {
+    color: navy;
+    font-size: 1.2em;
+}
+
 .inline {
     width: 3em;
     text-align: center;

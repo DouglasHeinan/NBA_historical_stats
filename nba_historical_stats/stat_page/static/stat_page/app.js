@@ -155,6 +155,16 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
         for (let i = 0; i < players.length; i++) {
             createPlayerPageLink(players[i])
         }
+        const retrievedPlayerLinks = document.querySelectorAll(".playerPage")
+        retrievedPlayerLinks.forEach(e => e.addEventListener("click", async() => {
+            curPlayer = await retrievePlayer(fetchSearchedPlayer, e.innerText)
+        }))
+//        for (i = 0; i < retrievedPlayerLinks.length; i++) {
+//            retrievedPlayerLinks[i].addEventListener("click", async() => {
+//                toSearch = retrievedPlayerLinks[i].innerText;
+//                curPlayer = await retrievePlayer(fetchSearchedPlayer, toSearch);
+//            })
+//        }
     }
 }
 
