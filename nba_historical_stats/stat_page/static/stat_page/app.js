@@ -1,6 +1,7 @@
 
 //********************Query Selectors********************
 
+
 const playerLinkDiv = document.querySelector("#playerLinkDiv");
 const playerLink = document.querySelector("#playerLink");
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
@@ -20,6 +21,7 @@ const nameDiv = document.querySelector("#divPlayerNames");
 
 //********************Global Variables******************
 
+
 let curPlayer = null;
 const statBtnLength = dropBtns.length;
 const fetchHeaders = {
@@ -28,8 +30,9 @@ const fetchHeaders = {
 }
 
 
-
 //***********************Event Listeners***************
+
+
 searchBtn.addEventListener("click", async() => {
     curPlayer = await retrievePlayer(fetchSearchedPlayer, searchInput.value);
     plot.classList.add("hidden");
@@ -137,38 +140,72 @@ function adjustAxis(axis, toGraph) {
 
 
 /**
-* Calls functions that create links and tables for a random player.
+* NEEDS NOTES.
 */
 async function retrievePlayer(fetchFunc, ...optionalArg) {
-    deleteLastSearch()
+    deleteLastSearch();
     deletePreviousData();
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
     if (playerData[0]["one_player"] == true) {
-        toggleHidden(playerLinkDiv);
-        createBBRefLink(playerData);
-        const [careerTotals, yearlyTotals] = getStats(playerData);
-        makeTables(careerTotals, yearlyTotals);
+        createPlayerPage(playerData);
         return playerData;
     } else {
         hideTables();
-        const players = Object.values(playerData[1])
-        for (let i = 0; i < players.length; i++) {
-            createPlayerPageLink(players[i])
-        }
-        const retrievedPlayerLinks = document.querySelectorAll(".playerPage")
-        retrievedPlayerLinks.forEach(e => e.addEventListener("click", async() => {
-            deleteLastSearch()
-            const tables = document.querySelectorAll(".tableDiv");
-            for (i = 0; i < tables.length; i++) {
-                tables[i].classList.remove("hidden");
-            }
-            curPlayer = await retrievePlayer(fetchSearchedPlayer, e.innerText)
-        }))
+        createPlayerLinkList(playerData);
+    }
+}
+
+/**
+* NEEDS NOTES
+*/
+function createPlayerPage(playerData) {
+    toggleHidden(playerLinkDiv);
+    createBBRefLink(playerData);
+    const [careerTotals, yearlyTotals] = getStats(playerData);
+    makeTables(careerTotals, yearlyTotals);
+}
+
+
+/**
+* NOTES NEEDED
+*/
+function createPlayerLinkList(playerData) {
+    const players = Object.values(playerData[1])
+    for (let i = 0; i < players.length; i++) {
+        createPlayerPageLink(players[i]);
+
     }
 }
 
 
+/**
+* NEEDS NOTES
+*/
+function createPlayerLinkListeners() {
+    const retrievedPlayerLinks = document.querySelectorAll(".playerPage")
+    retrievedPlayerLinks.forEach(e => e.addEventListener("click", async() => {
+        deleteLastSearch();
+        removeOldTables();
+        curPlayer = await retrievePlayer(fetchSearchedPlayer, e.innerText)
+    }))
+}
+
+
+/**
+* NEEDS NOTES
+*/
+function removeOldTables() {
+    const tables = document.querySelectorAll(".tableDiv");
+    for (i = 0; i < tables.length; i++) {
+        tables[i].classList.remove("hidden");
+    }
+}
+
+
+/**
+* NEEDS NOTES.
+*/
 function deleteLastSearch() {
     toDelete = document.querySelectorAll(".playerPage");
     toDelete.forEach(e => e.remove())
@@ -208,6 +245,7 @@ function makeTables(careerTotals, yearlyTotals) {
 
 //***************************Player Search***************************
 
+
 /**
 NEEDS NOTES*******************
 */
@@ -243,9 +281,6 @@ function createPlayerPageLink(player) {
     newListTag.insertAdjacentElement("beforeend", newAnchorTag)
     nameList.insertAdjacentElement("beforeend", newListTag)
 }
-
-
-
 
 
 /**
@@ -344,6 +379,7 @@ function createTableData(data, table) {
         table.insertAdjacentElement("beforeend", colData);
     }
 }
+
 
 /**
 * Creates a row for each year of a player's career in the yearlyPlayerData table.
