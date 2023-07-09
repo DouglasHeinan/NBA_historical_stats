@@ -140,6 +140,7 @@ function adjustAxis(axis, toGraph) {
 * Calls functions that create links and tables for a random player.
 */
 async function retrievePlayer(fetchFunc, ...optionalArg) {
+    deleteLastSearch()
     deletePreviousData();
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
@@ -157,15 +158,20 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
         }
         const retrievedPlayerLinks = document.querySelectorAll(".playerPage")
         retrievedPlayerLinks.forEach(e => e.addEventListener("click", async() => {
+            deleteLastSearch()
+            const tables = document.querySelectorAll(".tableDiv");
+            for (i = 0; i < tables.length; i++) {
+                tables[i].classList.remove("hidden");
+            }
             curPlayer = await retrievePlayer(fetchSearchedPlayer, e.innerText)
         }))
-//        for (i = 0; i < retrievedPlayerLinks.length; i++) {
-//            retrievedPlayerLinks[i].addEventListener("click", async() => {
-//                toSearch = retrievedPlayerLinks[i].innerText;
-//                curPlayer = await retrievePlayer(fetchSearchedPlayer, toSearch);
-//            })
-//        }
     }
+}
+
+
+function deleteLastSearch() {
+    toDelete = document.querySelectorAll(".playerPage");
+    toDelete.forEach(e => e.remove())
 }
 
 
@@ -278,9 +284,8 @@ function deletePreviousData() {
 
 function hideTables() {
 //    searchResultsList.classList.remove("hidden")
-//    nameDiv.classList.remove("hidden");
+    nameDiv.classList.remove("hidden");
     playerLink.innerText = "";
-//    nameDiv.classList.add("hidden");
     graphingBtn.classList.add("hidden");
     const tables = document.querySelectorAll(".tableDiv");
     for (i = 0; i < tables.length; i++) {
