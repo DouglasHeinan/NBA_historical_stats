@@ -140,7 +140,17 @@ function adjustAxis(axis, toGraph) {
 
 
 /**
-* NEEDS NOTES.
+* This callback is used to retrieve player data.
+* @callback fetchFunc - The fetch function used to retrieve the player or players info (e.g.: fetchRandPlayer()).
+* @param {} [optionalArg] - An argument passed to the callback function; some callbacks require an argument.
+*/
+
+/**
+* Calls functions to clear screen of data from previous retrievals and calls fetch functions to retrieve data
+* for a new player or players.
+* @param {function} fetchFunc - The callback
+* @param {Object} [optionalArg] - An optional argument for the callback.
+* return {Object} - An array-like object containing all available information for a single player.
 */
 async function retrievePlayer(fetchFunc, ...optionalArg) {
     deleteLastSearch();

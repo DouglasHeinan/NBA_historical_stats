@@ -207,9 +207,6 @@ def search_player(request, searched):
                 players[f"{new_player['first_name']} {new_player['last_name']}"] = new_player
             return JsonResponse([num_players, players], safe=False)
 
-        # player = get_fetched_player_info_dict(searched_player)
-        # career_stats_dict, yearly_stats_dict, totals_only = get_fetched_player_stats_dicts(searched_player)
-        # return JsonResponse([player, career_stats_dict, yearly_stats_dict, totals_only], safe=False)
 
 
 def determine_searched_player(searched):
