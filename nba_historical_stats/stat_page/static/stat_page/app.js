@@ -17,6 +17,7 @@ const searchResultsList = document.querySelector("#searchedPlayerList");
 const searchInput = document.querySelector("#searchInput");
 const nameList = document.querySelector("#listPlayerNames");
 const nameDiv = document.querySelector("#divPlayerNames");
+const tables = document.querySelectorAll(".tableDiv");
 
 
 //********************Global Variables******************
@@ -35,13 +36,13 @@ const fetchHeaders = {
 
 searchBtn.addEventListener("click", async() => {
     curPlayer = await retrievePlayer(fetchSearchedPlayer, searchInput.value);
-    plot.classList.add("hidden");
+    chart.classList.add("hidden");
 })
 
 
 randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await retrievePlayer(fetchRandPlayer);
-    plot.classList.add("hidden");
+    chart.classList.add("hidden");
 })
 
 
@@ -159,6 +160,7 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
     const playerData = await playerRes.json();
     if (playerData[0]["one_player"] == true) {
         createPlayerPage(playerData);
+        revealTables()
         return playerData;
     } else {
         hideTables();
@@ -206,7 +208,6 @@ function createPlayerLinkListeners() {
 * NEEDS NOTES
 */
 function removeOldTables() {
-    const tables = document.querySelectorAll(".tableDiv");
     for (i = 0; i < tables.length; i++) {
         tables[i].classList.remove("hidden");
     }
@@ -334,9 +335,14 @@ function hideTables() {
     nameDiv.classList.remove("hidden");
     playerLink.innerText = "";
     graphingBtn.classList.add("hidden");
-    const tables = document.querySelectorAll(".tableDiv");
     for (i = 0; i < tables.length; i++) {
         tables[i].classList.add("hidden");
+    }
+}
+
+function revealTables() {
+    for (i = 0; i < tables.length; i++) {
+        tables[i].classList.remove("hidden");
     }
 }
 
