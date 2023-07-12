@@ -217,7 +217,8 @@ function removeOldTables() {
 * NEEDS NOTES.
 */
 function deleteLastSearch() {
-    toDelete = document.querySelectorAll(".playerPage");
+    toDelete = document.querySelectorAll(".listedPlayer");
+    console.log(toDelete)
     toDelete.forEach(e => e.remove())
 }
 
@@ -288,6 +289,7 @@ function createPlayerPageLink(player) {
     newAnchorTag.classList.add("playerPage");
     newAnchorTag.innerText = fullName;
     newAnchorTag.href = "#";
+    newListTag.classList.add("listedPlayer")
     newListTag.insertAdjacentElement("beforeend", newAnchorTag)
     nameList.insertAdjacentElement("beforeend", newListTag)
 }
