@@ -172,7 +172,6 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
 * NEEDS NOTES
 */
 function createPlayerPage(playerData) {
-    toggleHidden(playerLinkDiv);
     createBBRefLink(playerData);
     const [careerTotals, yearlyTotals] = getStats(playerData);
     makeTables(careerTotals, yearlyTotals);
@@ -186,7 +185,7 @@ function createPlayerLinkList(playerData) {
     const players = Object.values(playerData[1])
     for (let i = 0; i < players.length; i++) {
         createPlayerPageLink(players[i]);
-
+        createPlayerLinkListeners();
     }
 }
 
@@ -199,7 +198,7 @@ function createPlayerLinkListeners() {
     retrievedPlayerLinks.forEach(e => e.addEventListener("click", async() => {
         deleteLastSearch();
         removeOldTables();
-        curPlayer = await retrievePlayer(fetchSearchedPlayer, e.innerText)
+        curPlayer = await retrievePlayer(fetchSearchedPlayer, e.innerText);
     }))
 }
 
@@ -219,7 +218,6 @@ function removeOldTables() {
 */
 function deleteLastSearch() {
     toDelete = document.querySelectorAll(".listedPlayer");
-    console.log(toDelete)
     toDelete.forEach(e => e.remove())
 }
 
@@ -283,6 +281,9 @@ function createBBRefLink(data) {
 }
 
 
+/**
+* NEEDS NOTES
+*/
 function createPlayerPageLink(player) {
     newListTag = document.createElement("li");
     newAnchorTag = document.createElement("a");
@@ -316,9 +317,6 @@ function getStats(data){
 * Removes all empty <tr> elements and all present <td> elements from the player table.
 */
 function deletePreviousData() {
-    if (playerLink.innerText) {
-        toggleHidden(playerLinkDiv)
-    }
     const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
     for (i = 0; i < toDelete.length; i++) {
         toDelete[i].remove();
@@ -331,7 +329,6 @@ function deletePreviousData() {
 
 
 function hideTables() {
-//    searchResultsList.classList.remove("hidden")
     nameDiv.classList.remove("hidden");
     playerLink.innerText = "";
     graphingBtn.classList.add("hidden");
