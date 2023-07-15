@@ -51,6 +51,9 @@ graphingBtn.addEventListener("click", function() {
 })
 
 
+nameList.addEventListener("click", retrieveClickedPlayer)
+
+
 for (let i = 0; i < statBtnLength; i++) {
     dropBtns[i].addEventListener("click", function() {
         statToGrab = dropBtns[i].innerText;
@@ -185,21 +188,15 @@ function createPlayerLinkList(playerData) {
     const players = Object.values(playerData[1])
     for (let i = 0; i < players.length; i++) {
         createPlayerPageLink(players[i]);
-        createPlayerLinkListeners();
     }
 }
 
 
-/**
-* NEEDS NOTES
-*/
-function createPlayerLinkListeners() {
-    const retrievedPlayerLinks = document.querySelectorAll(".playerPage")
-    retrievedPlayerLinks.forEach(e => e.addEventListener("click", async() => {
-        deleteLastSearch();
-        removeOldTables();
-        curPlayer = await retrievePlayer(fetchSearchedPlayer, e.innerText);
-    }))
+async function retrieveClickedPlayer(e) {
+    console.log(e.target.innerText)
+    if (e.target.className == "playerPage") {
+        curPlayer = await retrievePlayer(fetchSearchedPlayer, e.target.innerText);
+    }
 }
 
 
