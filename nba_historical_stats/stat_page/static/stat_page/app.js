@@ -103,6 +103,7 @@ function makeChart(player, stat) {
 	margin: { t: 0 } } );
 }
 
+
 /**
 * makeAxis is called by makeChart to create the axes used in making said chart.
 * @param {Number} yearsPlayed - The number of seasons played by this player.
@@ -119,6 +120,7 @@ function makeAxis(yearsPlayed, player, toGraph) {
     }
     return axes;
 }
+
 
 /**
 adjustAxis is called by makeAxis; it adjusts year values to read as a single year and '-' values to read as zero.
@@ -342,7 +344,7 @@ function checkTotals(careerTotals, yearlyTotals) {
 
 
 /**
-*
+* Removes 'hidden' class from all tables.
 */
 function revealTables() {
     for (i = 0; i < tables.length; i++) {
