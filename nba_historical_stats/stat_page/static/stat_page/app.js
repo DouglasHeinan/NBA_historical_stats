@@ -37,12 +37,14 @@ const fetchHeaders = {
 searchBtn.addEventListener("click", async() => {
     curPlayer = await retrievePlayer(fetchSearchedPlayer, searchInput.value);
     chart.classList.add("hidden");
+    dropdownDiv.classList.add("hidden");
 })
 
 
 randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await retrievePlayer(fetchRandPlayer);
     chart.classList.add("hidden");
+    dropdownDiv.classList.add("hidden");
 })
 
 
@@ -140,13 +142,14 @@ function adjustAxis(axis, toGraph) {
 }
 
 
-//***************Random Player**************************
+//***************Random Player Functions**************************
+//These functions are all associated with retrieving and displaying a random player.
 
 
 /**
 * This callback is used to retrieve player data.
-* @callback fetchFunc - The fetch function used to retrieve the player or players info (e.g.: fetchRandPlayer()).
-* @param {} [optionalArg] - An argument passed to the callback function; some callbacks require an argument.
+* @callback fetchFunc - The fetch function is used to retrieve the player or players' info (e.g.: fetchRandPlayer()).
+* @param {Object} [optionalArg] - An argument passed to the callback function; some callbacks require an argument.
 */
 
 /**
@@ -171,14 +174,8 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
     }
 }
 
-/**
-* NEEDS NOTES
-*/
-function createPlayerPage(playerData) {
-    createBBRefLink(playerData);
-    const [careerTotals, yearlyTotals] = getStats(playerData);
-    makeTables(careerTotals, yearlyTotals);
-}
+
+
 
 
 /**
@@ -232,29 +229,14 @@ async function fetchRandPlayer() {
 }
 
 
-/**
-* If there is any player data, uses it to call the table-creating functions.
-* Also toggles graphing button visibility as necessary.
-* @param {Object} careerTotals - A player's career statistics.
-* @param {Object} yearlyTotals - An array of year-to-year player statistics.
-*/
-function makeTables(careerTotals, yearlyTotals) {
-    if (careerTotals) {
-        createAndPopulateTable(careerTotals, yearlyTotals);
-        if (graphingBtn.classList.contains("hidden")) {
-            toggleHidden(graphingBtn);
-        }
-    } else {
-        toggleHidden(graphingBtn)
-    }
-}
+
 
 
 //***************************Player Search***************************
 
 
 /**
-NEEDS NOTES*******************
+* NEEDS NOTES
 */
 async function fetchSearchedPlayer(searched) {
     const playerRes = await fetch(`search_player/${searched}`, {
@@ -264,7 +246,19 @@ async function fetchSearchedPlayer(searched) {
 }
 
 
-//********************Basic player data functions********************
+//********************Player page creation********************
+//Functions related to populating the page with the info for a single player.
+
+
+/**
+* Calls the three functions that combine to populate the page with a single player's information and stats.
+* @param {Object} playerData - An array-like object that contains all relevant data for a single player.
+*/
+function createPlayerPage(playerData) {
+    createBBRefLink(playerData);
+    const [careerTotals, yearlyTotals] = getStats(playerData);
+    checkTotals(careerTotals, yearlyTotals);
+}
 
 
 /**
@@ -275,22 +269,6 @@ function createBBRefLink(data) {
     const fullName = data[1]["first_name"] + " " + data[1]["last_name"];
     playerLink.href = data[1]['bb_ref_link'];
     playerLink.innerText = fullName;
-}
-
-
-/**
-* NEEDS NOTES
-*/
-function createPlayerPageLink(player) {
-    newListTag = document.createElement("li");
-    newAnchorTag = document.createElement("a");
-    fullName = player["first_name"] + " " + player["last_name"]
-    newAnchorTag.classList.add("playerPage");
-    newAnchorTag.innerText = fullName;
-    newAnchorTag.href = "#";
-    newListTag.classList.add("listedPlayer")
-    newListTag.insertAdjacentElement("beforeend", newAnchorTag)
-    nameList.insertAdjacentElement("beforeend", newListTag)
 }
 
 
@@ -307,6 +285,23 @@ function getStats(data){
         yearlyTotals = data[3]["all_years"];
     }
     return [careerTotals, yearlyTotals];
+}
+
+
+/**
+* Toggles visibility of of the graphingBtn; calls table-creating function if necessary.
+* @param {Object} careerTotals - A player's career statistics.
+* @param {Object} yearlyTotals - An array of year-to-year player statistics.
+*/
+function checkTotals(careerTotals, yearlyTotals) {
+    if (careerTotals) {
+        createAndPopulateTable(careerTotals, yearlyTotals);
+        if (graphingBtn.classList.contains("hidden")) {
+            toggleHidden(graphingBtn);
+        }
+    } else {
+        toggleHidden(graphingBtn)
+    }
 }
 
 
@@ -338,6 +333,22 @@ function revealTables() {
     for (i = 0; i < tables.length; i++) {
         tables[i].classList.remove("hidden");
     }
+}
+
+
+/**
+* NEEDS NOTES
+*/
+function createPlayerPageLink(player) {
+    newListTag = document.createElement("li");
+    newAnchorTag = document.createElement("a");
+    fullName = player["first_name"] + " " + player["last_name"]
+    newAnchorTag.classList.add("playerPage");
+    newAnchorTag.innerText = fullName;
+    newAnchorTag.href = "#";
+    newListTag.classList.add("listedPlayer")
+    newListTag.insertAdjacentElement("beforeend", newAnchorTag)
+    nameList.insertAdjacentElement("beforeend", newListTag)
 }
 
 

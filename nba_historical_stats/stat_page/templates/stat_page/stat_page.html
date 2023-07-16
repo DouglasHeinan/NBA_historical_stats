@@ -5,21 +5,27 @@
 <h1>Stat Page!</h1>
 <button id="randomPlayerReveal">Look up a random player!</button>
 
+
+<!--**************************SEARCH BOX***************************-->
 <div id="search">
     <input id="searchInput" type="text" placeholder="Search"></input>
     <button id="searchBtn">Search</button>
 </div>
 
+
+<!--************************PLAYER NAME/LINK*************************-->
 <div id="playerLinkDiv" class="">
     <a id="playerLink" target="_blank"></a>
 </div>
 
-<!--For player search-->
 
+<!--***************************PLAYER SEARCH RESULTS***************-->
 <div id="divPlayerNames" class="">
     <ul id="listPlayerNames"></ul>
 </div>
 
+
+<!--****************************STAT TO CHART*************************-->
 <div class="dropdown">
     <button id="makeChart" class="hidden dropdownBtn">Make chart</button>
     <div class="dropdownOptions hidden">
@@ -29,6 +35,8 @@
     </div>
 </div>
 
+
+<!--**************************CHART TYPE************************-->
 <div class="dropdown">
     <button id="selectChartType" class="hidden dropdownBtn">Graph type</button>
     <div class="dropdownOptions hidden">
@@ -39,7 +47,7 @@
 </div>
 
 
-
+<!--*********************STAT CHART****************************-->
 <div id="plot" class="chart"></div>
 
 
