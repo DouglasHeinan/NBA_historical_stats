@@ -1,4 +1,3 @@
-
 //********************Query Selectors********************
 
 
@@ -16,7 +15,7 @@ const searchBtn = document.querySelector("#searchBtn");
 const searchResultsList = document.querySelector("#searchedPlayerList");
 const searchInput = document.querySelector("#searchInput");
 const nameList = document.querySelector("#listPlayerNames");
-const nameDiv = document.querySelector("#divPlayerNames");
+const namesDiv = document.querySelector("#divPlayerNames");
 const tables = document.querySelectorAll(".tableDiv");
 
 
@@ -83,8 +82,8 @@ function toggleHidden(element) {
 }
 
 
-//********************Chart Player*******************************
-//These function are all related to chart creation and population.
+//********************Player stat charting*******************************
+//These functions are all related to chart creation and population for single player stats.
 
 
 /**
@@ -123,7 +122,7 @@ function makeAxis(yearsPlayed, player, toGraph) {
 
 /**
 adjustAxis is called by makeAxis; it adjusts year values to read as a single year and '-' values to read as zero.
-@param {*} axis - The value of the stat/column currently being assigne an axis value.
+@param {*} axis - The value of the stat/column currently being assigned an axis value.
 @param {String} toGraph - The stat/column currently being assigned an axis value.
 @return {*} - The axis value after adjustment, could be a String or Number.
 */
@@ -142,8 +141,8 @@ function adjustAxis(axis, toGraph) {
 }
 
 
-//***************Random Player Functions**************************
-//These functions are all associated with retrieving and displaying a random player.
+//*****************Player retrieval***************************
+//Functions that retrieve player data from the database.
 
 
 /**
@@ -161,12 +160,11 @@ function adjustAxis(axis, toGraph) {
 */
 async function retrievePlayer(fetchFunc, ...optionalArg) {
     deleteLastSearch();
-    deletePreviousData();
+    deleteTableData();
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
     if (playerData[0]["one_player"] == true) {
         createPlayerPage(playerData);
-        revealTables()
         return playerData;
     } else {
         hideTables();
@@ -175,50 +173,9 @@ async function retrievePlayer(fetchFunc, ...optionalArg) {
 }
 
 
-
-
-
-/**
-* NOTES NEEDED
-*/
-function createPlayerLinkList(playerData) {
-    const players = Object.values(playerData[1])
-    for (let i = 0; i < players.length; i++) {
-        createPlayerPageLink(players[i]);
-    }
-}
-
-
-async function retrieveClickedPlayer(e) {
-    console.log(e.target.innerText)
-    if (e.target.className == "playerPage") {
-        curPlayer = await retrievePlayer(fetchSearchedPlayer, e.target.innerText);
-    }
-}
-
-
-/**
-* NEEDS NOTES
-*/
-function removeOldTables() {
-    for (i = 0; i < tables.length; i++) {
-        tables[i].classList.remove("hidden");
-    }
-}
-
-
-/**
-* NEEDS NOTES.
-*/
-function deleteLastSearch() {
-    toDelete = document.querySelectorAll(".listedPlayer");
-    toDelete.forEach(e => e.remove())
-}
-
-
 /**
 * An async function that retrieves a python dictionary of a random player's information and
-* statistices from the 'rando_json/' function in views.py.
+* statistices from the 'rando_player/' function in views.py.
 * @return {Object} - The response (a promise) from the API.
 */
 async function fetchRandPlayer() {
@@ -229,14 +186,11 @@ async function fetchRandPlayer() {
 }
 
 
-
-
-
-//***************************Player Search***************************
-
-
 /**
-* NEEDS NOTES
+* An async function that retrieves a python dictionary of a random player's information and
+* statistices from the 'search_player/' function in views.py.
+* @param {} searched - An array of all words from the user-input search box.
+* @return {Object} - The response (a promise) from the API.
 */
 async function fetchSearchedPlayer(searched) {
     const playerRes = await fetch(`search_player/${searched}`, {
@@ -246,18 +200,100 @@ async function fetchSearchedPlayer(searched) {
 }
 
 
+//********************Player search results page**********************
+//Functions called to create and populate a search results page with multiple options.
+
+
+/**
+* Reveals elements of the page relevant to displaying search results; hides elements that are irrelevant.
+*/
+function hideTables() {
+    namesDiv.classList.remove("hidden");
+    playerLink.innerText = "";
+    graphingBtn.classList.add("hidden");
+    for (i = 0; i < tables.length; i++) {
+        tables[i].classList.add("hidden");
+    }
+}
+
+
+/**
+* Calls the createPlayerPageLink function for each player returned as a result of a user search.
+* @param {Object} playerData - An array of objects containing all player information.
+*/
+function createPlayerLinkList(playerData) {
+    const players = Object.values(playerData[1])
+    for (let i = 0; i < players.length; i++) {
+        createPlayerPageLink(players[i]);
+    }
+}
+
+
+/**
+* Creates and populates all necessary elements for a single player's link/name to be
+* displayed in a group of search results.
+* @param {Object} player - An object containing all basic information for a single player.
+*/
+function createPlayerPageLink(player) {
+    newListTag = document.createElement("li");
+    newAnchorTag = document.createElement("a");
+    fullName = player["first_name"] + " " + player["last_name"]
+    newAnchorTag.classList.add("playerPage");
+    newAnchorTag.innerText = fullName;
+    newAnchorTag.href = "#";
+    newListTag.classList.add("listedPlayer")
+    newListTag.insertAdjacentElement("beforeend", newAnchorTag)
+    nameList.insertAdjacentElement("beforeend", newListTag)
+}
+
+
+/**
+* Called by the NameList eventListener, calls retrievePlayer(), passing the clicked player's name as the optionalArg.
+*/
+async function retrieveClickedPlayer(e) {
+    if (e.target.className == "playerPage") {
+        curPlayer = await retrievePlayer(fetchSearchedPlayer, e.target.innerText);
+    }
+}
+
+
 //********************Player page creation********************
 //Functions related to populating the page with the info for a single player.
 
 
 /**
-* Calls the three functions that combine to populate the page with a single player's information and stats.
+* Removes all empty <tr> elements and all present <td> elements from the player table.
+*/
+function deleteTableData() {
+    const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
+    for (i = 0; i < toDelete.length; i++) {
+        toDelete[i].remove();
+    }
+    const tableData = document.querySelectorAll(".tableData");
+    for (let i = 0; i < tableData.length; i++) {
+        tableData[i].remove();
+    }
+}
+
+
+/**
+* Deletes all listed elements from a previous search result.
+*/
+function deleteLastSearch() {
+    toDelete = document.querySelectorAll(".listedPlayer");
+    toDelete.forEach(e => e.remove())
+}
+
+
+/**
+* Calls the four functions that combine to populate the page with a single player's information and stats.
 * @param {Object} playerData - An array-like object that contains all relevant data for a single player.
 */
 function createPlayerPage(playerData) {
     createBBRefLink(playerData);
     const [careerTotals, yearlyTotals] = getStats(playerData);
     checkTotals(careerTotals, yearlyTotals);
+    revealTables();
 }
 
 
@@ -306,49 +342,12 @@ function checkTotals(careerTotals, yearlyTotals) {
 
 
 /**
-* Removes all empty <tr> elements and all present <td> elements from the player table.
+*
 */
-function deletePreviousData() {
-    const toDelete = document.querySelectorAll(".yearlyPlayerDataRow");
-    for (i = 0; i < toDelete.length; i++) {
-        toDelete[i].remove();
-    }
-    const tableData = document.querySelectorAll(".tableData");
-    for (let i = 0; i < tableData.length; i++) {
-        tableData[i].remove();
-    }
-}
-
-
-function hideTables() {
-    nameDiv.classList.remove("hidden");
-    playerLink.innerText = "";
-    graphingBtn.classList.add("hidden");
-    for (i = 0; i < tables.length; i++) {
-        tables[i].classList.add("hidden");
-    }
-}
-
 function revealTables() {
     for (i = 0; i < tables.length; i++) {
         tables[i].classList.remove("hidden");
     }
-}
-
-
-/**
-* NEEDS NOTES
-*/
-function createPlayerPageLink(player) {
-    newListTag = document.createElement("li");
-    newAnchorTag = document.createElement("a");
-    fullName = player["first_name"] + " " + player["last_name"]
-    newAnchorTag.classList.add("playerPage");
-    newAnchorTag.innerText = fullName;
-    newAnchorTag.href = "#";
-    newListTag.classList.add("listedPlayer")
-    newListTag.insertAdjacentElement("beforeend", newAnchorTag)
-    nameList.insertAdjacentElement("beforeend", newListTag)
 }
 
 
