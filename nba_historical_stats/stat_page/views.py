@@ -12,25 +12,32 @@ import plotly.express as px
 import requests
 
 
+"""
+Renders the home page, sending a list of all stat names to populate a dropdown.
+
+:param request: The request object.
+:returns: Returns the rendered web page.
+"""
 def home(request):
     # ***THIS NEEDS TO BE CALLED IN ITS OWN FUNC***
     # update_db()
     # ******
-    all_players = Player.objects.all()
-    all_teams = Team.objects.all()
+    # all_players = Player.objects.all()
+    # all_teams = Team.objects.all()
     all_stat_fields = PlayerYearlyStats._meta.get_fields()
     all_stat_field_names = [field.name for field in all_stat_fields]
     del all_stat_field_names[-1]
     del all_stat_field_names[0:4]
     context = {
-        'players': all_players,
-        'teams': all_teams,
+        # 'players': all_players,
+        # 'teams': all_teams,
         "stat_categories": all_stat_field_names
     }
     return render(request, 'stat_page/stat_page.html', context)
 
-
-# db update player functions*******************************************
+"""
+Calls functions that create db entries for new players and teams, if there are any.
+"""
 def update_db():
     all_players = players.get_players()
     all_teams = teams.get_teams()
@@ -48,6 +55,10 @@ def update_db():
     update_player_stats()
 
 
+# db update player functions*******************************************
+"""
+Creates a new db entry for a player; called by the 'update_db' function.
+"""
 def create_player_db_entries(all_players):
     for player in all_players:
         new_player = Player(
@@ -61,6 +72,9 @@ def create_player_db_entries(all_players):
         create_player_statistical_db(new_player)
 
 
+"""
+Retrieves all stats for a player form the nba api; calls function to create a db entry in the appropriate stat table.
+"""
 def create_player_statistical_db(player, stat_group):
     raw_stats = playercareerstats.PlayerCareerStats(per_mode36="PerGame", player_id=player.player_id)
     all_player_stats = raw_stats.get_dict()
@@ -72,6 +86,9 @@ def create_player_statistical_db(player, stat_group):
         create_career_stat_entry(career_stats, player)
 
 
+"""
+
+"""
 def update_player_stats():
     for player in Player.objects.all():
         if not PlayerYearlyStats.objects.filter(player=player).exists():
@@ -80,7 +97,9 @@ def update_player_stats():
             create_player_statistical_db(player, 'career')
 
 
+"""
 
+"""
 def create_year_by_year_stat_entry(stats, player):
     for stat in stats:
         new_entry = PlayerYearlyStats(
