@@ -42,6 +42,22 @@ ul {
     margin: 1em;
 }
 
+.playersToGraph {
+    display: flex;
+    justify-content: start;
+}
+
+.onePlayerOnly {
+    display: flex;
+    justify-content: start;
+    width: 50%;
+    margin-left: 1em;
+}
+
+.compBtnDiv {
+    margin-left: 0.5em;
+}
+
 #playerLink {
     color: black;
     font-size: 1.5em;

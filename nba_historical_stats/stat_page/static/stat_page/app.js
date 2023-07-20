@@ -1,7 +1,11 @@
 //********************Query Selectors********************
 
 
-const playerLinkDiv = document.querySelector("#playerLinkDiv");
+const selectedPlayers = document.querySelector(".playersToGraph");
+const leftPlayerDiv = document.querySelector("#leftPlayerDiv");
+const rightPlayerDiv = document.querySelector("#rightPlayerDiv");
+const compBtnDiv = document.querySelector(".compBtnDiv");
+const compBtn = document.querySelector("#compBtn")
 const playerLink = document.querySelector("#playerLink");
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
@@ -237,6 +241,7 @@ function createPlayerLinkList(playerData) {
 * @param {Object} player - An object containing all basic information for a single player.
 */
 function createPlayerPageLink(player) {
+    compBtnDiv.classList.remove("hidden");
     newListTag = document.createElement("li");
     newAnchorTag = document.createElement("a");
     fullName = player["first_name"] + " " + player["last_name"]
@@ -344,9 +349,10 @@ function checkTotals(careerTotals, yearlyTotals) {
 
 
 /**
-* Removes 'hidden' class from all tables.
+* Removes 'hidden' class from all tables and the comparison button.
 */
 function revealTables() {
+    compBtnDiv.classList.remove("hidden");
     for (i = 0; i < tables.length; i++) {
         tables[i].classList.remove("hidden");
     }
