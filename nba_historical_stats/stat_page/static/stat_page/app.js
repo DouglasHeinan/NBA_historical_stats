@@ -276,7 +276,7 @@ async function retrieveClickedPlayer(e) {
     }
 }
 
-
+//NEEDS NOTES
 function splitScreen() {
     singlePlayer.classList.add("halfPage");
 }
