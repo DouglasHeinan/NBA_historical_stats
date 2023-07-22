@@ -376,7 +376,7 @@ function revealTables() {
     }
 }
 
-
+//NEEDS NOTES
 function revealRightSideName() {
     splitScreen();
     rightPlayerDiv.classList.remove("hidden");
