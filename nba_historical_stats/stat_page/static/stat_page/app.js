@@ -40,7 +40,7 @@ const fetchHeaders = {
 
 
 //***********************Event Listeners***************
-
+//GIVE NOTES FOR EL?
 
 searchBtn.addEventListener("click", async() => {
     curPlayer = await retrievePlayer(fetchSearchedPlayer, false, searchInput.value);
