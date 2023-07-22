@@ -3,36 +3,51 @@
 {% block content %}
 
 <h1>Stat Page!</h1>
-<button id="randomPlayerReveal">Look up a random player!</button>
+<h3 id="compHeader" class="hidden">Compare to:</h3>
+<div id="hideForComp">
+    <button id="randomPlayerReveal">Look up a random player!</button>
 
 
-<!--**************************SEARCH BOX***************************-->
-<div id="search">
-    <input id="searchInput" type="text" placeholder="Search"></input>
-    <button id="searchBtn">Search</button>
-</div>
+    <!--**************************SEARCH BOX***************************-->
+<!--    <div id="search">-->
+<!--        <input id="searchInput" type="text" placeholder="Search"></input>-->
+<!--        <button id="searchBtn">Search</button>-->
+<!--    </div>-->
 
 
-<!--************************PLAYER NAME/LINK*************************-->
-<div class="playersToGraph">
-    <div class="onePlayerOnly">
-        <div id="leftPlayerDiv" class="">
-            <a id="playerLink" target="_blank"></a>
+    <!--************************PLAYER NAME/LINK*************************-->
+    <div class="playersToGraph">
+        <div class="search">
+            <input id="searchInputOne" type="text" placeholder="Search"></input>
+            <button id="searchBtnOne">Search</button>
         </div>
+        <div id="onePlayerOnly">
+            <div id="leftPlayerDiv" class="">
+                <a id="playerLink" target="_blank"></a>
+            </div>
 
-        <div class="compBtnDiv hidden">
-            <button id="compBtn">Compare</button>
+            <div class="compBtnDiv hidden">
+                <button id="compBtn">Compare</button>
+            </div>
+        </div>
+        <div class="search">
+            <button id="searchBtnTwo">Search</button>
+            <input id="searchInputTwo" type="text" placeholder="Search"></input>
+        </div>
+        <div id="rightPlayerDiv" class="hidden halfPage">
+            <a id="compPlayerLink" target="_blank">JJJ</a>
         </div>
     </div>
-    <div id="rightPlayerDiv" class="hidden">
-        <a id="playerLink" target="_blank"></a>
-    </div>
 </div>
-
 
 <!--***************************PLAYER SEARCH RESULTS***************-->
 <div id="divPlayerNames" class="">
     <ul id="listPlayerNames"></ul>
+</div>
+
+
+<div id="divCompNames" class="hidden">
+    <ul id="listCompNames"></ul>
 </div>
 
 

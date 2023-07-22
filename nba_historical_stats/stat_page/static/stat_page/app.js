@@ -5,7 +5,10 @@ const selectedPlayers = document.querySelector(".playersToGraph");
 const leftPlayerDiv = document.querySelector("#leftPlayerDiv");
 const rightPlayerDiv = document.querySelector("#rightPlayerDiv");
 const compBtnDiv = document.querySelector(".compBtnDiv");
-const compBtn = document.querySelector("#compBtn")
+const compBtn = document.querySelector("#compBtn");
+const compHeader = document.querySelector("#compHeader");
+const hideForComp = document.querySelector("#hideForComp");
+const singlePlayer = document.querySelector("#onePlayerOnly");
 const playerLink = document.querySelector("#playerLink");
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
@@ -15,11 +18,13 @@ const graphTypeBtn = document.querySelector("#selectChartType");
 const dropdownDiv = document.querySelector(".dropdownOptions");
 const dropBtns = document.querySelectorAll(".statDrop");
 const chart = document.querySelector("#plot");
-const searchBtn = document.querySelector("#searchBtn");
+const searchBtn = document.querySelector("#searchBtnOne");
+const searchInput = document.querySelector("#searchInputOne");
 const searchResultsList = document.querySelector("#searchedPlayerList");
-const searchInput = document.querySelector("#searchInput");
 const nameList = document.querySelector("#listPlayerNames");
+const compList = document.querySelector("#listCompNames");
 const namesDiv = document.querySelector("#divPlayerNames");
+const compDiv = document.querySelector("#divCompNames");
 const tables = document.querySelectorAll(".tableDiv");
 
 
@@ -38,14 +43,14 @@ const fetchHeaders = {
 
 
 searchBtn.addEventListener("click", async() => {
-    curPlayer = await retrievePlayer(fetchSearchedPlayer, searchInput.value);
+    curPlayer = await retrievePlayer(fetchSearchedPlayer, false, searchInput.value);
     chart.classList.add("hidden");
     dropdownDiv.classList.add("hidden");
 })
 
 
 randomPlayerBtn.addEventListener("click", async() => {
-    curPlayer = await retrievePlayer(fetchRandPlayer);
+    curPlayer = await retrievePlayer(fetchRandPlayer, false);
     chart.classList.add("hidden");
     dropdownDiv.classList.add("hidden");
 })
@@ -54,6 +59,9 @@ randomPlayerBtn.addEventListener("click", async() => {
 graphingBtn.addEventListener("click", function() {
     toggleHidden(dropdownDiv);
 })
+
+
+compBtn.addEventListener("click", revealRightSideName)
 
 
 nameList.addEventListener("click", retrieveClickedPlayer)
@@ -164,17 +172,22 @@ function adjustAxis(axis, toGraph) {
 * @param {Object} [optionalArg] - An optional argument for the callback.
 * return {Object} - An array-like object containing all available information for a single player.
 */
-async function retrievePlayer(fetchFunc, ...optionalArg) {
+async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
     deleteLastSearch();
     deleteTableData();
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
+    console.log(playerData);
     if (playerData[0]["one_player"] == true) {
         createPlayerPage(playerData);
         return playerData;
     } else {
         hideTables();
-        createPlayerLinkList(playerData);
+        if (comp) {
+            splitScreen()
+        } else {
+            createPlayerLinkList(playerData);
+        }
     }
 }
 
@@ -259,8 +272,13 @@ function createPlayerPageLink(player) {
 */
 async function retrieveClickedPlayer(e) {
     if (e.target.className == "playerPage") {
-        curPlayer = await retrievePlayer(fetchSearchedPlayer, e.target.innerText);
+        curPlayer = await retrievePlayer(fetchSearchedPlayer, false, e.target.innerText);
     }
+}
+
+
+function splitScreen() {
+    singlePlayer.classList.add("halfPage");
 }
 
 
@@ -356,6 +374,18 @@ function revealTables() {
     for (i = 0; i < tables.length; i++) {
         tables[i].classList.remove("hidden");
     }
+}
+
+
+function revealRightSideName() {
+    splitScreen();
+    rightPlayerDiv.classList.remove("hidden");
+    const searchedName = prompt("Compare to whom?");
+    hideForComp.classList.add("hidden");
+    toggleHidden(compHeader);
+    toggleHidden(compDiv);
+    playerOne = curPlayer;
+    retrievePlayer(fetchSearchedPlayer, true, searchedName);
 }
 
 

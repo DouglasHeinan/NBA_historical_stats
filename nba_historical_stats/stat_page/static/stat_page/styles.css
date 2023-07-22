@@ -32,6 +32,10 @@ ul {
     list-style: none;
 }
 
+.halfPage {
+    width: 50%;
+}
+
 /*******************************FONTS*******************************/
 .bigFont {
     font-size: 5em;
@@ -42,12 +46,16 @@ ul {
     margin: 1em;
 }
 
+.search {
+    display: flex;
+}
+
 .playersToGraph {
     display: flex;
     justify-content: start;
 }
 
-.onePlayerOnly {
+#onePlayerOnly {
     display: flex;
     justify-content: start;
     width: 50%;
