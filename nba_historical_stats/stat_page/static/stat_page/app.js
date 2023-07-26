@@ -2,12 +2,14 @@
 
 
 const selectedPlayers = document.querySelector(".playersToGraph");
+const onePlayerOnly = document.querySelector("#onePlayerOnly");
 const leftPlayerDiv = document.querySelector("#leftPlayerDiv");
 const rightPlayerDiv = document.querySelector("#rightPlayerDiv");
 const compBtnDiv = document.querySelector(".compBtnDiv");
 const compBtn = document.querySelector("#compBtn");
 const compHeader = document.querySelector("#compHeader");
 const hideForComp = document.querySelector("#hideForComp");
+const secondSearch = document.querySelector("#secondSearch");
 const singlePlayer = document.querySelector("#onePlayerOnly");
 const playerLink = document.querySelector("#playerLink");
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
@@ -43,6 +45,9 @@ const fetchHeaders = {
 //GIVE NOTES FOR EL?
 
 searchBtn.addEventListener("click", async() => {
+    onePlayerOnly.classList.remove("flex");
+    onePlayerOnly.classList.add("hidden");
+    hideCompDiv();
     curPlayer = await retrievePlayer(fetchSearchedPlayer, false, searchInput.value);
     chart.classList.add("hidden");
     dropdownDiv.classList.add("hidden");
@@ -50,6 +55,7 @@ searchBtn.addEventListener("click", async() => {
 
 
 randomPlayerBtn.addEventListener("click", async() => {
+    hideCompDiv();
     curPlayer = await retrievePlayer(fetchRandPlayer, false);
     chart.classList.add("hidden");
     dropdownDiv.classList.add("hidden");
@@ -61,7 +67,7 @@ graphingBtn.addEventListener("click", function() {
 })
 
 
-compBtn.addEventListener("click", revealRightSideName)
+compBtn.addEventListener("click", revealRightSideSearch)
 
 
 nameList.addEventListener("click", retrieveClickedPlayer)
@@ -271,6 +277,8 @@ function createPlayerPageLink(player) {
 * Called by the NameList eventListener, calls retrievePlayer(), passing the clicked player's name as the optionalArg.
 */
 async function retrieveClickedPlayer(e) {
+    onePlayerOnly.classList.add("flex");
+    onePlayerOnly.classList.remove("hidden");
     if (e.target.className == "playerPage") {
         curPlayer = await retrievePlayer(fetchSearchedPlayer, false, e.target.innerText);
     }
@@ -376,14 +384,32 @@ function revealTables() {
     }
 }
 
+
+function hideTables() {
+    for (i = 0; i < tables.length; i++) {
+        tables[i].classList.add("hidden");
+    }
+}
+
+
+function hideCompDiv() {
+    secondSearch.classList.remove("search");
+    secondSearch.classList.add("hidden");
+    rightPlayerDiv.classList.add("hidden");
+//    compBtnDiv.classList.add("hidden");
+}
+
 //NEEDS NOTES
-function revealRightSideName() {
+function revealRightSideSearch() {
+    secondSearch.classList.add("search");
+    secondSearch.classList.remove("hidden");
     splitScreen();
     rightPlayerDiv.classList.remove("hidden");
-    const searchedName = prompt("Compare to whom?");
-    hideForComp.classList.add("hidden");
-    toggleHidden(compHeader);
-    toggleHidden(compDiv);
+    hideTables();
+//    const searchedName = prompt("Compare to whom?");
+//    hideForComp.classList.add("hidden");
+//    toggleHidden(compHeader);
+//    toggleHidden(compDiv);
     playerOne = curPlayer;
     retrievePlayer(fetchSearchedPlayer, true, searchedName);
 }
