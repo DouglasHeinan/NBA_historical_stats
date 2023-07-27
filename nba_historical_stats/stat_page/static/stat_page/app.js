@@ -22,6 +22,8 @@ const dropBtns = document.querySelectorAll(".statDrop");
 const chart = document.querySelector("#plot");
 const searchBtn = document.querySelector("#searchBtnOne");
 const searchInput = document.querySelector("#searchInputOne");
+const searchBtnTwo = document.querySelector("#searchBtnTwo");
+const searchInputTwo = document.querySelector("#searchInputTwo");
 const searchResultsList = document.querySelector("#searchedPlayerList");
 const nameList = document.querySelector("#listPlayerNames");
 const compList = document.querySelector("#listCompNames");
@@ -67,7 +69,10 @@ graphingBtn.addEventListener("click", function() {
 })
 
 
-compBtn.addEventListener("click", revealRightSideSearch)
+compBtn.addEventListener("click", async() => {
+    revealRightSideSearch();
+})
+
 
 
 nameList.addEventListener("click", retrieveClickedPlayer)
@@ -183,7 +188,6 @@ async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
     deleteTableData();
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
-    console.log(playerData);
     if (playerData[0]["one_player"] == true) {
         createPlayerPage(playerData);
         return playerData;
@@ -401,17 +405,25 @@ function hideCompDiv() {
 
 //NEEDS NOTES
 function revealRightSideSearch() {
+    compBtn.classList.add("hidden");
     secondSearch.classList.add("search");
     secondSearch.classList.remove("hidden");
     splitScreen();
     rightPlayerDiv.classList.remove("hidden");
     hideTables();
-//    const searchedName = prompt("Compare to whom?");
 //    hideForComp.classList.add("hidden");
-//    toggleHidden(compHeader);
+    toggleHidden(compHeader);
+    searchBtnTwo.addEventListener("click", function() {
+        searched = searchInputTwo.value;
+        getSecondName(searched)
+    })
 //    toggleHidden(compDiv);
-    playerOne = curPlayer;
-    retrievePlayer(fetchSearchedPlayer, true, searchedName);
+//    playerOne = curPlayer;
+//    retrievePlayer(fetchSearchedPlayer, true, searchedName);
+}
+
+async function getSecondName(searched) {
+    searchedPlayer = retrievePlayer(fetchSearchedPlayer, true, searched);
 }
 
 
