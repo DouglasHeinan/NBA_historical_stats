@@ -202,15 +202,15 @@ async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
         hideTables();
         if (comp) {
             splitScreen()
-            createPlayerCompList(playerData);
+            createPlayerLinkList(playerData, true);
         } else {
-            createPlayerLinkList(playerData);
+            createPlayerLinkList(playerData, false);
         }
     }
 }
 
 
-function createPlayerCompList() {
+function createPlayerCompList(playerData) {
     const players = Object.values(playerData[1])
     for (let i = 0; i < players.length; i++) {
         createPlayerPageLink(players[i]);
@@ -266,10 +266,10 @@ function hideTables() {
 * Calls the createPlayerPageLink function for each player returned as a result of a user search.
 * @param {Object} playerData - An array of objects containing all player information.
 */
-function createPlayerLinkList(playerData) {
+function createPlayerLinkList(playerData, comp) {
     const players = Object.values(playerData[1])
     for (let i = 0; i < players.length; i++) {
-        createPlayerPageLink(players[i]);
+        createPlayerPageLink(players[i], comp);
     }
 }
 
@@ -279,7 +279,7 @@ function createPlayerLinkList(playerData) {
 * displayed in a group of search results.
 * @param {Object} player - An object containing all basic information for a single player.
 */
-function createPlayerPageLink(player) {
+function createPlayerPageLink(player, comp) {
     compBtnDiv.classList.remove("hidden");
     newListTag = document.createElement("li");
     newAnchorTag = document.createElement("a");
@@ -289,7 +289,12 @@ function createPlayerPageLink(player) {
     newAnchorTag.href = "#";
     newListTag.classList.add("listedPlayer")
     newListTag.insertAdjacentElement("beforeend", newAnchorTag)
-    nameList.insertAdjacentElement("beforeend", newListTag)
+    if (comp) {
+        compDiv.classList.remove("hidden");
+        compList.insertAdjacentElement("beforeend", newListTag)
+    } else {
+        nameList.insertAdjacentElement("beforeend", newListTag)
+    }
 }
 
 
