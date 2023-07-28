@@ -12,6 +12,7 @@ const hideForComp = document.querySelector("#hideForComp");
 const secondSearch = document.querySelector("#secondSearch");
 const singlePlayer = document.querySelector("#onePlayerOnly");
 const playerLink = document.querySelector("#playerLink");
+const compPlayerLink = document.querySelector("#compPlayerLink");
 const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
 const careerTableData = document.querySelector("#careerPlayerDataRow");
@@ -189,15 +190,30 @@ async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
     if (playerData[0]["one_player"] == true) {
-        createPlayerPage(playerData);
-        return playerData;
+        if (comp) {
+            createPlayerPage(playerData, true);
+//            createCompPage(playerData);
+            return playerData
+        } else {
+            createPlayerPage(playerData, false);
+            return playerData;
+        }
     } else {
         hideTables();
         if (comp) {
             splitScreen()
+            createPlayerCompList(playerData);
         } else {
             createPlayerLinkList(playerData);
         }
+    }
+}
+
+
+function createPlayerCompList() {
+    const players = Object.values(playerData[1])
+    for (let i = 0; i < players.length; i++) {
+        createPlayerPageLink(players[i]);
     }
 }
 
@@ -288,6 +304,7 @@ async function retrieveClickedPlayer(e) {
     }
 }
 
+
 //NEEDS NOTES
 function splitScreen() {
     singlePlayer.classList.add("halfPage");
@@ -326,22 +343,31 @@ function deleteLastSearch() {
 * Calls the four functions that combine to populate the page with a single player's information and stats.
 * @param {Object} playerData - An array-like object that contains all relevant data for a single player.
 */
-function createPlayerPage(playerData) {
-    createBBRefLink(playerData);
+function createPlayerPage(playerData, comp) {
+    if (comp) {
+        createBBRefLink(playerData, compPlayerLink);
+    } else {
+        createBBRefLink(playerData, playerLink);
+    }
     const [careerTotals, yearlyTotals] = getStats(playerData);
     checkTotals(careerTotals, yearlyTotals);
     revealTables();
 }
 
 
+//function createCompPage(playerData) {
+//
+//}
+
+
 /**
 * Populates the player name and creates the link for the retrievePlayerLink anchor tag.
 * @param {Object} data - An array of the player's statistical data.
 */
-function createBBRefLink(data) {
+function createBBRefLink(data, link) {
     const fullName = data[1]["first_name"] + " " + data[1]["last_name"];
-    playerLink.href = data[1]['bb_ref_link'];
-    playerLink.innerText = fullName;
+    link.href = data[1]['bb_ref_link'];
+    link.innerText = fullName;
 }
 
 
@@ -350,7 +376,7 @@ function createBBRefLink(data) {
 * @param {Object} data - An array of the player's statistical data.
 * return {Object} - An array containing the player's career and year-to-year statistical data.
 */
-function getStats(data){
+function getStats(data) {
     let careerTotals = null;
     let yearlyTotals = null;
     if (data[2]) {
