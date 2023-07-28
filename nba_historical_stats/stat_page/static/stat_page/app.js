@@ -290,7 +290,8 @@ function createPlayerPageLink(player, comp) {
     newListTag.classList.add("listedPlayer")
     newListTag.insertAdjacentElement("beforeend", newAnchorTag)
     if (comp) {
-//        div needs to be pushed to right side
+//div needs to be pushed to right side
+//second column doesn't link
         compDiv.classList.remove("hidden");
         compList.insertAdjacentElement("beforeend", newListTag)
     } else {

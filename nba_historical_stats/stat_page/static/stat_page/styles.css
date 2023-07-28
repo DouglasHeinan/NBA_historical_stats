@@ -79,6 +79,12 @@ ul {
     font-size: 1.2em;
 }
 
+
+#playerLists {
+    display: flex;
+    justify-content: space-between;
+}
+
 .inline {
     width: 3em;
     text-align: center;
