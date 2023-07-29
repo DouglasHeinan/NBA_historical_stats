@@ -78,12 +78,25 @@ ul {
     color: navy;
     font-size: 1.2em;
 }
+/*
+TRYING TO MAKE THE SEARCH GROUPS LOOK BETTER, BACK BURNER.
+#divPlayerNames {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+}
 
+#divCompNames {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+}
 
 #playerLists {
     display: flex;
     justify-content: space-between;
 }
+*/
 
 .inline {
     width: 3em;

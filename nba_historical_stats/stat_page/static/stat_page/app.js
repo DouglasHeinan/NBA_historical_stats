@@ -37,6 +37,7 @@ const tables = document.querySelectorAll(".tableDiv");
 
 
 let curPlayer = null;
+let compPlayer = null;
 const statBtnLength = dropBtns.length;
 const fetchHeaders = {
     'Content-Type': 'application/json',
@@ -45,7 +46,8 @@ const fetchHeaders = {
 
 
 //***********************Event Listeners***************
-//GIVE NOTES FOR EL?
+//GIVE NOTES FOR E.L.?
+
 
 searchBtn.addEventListener("click", async() => {
     onePlayerOnly.classList.remove("flex");
@@ -75,8 +77,10 @@ compBtn.addEventListener("click", async() => {
 })
 
 
-
 nameList.addEventListener("click", retrieveClickedPlayer)
+
+
+compList.addEventListener("click", retrieveClickedComp)
 
 
 for (let i = 0; i < statBtnLength; i++) {
@@ -290,7 +294,6 @@ function createPlayerPageLink(player, comp) {
     newListTag.classList.add("listedPlayer")
     newListTag.insertAdjacentElement("beforeend", newAnchorTag)
     if (comp) {
-//div needs to be pushed to right side
 //second column doesn't link
         compDiv.classList.remove("hidden");
         compList.insertAdjacentElement("beforeend", newListTag)
@@ -308,6 +311,13 @@ async function retrieveClickedPlayer(e) {
     onePlayerOnly.classList.remove("hidden");
     if (e.target.className == "playerPage") {
         curPlayer = await retrievePlayer(fetchSearchedPlayer, false, e.target.innerText);
+    }
+}
+
+
+async function retrieveClickedComp(e) {
+    if (e.target.className == "playerPage") {
+        compPlayer = await retrievePlayer(fetchSearchedPlayer, false, e.target.innerText);
     }
 }
 
@@ -456,7 +466,7 @@ function revealRightSideSearch() {
 }
 
 async function getSecondName(searched) {
-    searchedPlayer = retrievePlayer(fetchSearchedPlayer, true, searched);
+    compPlayer = retrievePlayer(fetchSearchedPlayer, true, searched);
 }
 
 
