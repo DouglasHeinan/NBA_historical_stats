@@ -22,15 +22,15 @@ def home(request):
     # ***THIS NEEDS TO BE CALLED IN ITS OWN FUNC***
     # update_db()
     # ******
-    # all_players = Player.objects.all()
-    # all_teams = Team.objects.all()
+    all_players = Player.objects.all()
+    all_teams = Team.objects.all()
     all_stat_fields = PlayerYearlyStats._meta.get_fields()
     all_stat_field_names = [field.name for field in all_stat_fields]
     del all_stat_field_names[-1]
     del all_stat_field_names[0:4]
     context = {
-        # 'players': all_players,
-        # 'teams': all_teams,
+        'players': all_players,
+        'teams': all_teams,
         "stat_categories": all_stat_field_names
     }
     return render(request, 'stat_page/stat_page.html', context)

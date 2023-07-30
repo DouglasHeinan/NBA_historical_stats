@@ -205,7 +205,7 @@ async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
     } else {
         hideTables();
         if (comp) {
-            splitScreen()
+//            splitScreen()
             createPlayerLinkList(playerData, true);
         } else {
             createPlayerLinkList(playerData, false);
@@ -317,7 +317,8 @@ async function retrieveClickedPlayer(e) {
 
 async function retrieveClickedComp(e) {
     if (e.target.className == "playerPage") {
-        compPlayer = await retrievePlayer(fetchSearchedPlayer, false, e.target.innerText);
+        compDiv.classList.remove("hidden");
+        compPlayer = await retrievePlayer(fetchSearchedPlayer, true, e.target.innerText);
     }
 }
 
@@ -361,6 +362,7 @@ function deleteLastSearch() {
 * @param {Object} playerData - An array-like object that contains all relevant data for a single player.
 */
 function createPlayerPage(playerData, comp) {
+    console.log(comp)
     if (comp) {
         createBBRefLink(playerData, compPlayerLink);
     } else {
@@ -383,8 +385,8 @@ function createPlayerPage(playerData, comp) {
 */
 function createBBRefLink(data, link) {
     const fullName = data[1]["first_name"] + " " + data[1]["last_name"];
-    link.href = data[1]['bb_ref_link'];
     link.innerText = fullName;
+    link.href = data[1]['bb_ref_link'];
 }
 
 
@@ -451,7 +453,7 @@ function revealRightSideSearch() {
     compBtn.classList.add("hidden");
     secondSearch.classList.add("search");
     secondSearch.classList.remove("hidden");
-    splitScreen();
+//    splitScreen();
     rightPlayerDiv.classList.remove("hidden");
     hideTables();
 //    hideForComp.classList.add("hidden");

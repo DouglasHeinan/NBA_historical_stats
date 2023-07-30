@@ -69,7 +69,7 @@ ul {
     margin-left: 0.5em;
 }
 
-#playerLink {
+#playerLink, #compPlayerLink {
     color: black;
     font-size: 1.5em;
 }
