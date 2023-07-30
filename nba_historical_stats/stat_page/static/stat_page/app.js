@@ -56,6 +56,7 @@ searchBtn.addEventListener("click", async() => {
     curPlayer = await retrievePlayer(fetchSearchedPlayer, false, searchInput.value);
     chart.classList.add("hidden");
     dropdownDiv.classList.add("hidden");
+    compPlayerLink.innerText = "";
 })
 
 
@@ -64,6 +65,7 @@ randomPlayerBtn.addEventListener("click", async() => {
     curPlayer = await retrievePlayer(fetchRandPlayer, false);
     chart.classList.add("hidden");
     dropdownDiv.classList.add("hidden");
+    compPlayerLink.innerText = "";
 })
 
 
@@ -363,7 +365,6 @@ function deleteLastSearch() {
 * @param {Object} playerData - An array-like object that contains all relevant data for a single player.
 */
 function createPlayerPage(playerData, comp) {
-    console.log(comp)
     if (comp) {
         createBBRefLink(playerData, compPlayerLink);
     } else {
