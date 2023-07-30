@@ -17,6 +17,8 @@ const randomPlayerBtn = document.querySelector("#randomPlayerReveal");
 const graphingBtn = document.querySelector("#makeChart");
 const careerTableData = document.querySelector("#careerPlayerDataRow");
 const yearlyTable = document.querySelector("#playerYearly");
+const playerOneTable = document.querySelector("#playerOneTable")
+const playerTwoTable = document.querySelector("#playerTwoTable")
 const graphTypeBtn = document.querySelector("#selectChartType");
 const dropdownDiv = document.querySelector(".dropdownOptions");
 const dropBtns = document.querySelectorAll(".statDrop");
@@ -57,6 +59,7 @@ searchBtn.addEventListener("click", async() => {
     chart.classList.add("hidden");
     dropdownDiv.classList.add("hidden");
     compPlayerLink.innerText = "";
+    playerOneTable.style.width = "100%";
 })
 
 
@@ -66,6 +69,7 @@ randomPlayerBtn.addEventListener("click", async() => {
     chart.classList.add("hidden");
     dropdownDiv.classList.add("hidden");
     compPlayerLink.innerText = "";
+    playerOneTable.style.width = "100%";
 })
 
 
@@ -192,7 +196,7 @@ function adjustAxis(axis, toGraph) {
 */
 async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
     deleteLastSearch();
-    deleteTableData();
+//    deleteTableData();
     const playerRes = await fetchFunc(optionalArg);
     const playerData = await playerRes.json();
     if (playerData[0]["one_player"] == true) {
@@ -201,6 +205,7 @@ async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
 //            createCompPage(playerData);
             return playerData
         } else {
+            deleteTableData();
             createPlayerPage(playerData, false);
             return playerData;
         }
@@ -210,6 +215,7 @@ async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
 //            splitScreen()
             createPlayerLinkList(playerData, true);
         } else {
+            deleteTableData();
             createPlayerLinkList(playerData, false);
         }
     }
@@ -367,6 +373,8 @@ function deleteLastSearch() {
 function createPlayerPage(playerData, comp) {
     if (comp) {
         createBBRefLink(playerData, compPlayerLink);
+        console.log(playerOneTable)
+        playerOneTable.style.width = "50%";
     } else {
         createBBRefLink(playerData, playerLink);
     }
