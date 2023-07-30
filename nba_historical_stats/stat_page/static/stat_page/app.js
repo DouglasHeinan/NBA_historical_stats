@@ -309,6 +309,7 @@ function createPlayerPageLink(player, comp) {
 async function retrieveClickedPlayer(e) {
     onePlayerOnly.classList.add("flex");
     onePlayerOnly.classList.remove("hidden");
+    compBtn.classList.remove("hidden")
     if (e.target.className == "playerPage") {
         curPlayer = await retrievePlayer(fetchSearchedPlayer, false, e.target.innerText);
     }
