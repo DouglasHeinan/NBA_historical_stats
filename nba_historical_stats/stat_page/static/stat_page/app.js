@@ -70,6 +70,7 @@ randomPlayerBtn.addEventListener("click", async() => {
     dropdownDiv.classList.add("hidden");
     compPlayerLink.innerText = "";
     playerOneTable.style.width = "100%";
+    compBtn.classList.remove("hidden");
 })
 
 
@@ -373,7 +374,6 @@ function deleteLastSearch() {
 function createPlayerPage(playerData, comp) {
     if (comp) {
         createBBRefLink(playerData, compPlayerLink);
-        console.log(playerOneTable)
         playerOneTable.style.width = "50%";
     } else {
         createBBRefLink(playerData, playerLink);
