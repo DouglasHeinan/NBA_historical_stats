@@ -432,7 +432,7 @@ function checkTotals(careerTotals, yearlyTotals) {
     }
 }
 
-
+//NOTES
 /**
 * Removes 'hidden' class from all tables and the comparison button.
 */
