@@ -513,7 +513,7 @@ function createTableRowHeaders(careerTotals, yearlyTotals) {
     }
 }
 
-
+//MORE NOTES
 /**
 * This function creates, populates, and inserts each <td> element for the player table.
 * @param {Object} data - The player's statistical data.
