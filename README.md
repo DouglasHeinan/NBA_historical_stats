@@ -12,6 +12,7 @@
 [comment]: <> (This website can be accessed at [douglasheinan.com/tamarack-treks]&#40;http://douglasheinan.com/tamarack-treks&#41;.)
 
 [comment]: <> (![Screen shot of web page]&#40;README_IMG/scrn_shot.png&#41;)
+This project is a stat graphing and comparison tool to evaluate NBA players from all eras.
 
 ## Key Features
 
@@ -32,6 +33,9 @@
 [comment]: <> (* Using the Beautiful Soup library, I created a constantly running web scraper to automate database updates)
 
 [comment]: <> (* I designed each web page using original CSS code and some Bootstrap)
+**Languages/technologies:** HTML, CSS, Javascript, Python Django, SQLite
+This project is mostly written in python and javascript. I wanted to create a single-page web app that showcased my 
+understanding of javascript and python and how they interacted.
 
 ## Takeaways
 
