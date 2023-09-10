@@ -8,7 +8,8 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: grey;
+    background-color: black;
+    color: white;
 }
 
 #wrapper {
@@ -70,12 +71,12 @@ ul {
 }
 
 #playerLink, #compPlayerLink {
-    color: black;
+    color: white;
     font-size: 1.5em;
 }
 
 .playerPage {
-    color: navy;
+    color: white;
     font-size: 1.2em;
 }
 /*
@@ -112,14 +113,15 @@ TRYING TO MAKE THE SEARCH GROUPS LOOK BETTER, BACK BURNER.
 table {
     border-spacing: 0 0.25em; /*margin between table lines*/
     white-space: nowrap; /*keep data on one line*/
+    background-color: grey;
 }
 
 th {
     padding: 0 0.5em;
+    color: black;
 }
 
 td {
-    background-color: pink;
     padding: 0.5em;
 }
 
