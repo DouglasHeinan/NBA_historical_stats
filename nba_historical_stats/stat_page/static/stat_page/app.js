@@ -198,8 +198,9 @@ function adjustAxis(axis, toGraph) {
 async function retrievePlayer(fetchFunc, comp, ...optionalArg) {
     deleteLastSearch();
 //    deleteTableData();
-    const playerRes = await fetchFunc(optionalArg);
-    const playerData = await playerRes.json();
+//    const playerRes = await fetchFunc(optionalArg);
+//    const playerData = await playerRes.json();
+    const playerData = await fetchFunc(optionalArg);
     if (playerData[0]["one_player"] == true) {
         if (comp) {
             createPlayerPage(playerData, true);
@@ -236,11 +237,17 @@ function createPlayerCompList(playerData) {
 * statistices from the 'rando_player/' function in views.py.
 * @return {Object} - The response (a promise) from the API.
 */
+//async function fetchRandPlayer() {
+//    const playerRes = await fetch('rando_player/', {
+//        headers:fetchHeaders
+//    });
+//    return playerRes;
+//}
 async function fetchRandPlayer() {
-    const playerRes = await fetch('rando_player/', {
+    const playerRes = await axios.get('rando_player/', {
         headers:fetchHeaders
     });
-    return playerRes;
+    return playerRes["data"];
 }
 
 
@@ -250,11 +257,17 @@ async function fetchRandPlayer() {
 * @param {} searched - An array of all words from the user-input search box.
 * @return {Object} - The response (a promise) from the API.
 */
+//async function fetchSearchedPlayer(searched) {
+//    const playerRes = await fetch(`search_player/${searched}`, {
+//        headers:fetchHeaders
+//    });
+//    return playerRes;
+//}
 async function fetchSearchedPlayer(searched) {
-    const playerRes = await fetch(`search_player/${searched}`, {
+    const playerRes = await axios.get(`search_player/${searched}`, {
         headers:fetchHeaders
     });
-    return playerRes;
+    return playerRes["data"];
 }
 
 
