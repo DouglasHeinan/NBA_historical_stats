@@ -19,9 +19,6 @@ Renders the home page, sending a list of all stat names to populate a dropdown.
 :returns: Returns the rendered web page.
 """
 def home(request):
-    # ***THIS NEEDS TO BE CALLED IN ITS OWN FUNC***
-    # update_db()
-    # ******
     all_players = Player.objects.all()
     all_teams = Team.objects.all()
     all_stat_fields = PlayerYearlyStats._meta.get_fields()
